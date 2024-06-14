@@ -25,8 +25,13 @@ function LoginForm() {
   }; // end login
 
   return (
-    <form className="formPanel" onSubmit={login}>
-      <h2>Login</h2>
+    
+    <form
+    
+    className="formPanel" onSubmit={login}>
+          <h2>Login</h2>
+      <img src="favicon.ico" ></img>
+  
       {errors.loginMessage && (
         <h3 className="alert" role="alert">
           {errors.loginMessage}
@@ -58,6 +63,7 @@ function LoginForm() {
       </div>
       <div>
         <input className="btn" type="submit" name="submit" value="Log In" />
+        <p>Dont have an account?</p>
       </div>
     </form>
   );
