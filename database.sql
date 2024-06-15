@@ -2,9 +2,9 @@
 -- You must use double quotes in every query that user is in:
 -- ex. SELECT * FROM "user";
 -- Otherwise you will have errors!
-
+DROP TABLE IF EXISTS "monthly_data";
 DROP TABLE IF EXISTS "user" CASCADE;
-DROP TABLE IF EXISTS "monthly_data" CASCADE;
+DROP TABLE IF EXISTS "monthly_inputs" CASCADE;
 DROP TABLE IF EXISTS "metrics" CASCADE;
 DROP TABLE IF EXISTS "monthly_metrics" CASCADE;
 DROP TABLE IF EXISTS "industry" CASCADE;
@@ -30,7 +30,7 @@ CREATE TABLE "user" (
     "industry_id" int REFERENCES "industry" ON DELETE CASCADE 
 );
 
-CREATE TABLE "monthly_data" (
+CREATE TABLE "monthly_inputs" (
     "id" SERIAL PRIMARY KEY,
     "user_id" int REFERENCES "user" ON DELETE CASCADE,
     "year" INTEGER,
@@ -53,7 +53,7 @@ CREATE TABLE "metrics" (
 
 CREATE TABLE "monthly_metrics" (
     "id" SERIAL PRIMARY KEY,
-    "monthly_id" int REFERENCES "monthly_data" ON DELETE CASCADE,
+    "monthly_id" int REFERENCES "monthly_inputs" ON DELETE CASCADE,
     "metrics_id" int REFERENCES "metrics" ON DELETE CASCADE,
     "metric_value" DECIMAL, 
     "variance_value" DECIMAL, 

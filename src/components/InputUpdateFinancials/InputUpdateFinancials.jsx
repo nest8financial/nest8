@@ -8,11 +8,24 @@ import { TextField,
          InputAdornment,
          Box, 
          Button } from '@mui/material';
-
+import { getMonthName } from '../../utilities/utilities';
 import { useState } from 'react';
+import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
+import { useEffect } from 'react';
 
-function InputUpdateFinancials({month, year}) {
-    
+/**
+ * This component provides a way for the user to input, edit, and view
+ *      their monthly financial metrics.  These metrics provide
+ *      informaton to analyze financial health
+ *   -  The month and year are the applicable month / year to input/edit/view
+ *          and are passed via params
+ *   -  The mode is either view or edit and is determined by if a month/year 
+ *          already exists in the monthly_data table
+ */
+function InputUpdateFinancials() {
+
+    const { month, year } = useParams();
+    const singleMonthInputs = useSelector(store => store.financialsReducer.singleMonthInputs);
     const [amountInputs, setAmountInputs] = useState({
         netIncome: '',
         sales: '',
@@ -28,7 +41,20 @@ function InputUpdateFinancials({month, year}) {
         equity: false,
         earningsBeforeTax: false });
     const [taxRateError, setTaxRateError] = useState(false);
+    const [inputMode, setInputMode] = useState(false);
 
+    useEffect(() => {
+        dispatch({
+            type: 'GET_SINGLE_MONTH_INPUTS',
+            payload: { month, year } })
+    }, []);
+
+    useEffect(() => {
+        // if no inputs for that month, assume input mode
+        if (singleMonthInputs.length === 0) {
+            setInputMode(true);
+        }
+    }, [singleMonthInputs])
     /**
      * Handles any of the amount fields on any input change 
      *      - validate input to make sure it is a valid number with 
@@ -60,8 +86,9 @@ function InputUpdateFinancials({month, year}) {
      */
     const handleTaxRateChange = (event) => {
         const taxValue = event.target.value;
+        const decimalUnlimitedRegex = /^\d*\.?\d{0,}$/;
         // if valid percentage (decimal value, non-negative)
-        if (true) {
+        if (decimalUnlimitedRegex.test(taxValue)) {
             setTaxRateInput(taxValue);
             setTaxRateError(false);
         } else {
@@ -94,9 +121,10 @@ function InputUpdateFinancials({month, year}) {
         <Container>
             <Box component="form"
                  onSubmit={handleSubmitFinancialData}>
-                <FormLabel component="legend">Input Your Financial Data for {</FormLabel>
+                <FormLabel component="legend">Input Your Financial Data for {getMonthName(month)} {year}:</FormLabel>
                 <TextField
-                    label="Net Income"
+                    required
+                    label="Net Income (required)"
                     name="netIncome"
                     type="number"
                     inputProps={{ step: "0.01" }}
@@ -109,7 +137,8 @@ function InputUpdateFinancials({month, year}) {
                     InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}>
                 </TextField>
                 <TextField
-                    label="Sales"
+                    required              
+                    label="Sales (required)"
                     name="sales"
                     type="number"
                     inputProps={{ step: "0.01" }}
@@ -118,10 +147,12 @@ function InputUpdateFinancials({month, year}) {
                     variant="outlined"
                     error={amountErrors.sales}
                     helperText={amountErrors.sales ? "Please enter a valid decimal value with up to two decimal places" : 
-                        "Your Sales is blah blah blah..."}>
+                        "Your Sales is blah blah blah..."}
+                    InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}>
                 </TextField>
                 <TextField
-                    label="Assets"
+                    required 
+                    label="Assets (required)"
                     name="assets"
                     type="number"
                     inputProps={{ step: "0.01" }}
@@ -130,10 +161,12 @@ function InputUpdateFinancials({month, year}) {
                     variant="outlined"
                     error={amountErrors.assets}
                     helperText={amountErrors.assets ? "Please enter a valid decimal value with up to two decimal places" : 
-                        "Your Assets are blah blah blah..."}>
+                        "Your Assets are blah blah blah..."}
+                    InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}>
                 </TextField>
                 <TextField
-                    label="Equity"
+                    required 
+                    label="Equity (required)"
                     name="equity"
                     type="number"
                     inputProps={{ step: "0.01" }}
@@ -142,10 +175,12 @@ function InputUpdateFinancials({month, year}) {
                     variant="outlined"
                     error={amountErrors.equity}
                     helperText={amountErrors.equity ? "Please enter a valid decimal value with up to two decimal places" : 
-                        "Your Equity is blah blah blah..."}>
+                        "Your Equity is blah blah blah..."}
+                    InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}>
                 </TextField>
                 <TextField
-                    label="Tax Rate"
+                    required 
+                    label="Tax Rate (required)"
                     name="taxRate"
                     type="number"
                     inputProps={{ step: "0.01" }}
@@ -154,10 +189,12 @@ function InputUpdateFinancials({month, year}) {
                     variant="outlined"
                     error={taxRateError}
                     helperText={taxRateError ? "Please enter a percentage with up to two decimal places" : 
-                        "Your Tax Rate is the blah blah blah..."}>
+                        "Your Tax Rate is the blah blah blah..."}
+                    InputProps={{endAdornment: <InputAdornment position="end">%</InputAdornment>}}>
                 </TextField>
                 <TextField
-                    label="Earnings Before Tax (EBT)"
+                    required 
+                    label="Earnings Before Tax (EBT) (required)"
                     name="earningsBeforeTax"
                     type="number"
                     inputProps={{ step: "0.01" }}
@@ -166,7 +203,8 @@ function InputUpdateFinancials({month, year}) {
                     variant="outlined"
                     error={amountErrors.earningsBeforeTax}
                     helperText={amountErrors.earningsBeforeTax ? "Please enter a valid decimal value with up to two decimal places" : 
-                        "Your Earnings Before Tax is blah blah blah..."}>
+                        "Your Earnings Before Tax is blah blah blah..."}
+                    InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}>
                 </TextField>
                 <FormHelperText id="my-helper-text">Input your basic financial data for this month</FormHelperText>
                 <Button type="submit"
