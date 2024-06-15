@@ -6,12 +6,15 @@ import axios from 'axios';
  * Get a single month's of financial inputs for a user
  */
 function* getSingleMonthInputs(action) {
+  console.log('hellllloooooo')
   try {
+    console.log('in get here is action.payload', action.payload)
     response = yield axios({
         method: 'GET',
         url: `/api/financial_inputs/${action.payload.month}&${action.payload.year}`,
         headers: { 'Content-Type': 'application/json' },
         withCredentials: true })
+    console.log('did get, here is reposnse: ', response.data);
     yield put({
         type: 'SET_SINGLE_MONTH_INPUTS',
         payload: response.data })

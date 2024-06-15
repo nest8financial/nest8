@@ -9,23 +9,24 @@ import { TextField,
          Box, 
          Button } from '@mui/material';
 import { getMonthName } from '../../utilities/utilities';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
-import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 /**
  * This component provides a way for the user to input, edit, and view
- *      their monthly financial metrics.  These metrics provide
+ *      their monthly financial inputs.  These inputs provide
  *      informaton to analyze financial health
  *   -  The month and year are the applicable month / year to input/edit/view
  *          and are passed via params
  *   -  The mode is either view or edit and is determined by if a month/year 
  *          already exists in the monthly_data table
  */
-function InputUpdateFinancials() {
+function financialInputsAddEdit({month, year}) {
 
-    const { month, year } = useParams();
-    const singleMonthInputs = useSelector(store => store.financialsReducer.singleMonthInputs);
+    const dispatch = useDispatch();
+    // const { month, year } = useParams();
+    const singleMonthInputs = useSelector(store => store.financialInputs.singleMonthInputs);
     const [amountInputs, setAmountInputs] = useState({
         netIncome: '',
         sales: '',
@@ -51,10 +52,11 @@ function InputUpdateFinancials() {
 
     useEffect(() => {
         // if no inputs for that month, assume input mode
-        if (singleMonthInputs.length === 0) {
+        if (singleMonthInputs?.length === 0) {
             setInputMode(true);
         }
-    }, [singleMonthInputs])
+    }, [singleMonthInputs]);
+
     /**
      * Handles any of the amount fields on any input change 
      *      - validate input to make sure it is a valid number with 
@@ -64,6 +66,7 @@ function InputUpdateFinancials() {
      *      - if problems with input, set error for this field
      */
     const handleAmountChange = (event) => {
+        event.preventDefault();
         const { name, value } = event.target;
         const decimalRegex = /^\d*\.?\d{0,2}$/;
         // validate amount field
@@ -85,6 +88,7 @@ function InputUpdateFinancials() {
      *      - if problems with input, set error for tax rate
      */
     const handleTaxRateChange = (event) => {
+        event.preventDefault();
         const taxValue = event.target.value;
         const decimalUnlimitedRegex = /^\d*\.?\d{0,}$/;
         // if valid percentage (decimal value, non-negative)
@@ -99,8 +103,9 @@ function InputUpdateFinancials() {
     /**
      * Submit the Financial Data for the current month to the database
      */
-    const handleSubmitFinancialData = () => {
-        dispatchEvent({
+    const handleSubmitFinancialData = (dispatchEvent) => {
+        event.preventDefault();
+        dispatch({
             type: 'ADD_FINANCIAL_DATA',
             payload: {
                 month: month,
@@ -113,8 +118,6 @@ function InputUpdateFinancials() {
             }
         })
     }
-
-
 
 
     return (
@@ -216,4 +219,4 @@ function InputUpdateFinancials() {
     )
 }
 
-export default InputUpdateFinancials;
+export default financialInputsAddEdit;

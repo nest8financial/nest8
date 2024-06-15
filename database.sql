@@ -61,7 +61,77 @@ CREATE TABLE "monthly_metrics" (
     "notes" VARCHAR 
 );
 
+INSERT INTO industry
+    (name, 
+    profit_margin, 
+    asset_turnover_ratio,
+     financial_leverage_ratio,
+     return_on_equity,
+     tax_burden,
+     interest_burden)
+    VALUES( 'farmers', 0.2, 1.5, 2.0, 0.3, 0.2, 0.3);
 
+    
+INSERT INTO metrics 
+    (metric_name, positive_text, negative_text)
+    VALUES ('Profit Margin', 'Maintain quality: Ensure that the quality of products or services remains
+                high to justify premium pricing and sustain profit margins. Invest in innovation: Allocate resources towards research and development
+                to continually improve products or services, enhancing their value
+                proposition and justifying higher margins.', 
+                'Reduce costs: Identify areas where costs can be reduced without
+                compromising quality. This could involve renegotiating contracts with
+                suppliers, optimizing inventory management, or streamlining operations'),
+            ('Asset Turnover Ratio', 'Optimize operations: Continuously review and streamline business
+                processes to maximize the efficiency of asset utilization. This could involve
+                improving inventory management, reducing idle time, or enhancing
+                production efficiency. Expand market reach: Explore opportunities to enter new markets or
+                expand existing ones to increase sales volume without significantly
+                increasing assets.',
+                'Improve inventory management: Optimize inventory levels to minimize
+                holding costs and reduce the cash tied up in inventory.Increase sales: Implement marketing strategies to attract more customers
+                and increase sales volume. Explore opportunities to expand into new
+                markets or offer additional products/services.'),
+            ('Financial Leverage Ratio', 'Strategic debt management: If <User> has a lower financial leverage ratio
+                compared to industry peers, evaluate the potential benefits of judiciously
+                increasing leverage to finance growth initiatives or invest in income-
+                generating assets. Balanced capital structure: Maintain a balanced approach to capital
+                structure, leveraging debt when advantageous but avoiding excessive risk
+                that could jeopardize financial stability.',
+                'Reduce debt: If <User> has high debt levels, consider reducing debt
+                through debt repayment or restructuring. This can lower interest expenses
+                and decrease financial risk. Increase equity financing: Instead of relying heavily on debt financing, seek
+                opportunities to raise equity capital through investors or partners. This can
+                improve the financial leverage ratio and reduce the reliance on debt.'),
+            ('Return on Equity (ROE)', 'Capitalize on strengths: Identify the key drivers of superior ROE and double
+                down on strategies that have contributed to the business''s success,
+                whether it''s operational efficiency, strong brand loyalty, or innovative
+                product offerings. Continual improvement: Pursue initiatives aimed at sustaining or enhancing
+                ROE over the long term, such as investing in employee training, expanding
+                market share, or diversifying revenue streams.',
+                'Enhance profitability: Focus on increasing sales, improving profit margins,
+                and optimizing asset utilization to boost overall profitability.  Invest in in efficiency: Invest in technologies or processes that enhance
+                operational efficiency and productivity, leading to higher returns on equity.'),
+            ('Tax Burden', 'Tax optimization: Continuously monitor changes in tax regulations and
+                work with tax advisors to identify opportunities for tax optimization, such
+                as leveraging tax credits or deductions available to businesses with higher
+                profitability. Strategic planning: Develop tax planning strategies that align with the
+                business''s growth objectives, taking advantage of legal provisions to
+                minimize tax liabilities while maximizing after-tax profits.',
+                'Tax planning: Work with a tax advisor to identify opportunities for tax
+                optimization, such as taking advantage of tax credits, deductions, and
+                incentives available to small businesses. Structure optimization: Evaluate <User>''s legal structure to ensure it is tax-
+                efficient. Depending on the circumstances, restructuring the business entity
+                may help minimize tax liabilities.'),
+            ('Interest Burden', 'Leverage favorable financing: If <User> has a lower interest burden
+                compared to industry peers, consider refinancing existing debt at more
+                favorable terms to further reduce interest expenses and improve
+                profitability. Negotiate with lenders: Use <User>''s strong financial position to negotiate
+                better terms with lenders, such as lower interest rates or longer repayment
+                periods, to further mitigate interest burden.',
+                'Refinance debt: Explore options to refinance existing debt at lower interest
+                rates, especially if interest expenses are significantly impacting profitability. Negotiate with lenders: Discuss with lenders to renegotiate loan terms,
+                extend repayment periods, or explore alternative financing options to
+                reduce interest burden.');
 
 
 

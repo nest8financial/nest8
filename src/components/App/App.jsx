@@ -21,8 +21,6 @@ import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 
 import './App.css';
-import InputUpdateFinancials from 
-  '../InputUpdateFinancials/InputUpdateFinancials';
 
 function App() {
   const dispatch = useDispatch();
@@ -37,8 +35,6 @@ function App() {
     <Router>
       <div>
         <Nav />
-        <InputUpdateFinancials month={6}
-                               year={2024}/>
         <Switch>
           {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
           <Redirect exact from="/" to="/home" />

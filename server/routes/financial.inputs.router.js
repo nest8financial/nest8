@@ -4,10 +4,10 @@ const router = express.Router();
 const { rejectUnauthenticated } = 
     require('../modules/authentication-middleware');
 
-/**
+/**rejectUnauthenticated,
  * GET all monthly inputs for a user
  */
-router.get('/', rejectUnauthenticated, async (req, res) => {
+router.get('/',  async (req, res) => {
     try {
         let connection;
         connection = await pool.connect();
@@ -32,13 +32,14 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
 /**
  * GET a single month's inputs for a user
  */
-router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
+router.get('/:month&:year',  async (req, res) => {
+    let connection;
     try {
-        let connection;
         connection = await pool.connect();
         month = req.params.month;
         year = req.params.year;
-        userId = user.id;
+        // userId = user.id;
+        userId = 1;
         sqlText = `
             SELECT * 
                 FROM monthly_inputs
@@ -50,18 +51,18 @@ router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
             const dbResponse = await connection.query(sqlText, [userId, month, year]);
             console.log('Get of single month\'s inputs in /api/financial_inputs/:month&:year succesful:', dbResponse.rows )
             connection.release();
-            send(dbResponse.rows);
+            res.send(dbResponse.rows);
     } catch (error) {
         console.log('Error in get of single month\'s inputs in /api/financial_inputs/:month&:year', error);
         connection.release();
-        sendStatus(500);
+        res.sendStatus(500);
     }
 })
 
 /**
  * POST / ADD a single month's input for a user
  */
-router.post('/', rejectUnauthenticated, async (req, res) => {
+router.post('/',  async (req, res) => {
    try {
        let connection;
        connection = await pool.connect();
@@ -110,7 +111,7 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
 /**
  * PUT / UPDATE a single month's inputs for a user
  */
-router.post('/', rejectUnauthenticated, async (req, res) => {
+router.post('/',  async (req, res) => {
     try {
         let connection;
         connection = await pool.connect();
@@ -155,6 +156,6 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
     }
  })
 
- 
+
 module.exports = router;
 
