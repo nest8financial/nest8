@@ -18,16 +18,27 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 // The only thing different from this and every other post we've seen
 // is that the password gets encrypted before being inserted
 router.post('/register', (req, res, next) => {
-  const username = req.body.username;
+   const firstName = req.body.firstName;
+   const lastName = req.body.lastName;
+   const companyName = req.body.companyName;
+   const industry = req.body.industry;
+   const email = req.body.email;
   const password = encryptLib.encryptPassword(req.body.password);
 
-  const queryText = `INSERT INTO "user" (username, password)
-    VALUES ($1, $2) RETURNING id`;
+  const queryText = `INSERT INTO "user" (first_name, last_name,company,industry_id,email,password)
+    VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`;
   pool
-    .query(queryText, [username, password])
+    .query(queryText, [
+      firstName,
+      lastName,
+      companyName,
+      industry,
+      email,
+      password
+    ])
     .then(() => res.sendStatus(201))
     .catch((err) => {
-      console.log('User registration failed: ', err);
+      console.log("User registration failed: ", err);
       res.sendStatus(500);
     });
 });
@@ -40,12 +51,13 @@ router.post('/login', userStrategy.authenticate('local'), (req, res) => {
   res.sendStatus(200);
 });
 
-// clear all server session information about this user
-router.post('/logout', (req, res, next) => {
+router.post("/logout", (req, res) => {
   // Use passport's built-in method to log out the user
-  req.logout((err) => {
-    if (err) { return next(err); }
-    res.sendStatus(200);
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
   });
 });
 

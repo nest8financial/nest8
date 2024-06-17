@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import {useSelector} from 'react-redux';
+import { Container, TextField, Button, Typography, Box } from '@mui/material';
+
 
 function LoginForm() {
   const [email, setEmail] = useState('');
@@ -16,7 +18,7 @@ function LoginForm() {
         type: 'LOGIN',
         payload: {
           email: email,
-          password: password,
+          password: password
         },
       });
     } else {
@@ -25,47 +27,54 @@ function LoginForm() {
   }; // end login
 
   return (
-    
-    <form
-    
-    className="formPanel" onSubmit={login}>
-          <h2>Login</h2>
-      <img src="favicon.ico" ></img>
   
+    <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>  
+   <form onSubmit={login} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+          <Typography variant="h6" component="div" sx={{ background: '#0073e6', color: 'white', width: '100%', textAlign: 'center', padding: '8px 0' }}>
+            Login/sign-up
+          </Typography>
+          <img alt="Login Icon" src="favicon.ico" />
+        </Box>
       {errors.loginMessage && (
-        <h3 className="alert" role="alert">
+        <Typography variant="body1" color="error">
           {errors.loginMessage}
-        </h3>
+        </Typography>
       )}
-      <div>
-        <label htmlFor="email">
-          Email:
-          <input
+      <TextField 
+      label="Email"
             type="text"
             name="email"
             required
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-          />
-        </label>
-      </div>
-      <div>
-        <label htmlFor="password">
-          Password:
-          <input
+            variant='outlined'
+            fullWidth
+            />
+      <TextField
+        label="Password"
             type="password"
             name="password"
             required
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            variant='outlined'
+            fullWidth
           />
-        </label>
-      </div>
-      <div>
-        <input className="btn" type="submit" name="submit" value="Log In" />
-        <p>Dont have an account?</p>
-      </div>
+       
+      
+       <Box sx={{ display: 'flex',alignItems: 'center', flexDirection: 'column' ,gap: 2}}>
+          <Button type="submit" variant="contained" color="primary">
+            Log In
+          </Button>
+          <Typography variant="body2" sx={{gap:100}} >
+            Don't have an account?
+          </Typography>
+        </Box>
+  
     </form>
+    </Container>
+
   );
 }
 

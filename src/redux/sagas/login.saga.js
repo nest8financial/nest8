@@ -15,6 +15,7 @@ function* loginUser(action) {
     // send the action.payload as the body
     // the config includes credentials which
     // allow the server session to recognize the user
+    console.log('action.payload in login sagaa', action.payload)
     yield axios.post('/api/user/login', action.payload, config);
 
     // after the user has logged in
@@ -25,7 +26,7 @@ function* loginUser(action) {
     if (error.response.status === 401) {
       // The 401 is the error status sent from passport
       // if user isn't in the database or
-      // if the username and password don't match in the database
+      // if the email and password don't match in the database
       yield put({ type: 'LOGIN_FAILED' });
     } else {
       // Got an error that wasn't a 401
