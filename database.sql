@@ -2,7 +2,7 @@
 -- You must use double quotes in every query that user is in:
 -- ex. SELECT * FROM "user";
 -- Otherwise you will have errors!
-DROP TABLE IF EXISTS "monthly_data";
+DROP TABLE IF EXISTS "monthly_data" CASCADE; 
 DROP TABLE IF EXISTS "user" CASCADE;
 DROP TABLE IF EXISTS "monthly_inputs" CASCADE;
 DROP TABLE IF EXISTS "metrics" CASCADE;
