@@ -11,13 +11,13 @@ function* loginUser(action) {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true,
     };
-
+    const loginObject = { username: action.payload.email, 
+                          password: action.payload.password };
     // send the action.payload as the body
     // the config includes credentials which
     // allow the server session to recognize the user
-    console.log('action.payload in login sagaa', action.payload)
-    yield axios.post('/api/user/login', action.payload, config);
-
+    console.log('login object in login sagaa', loginObject)
+    yield axios.post('/api/user/login', loginObject, config);
     // after the user has logged in
     // get the user information from the server
     yield put({ type: 'FETCH_USER' });
