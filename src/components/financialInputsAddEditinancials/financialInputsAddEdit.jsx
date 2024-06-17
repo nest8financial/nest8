@@ -19,8 +19,12 @@ import { useSelector, useDispatch } from 'react-redux';
  *      informaton to analyze financial health
  *   -  The month and year are the applicable month / year to input/edit/view
  *          and are passed via params
- *   -  The mode is either view or edit and is determined by if a month/year 
- *          already exists in the monthly_data table
+ *   - input/edit/view controlled by two pieces of state
+ *        These two pieces of state are set initially:
+ *          newInputMonth (true if this is a new month/year for user,
+ *                         false if this is an existing month/year)
+ *          readOnlyMode (true if this is an existing month/year for user,
+ *                        false if this in an existing month/year)
  */
 function financialInputsAddEdit({month, year}) {
 
@@ -72,12 +76,6 @@ function financialInputsAddEdit({month, year}) {
             console.log('objkeys', Object.keys(singleMonthInputs))
             setNewInputMonth(true);
             setReadOnlyMode(false);
-            const inputProps = {
-                step: 300,
-              };
-            inputProperites = { startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                step: "0.01",
-                                readOnly: false };
         // else if this is an existing year/month for financial inputs:
         //      - newInputMode is false
         //      - readOnlyMode is true
@@ -85,9 +83,6 @@ function financialInputsAddEdit({month, year}) {
         } else {
             setNewInputMonth(false);
             setReadOnlyMode(true);
-            inputProperites = { startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                step: "0.01",
-                                readOnly: true };
             console.log('netincome', singleMonthInputs.net_income);
             setAmountInputs({
                 netIncome: singleMonthInputs.net_income,
@@ -152,9 +147,6 @@ function financialInputsAddEdit({month, year}) {
         //      - Edit button pressed: change to edit mode to allow changes
         if (readOnlyMode) {
             setReadOnlyMode(false);
-            inputProperites = { startAdornment: <InputAdornment position="start">$</InputAdornment>,
-            step: "0.01",
-            readOnly: false };
         // else, if screen is not in readOnly mode, button pressed is save
         //      - Save button pressed: save or update financial inputs
         } else {
