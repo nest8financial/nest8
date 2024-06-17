@@ -22,7 +22,7 @@ CREATE TABLE "industry" (
 
 CREATE TABLE "user" (
     "id" SERIAL PRIMARY KEY,
-    "email" VARCHAR (80) UNIQUE NOT NULL,
+    "username" VARCHAR (80) UNIQUE NOT NULL,
     "password" VARCHAR (1000) NOT NULL,
     "first_name" VARCHAR NOT NULL,
     "last_name" VARCHAR NOT NULL, 
