@@ -4,28 +4,36 @@ const router = express.Router();
 const { rejectUnauthenticated } = 
     require('../modules/authentication-middleware');
 
-/**rejectUnauthenticated,
+
+
+/* ------------------------- ROUTES ----------------------------------------*/
+
+/**  ****  rejectUnauthenticated, put this in when login done */
+
+/**
  * GET all monthly inputs for a user
  */
 router.get('/',  async (req, res) => {
+    let connection;
+    connection = await pool.connect();
     try {
-        let connection;
-        connection = await pool.connect();
-        userId = user.id;
-        sqlText = `
+
+        // userId = user.id;
+        userId = 1;
+        sqlTextGetInputs = `
             SELECT * 
                 FROM monthly_inputs
                 WHERE user_id = $1
                 ORDER BY year, month;
             `;
-            const dbResponse = await connection.query(sqlText, [userId]);
+            const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
             console.log('Get of monthly inputs in /api/financial_inputs succesful:', dbResponse.rows )
             connection.release();
-            send(dbResponse.rows);
+            res.send(dbResponse.rows);
     } catch (error) {
         console.log('Error in get of monthly inputs in /api/financial_inputs', error);
         connection.release();
-        sendStatus(500);
+        res.sendStatus(500);
     }
 })
 
@@ -34,13 +42,14 @@ router.get('/',  async (req, res) => {
  */
 router.get('/:month&:year',  async (req, res) => {
     let connection;
+    connection = await pool.connect();
     try {
-        connection = await pool.connect();
-        month = req.params.month;
-        year = req.params.year;
+        month = Number(req.params.month);
+        year = Number(req.params.year);
         // userId = user.id;
         userId = 1;
-        sqlText = `
+        console.log('year, month', year, month);
+        sqlTextGetSingleMonth = `
             SELECT * 
                 FROM monthly_inputs
                 WHERE user_id = $1
@@ -48,7 +57,7 @@ router.get('/:month&:year',  async (req, res) => {
                     AND year = $3
                 ORDER BY year, month;
             `;
-            const dbResponse = await connection.query(sqlText, [userId, month, year]);
+            const dbResponse = await connection.query(sqlTextGetSingleMonth, [userId, month, year]);
             console.log('Get of single month\'s inputs in /api/financial_inputs/:month&:year succesful:', dbResponse.rows )
             connection.release();
             res.send(dbResponse.rows);
@@ -61,11 +70,23 @@ router.get('/:month&:year',  async (req, res) => {
 
 /**
  * POST / ADD a single month's input for a user
+ *          (This is a multi-step process)
+ * 
+ *        For the currently selected year/month:
+ *         1. Insert financial inputs into the monthly_inputs table
+ *         2. Compute the monthly metrics   
+ *         3. Retreive the current industry standard metrics
+ *         4. Insert into the monthly_metrics table:
+ *             - The newly computed monthly metrics (from 3)
+ *             - The computed variances:
+ *                  (industry metric - computed monthly metric) or
+ *                  (number 3 metric - number 2 metric)
+ *         5. Return created (201) status if successful
  */
 router.post('/',  async (req, res) => {
+    let connection;
+    connection = await pool.connect();
    try {
-       let connection;
-       connection = await pool.connect();
        month = req.body.month;
        year = req.body.year;
        netIncome = req.body.netIncome;
@@ -73,9 +94,15 @@ router.post('/',  async (req, res) => {
        assets = req.body.assets;
        equity = req.body.equity;
        taxRate = req.body.taxRate;
-       earningBeforeTaxes = req.body.earningBeforeTaxes;
-       userId = user.id;
-       sqlText = `
+       earningsBeforeTax = req.body.earningsBeforeTax;
+    //    userId = user.id;
+        userId = 1;
+       // If inserts fail for either monthly_inputs or monthly_metrics,
+       //   rollback all SQL changes
+       connection.query('BEGIN');
+
+       // 1. Insert financial inputs into the monthly_inputs table
+       sqlTextInsertMonthlyInputs = `
            INSERT INTO monthly_inputs
                 (user_id, 
                  year,
@@ -85,76 +112,283 @@ router.post('/',  async (req, res) => {
                  assets,
                  equity,
                  tax_rate,
-                 earning_before_taxes )
-                VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9 );
-           `;
-           const dbResponse = 
-                await connection.query(sqlText, [userId,
-                                                 month,
-                                                 year,
-                                                 netIncome,
-                                                 sales,
-                                                 assets,
-                                                 equity,
-                                                 taxRate,
-                                                 earningBeforeTaxes ]);
-           console.log('POST of a single month\'s data in /api/financial_input/ successful:', dbResponse.rows )
-           connection.release();
-           sendStatus(201);
+                 earnings_before_tax )
+                VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9 )
+            RETURNING id;
+        `;
+        const returnedIdResponse = 
+            await connection.query(sqlTextInsertMonthlyInputs,
+                                   [userId,
+                                    year,
+                                    month,
+                                    netIncome,
+                                    sales,
+                                    assets,
+                                    equity,
+                                    taxRate,
+                                    earningsBeforeTax ]);
+        console.log('POST of a single month\'s inputs in /api/financial_input/ successful, new id is:',returnedIdResponse.rows[0].id );
+        const monthlyInputId = returnedIdResponse.rows[0].id;                       
+        // 2. Compute the monthly financial metrics   
+        const profitMargin = netIncome / sales;
+        const assetTurnoverRatio = sales / assets;  //average assets????
+        const financialLeverageRatio = assets / equity;
+        const returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
+        const taxBurden = netIncome / earningsBeforeTax;
+        const interestBurden = earningsBeforeTax / sales;
+
+        // 3. Retreive the industry standard metrics for the current user
+        sqlTextGetIndustry = `
+        SELECT profit_margin AS ind_profit_margin,
+            asset_turnover_ratio AS ind_asset_turnover_ratio,
+            financial_leverage_ratio AS ind_financial_leverage_ratio,
+            return_on_equity AS ind_return_on_equity,
+            tax_burden AS ind_tax_burden,
+            interest_burden AS ind_interest_burden
+        FROM industry
+        JOIN "user"
+            ON industry.id = "user".industry_id
+        WHERE "user".id = $1;
+        `;
+        let industryMetrics = await connection.query(sqlTextGetIndustry, [userId]);
+        console.log('Industry metrics retreived successfully in /api/monthly_metrics (POST):', industryMetrics.rows);
+        // save industry metrics 
+        //   -use them to compute variances in below query
+        indProfitMargin = Number(industryMetrics.rows[0].ind_profit_margin);
+        indAssetTurnoverRatio = Number(industryMetrics.rows[0].ind_asset_turnover_ratio);
+        indFinancialLeverageRatio = Number(industryMetrics.rows[0].ind_financial_leverage_ratio);
+        indReturnOnEquity = Number(industryMetrics.rows[0].ind_return_on_equity);
+        indTaxBurden = Number(industryMetrics.rows[0].ind_tax_burden);
+        indInterestBurden = Number(industryMetrics.rows[0].ind_interest_burden);
+        console.log(profitMargin, assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, indProfitMargin, indAssetTurnoverRatio, indFinancialLeverageRatio, indReturnOnEquity, indTaxBurden, indInterestBurden, '***********');
+        sqlTextInsertMonthlyMetrics = `
+                INSERT INTO monthly_metrics
+                    (monthly_id, metrics_id, metric_value, variance_value)
+                    VALUES 
+                    ($1, 1, $2, ($8::DECIMAL - $2::DECIMAL)),      
+                    ($1, 2, $3, ($9::DECIMAL - $3::DECIMAL)),      
+                    ($1, 3, $4, ($10::DECIMAL - $4::DECIMAL)),     
+                    ($1, 4, $5, ($11::DECIMAL - $5::DECIMAL)),     
+                    ($1, 5, $6, ($12::DECIMAL - $6::DECIMAL)),    
+                    ($1, 6, $7, ($13::DECIMAL - $7::DECIMAL));    
+        `;
+        await connection.query(sqlTextInsertMonthlyMetrics,
+                                        [ monthlyInputId,
+                                          profitMargin,
+                                          assetTurnoverRatio,
+                                          financialLeverageRatio,
+                                          returnOnEquity,
+                                          taxBurden,
+                                          interestBurden,
+                                          indProfitMargin,
+                                          indAssetTurnoverRatio,
+                                          indFinancialLeverageRatio,
+                                          indReturnOnEquity,
+                                          indTaxBurden,
+                                          indInterestBurden ]);   
+        console.log('POST of a single month\'s metrics in /api/financial_input/ successful');  
+        connection.query('COMMIT;');
+        connection.release();
+        // 5. Return created (201) status if successful
+        res.sendStatus(201);
    } catch (error) {
        console.log('Error in POST of single month\'s inputs in /api/financial_inputs/', error);
+       connection.query('ROLLBACK;');
        connection.release();
-       sendStatus(500);
+       res.sendStatus(500);
    }
 })
 
 /**
  * PUT / UPDATE a single month's inputs for a user
+ *  *          (This is a multi-step process)
+ * 
+ *        For the currently selected year/month:
+ *         1. Update financial inputs into the monthly_inputs table
+ *         2. Re-compute the monthly metrics   
+ *         3. Retreive the current industry standard metrics
+ *         4. Update the monthly_metrics table:
+ *             - The newly computed monthly metrics (from 3)
+ *             - The computed variances:
+ *                  (industry metric - computed monthly metric) or
+ *                  (number 3 metric - number 2 metric)
+ *         5. Return 200 status if successful
  */
-router.post('/',  async (req, res) => {
-    try {
-        let connection;
-        connection = await pool.connect();
-        month = req.body.month;
-        year = req.body.year;
-        netIncome = req.body.netIncome;
-        sales = req.body.sales;
-        assets = req.body.assets;
-        equity = req.body.equity;
-        taxRate = req.body.taxRate;
-        earningBeforeTaxes = req.body.earningBeforeTaxes;
-        userId = user.id;
-        sqlText = `
-            UPDATE monthly_inputs
-                SET year = $2,
-                    month = $3,
-                    net_income = $4,
-                    sales = $5,
-                    assets = $6,
-                    equity = $7,
-                    tax_rate = $8,
-                    earning_before_taxes = $9
-                WHERE user_id = $1;
-            `;
-            const dbResponse = 
-                 await connection.query(sqlText, [userId,
-                                                  month,
-                                                  year,
-                                                  netIncome,
-                                                  sales,
-                                                  assets,
-                                                  equity,
-                                                  taxRate,
-                                                  earningBeforeTaxes ]);
-            console.log('PUT of a single month\'s data in /api/financial_input/ successful:', dbResponse.rows )
-            connection.release();
-            sendStatus(201);
-    } catch (error) {
-        console.log('Error in PUT of single month\'s inputs in /api/financial_inputs/', error);
+router.put('/',  async (req, res) => {
+
+    let connection;
+    connection = await pool.connect();
+   try {
+       month = req.body.month;
+       year = req.body.year;
+       netIncome = req.body.netIncome;
+       sales = req.body.sales;
+       assets = req.body.assets;
+       equity = req.body.equity;
+       taxRate = req.body.taxRate;
+       earningsBeforeTax = req.body.earningsBeforeTax;
+    //    userId = user.id;
+        userId = 1;
+       // If inserts fail for either monthly_inputs or monthly_metrics,
+       //   rollback all SQL changes
+       connection.query('BEGIN');
+
+       // 1. Update financial inputs into the monthly_inputs table
+       sqlTextUpdateMonthlyInputs = `
+       UPDATE monthly_inputs
+           SET year = $2,
+               month = $3,
+               net_income = $4,
+               sales = $5,
+               assets = $6,
+               equity = $7,
+               tax_rate = $8,
+               earnings_before_tax = $9
+           WHERE user_id = $1
+           RETURNING id;
+       `;
+       const returnedId = 
+            await connection.query(sqlTextUpdateMonthlyInputs, [userId,
+                                             year,
+                                             month,
+                                             netIncome,
+                                             sales,
+                                             assets,
+                                             equity,
+                                             taxRate,
+                                             earningsBeforeTax ]);
+        console.log('PUT of a single month\'s inputs in /api/financial_input/ successful, new id is:',returnedId.rows[0].id );
+        const monthlyInputId = returnedId.rows[0].id;                       
+        // 2. Compute the monthly financial metrics   
+        const profitMargin = netIncome / sales;
+        const assetTurnoverRatio = sales / assets;  //average assets????
+        const financialLeverageRatio = assets / equity;
+        const returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
+        const taxBurden = netIncome / earningsBeforeTax;
+        const interestBurden = earningsBeforeTax / sales;
+
+        // 3. Retreive the industry standard metrics for the current user
+        sqlTextGetIndustry = `
+        SELECT profit_margin AS ind_profit_margin,
+            asset_turnover_ratio AS ind_asset_turnover_ratio,
+            financial_leverage_ratio AS ind_financial_leverage_ratio,
+            return_on_equity AS ind_return_on_equity,
+            tax_burden AS ind_tax_burden,
+            interest_burden AS ind_interest_burden
+        FROM industry
+        JOIN "user"
+            ON industry.id = "user".industry_id
+        WHERE "user".id = $1;
+        `;
+        let industryMetrics = await connection.query(sqlTextGetIndustry, [userId]);
+        console.log('Industry metrics retreived successfully in /api/monthly_metrics (POST):', industryMetrics.rows);
+        // save industry metrics 
+        //   -use them to compute variances in below query
+        indProfitMargin = Number(industryMetrics.rows[0].ind_profit_margin);
+        indAssetTurnoverRatio = Number(industryMetrics.rows[0].ind_asset_turnover_ratio);
+        indFinancialLeverageRatio = Number(industryMetrics.rows[0].ind_financial_leverage_ratio);
+        indReturnOnEquity = Number(industryMetrics.rows[0].ind_return_on_equity);
+        indTaxBurden = Number(industryMetrics.rows[0].ind_tax_burden);
+        indInterestBurden = Number(industryMetrics.rows[0].ind_interest_burden);
+        console.log(profitMargin, assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, indProfitMargin, indAssetTurnoverRatio, indFinancialLeverageRatio, indReturnOnEquity, indTaxBurden, indInterestBurden, '***********');
+        // 4. Update the monthly_metrics table:
+        sqlTextUpdateMonthlyMetrics = `
+            UPDATE monthly_metrics
+                SET metric_value = CASE metrics_id
+                                      WHEN 1 THEN $2::DECIMAL
+                                      WHEN 2 THEN $3::DECIMAL
+                                      WHEN 3 THEN $4::DECIMAL
+                                      WHEN 4 THEN $5::DECIMAL
+                                      WHEN 5 THEN $6::DECIMAL
+                                      WHEN 6 THEN $7::DECIMAL
+                                   END,
+                    variance_value = CASE metrics_id
+                                        WHEN 1 THEN ($8::DECIMAL - $2::DECIMAL)
+                                        WHEN 2 THEN ($9::DECIMAL - $3::DECIMAL)
+                                        WHEN 3 THEN ($10::DECIMAL - $4::DECIMAL)
+                                        WHEN 4 THEN ($11::DECIMAL - $5::DECIMAL)
+                                        WHEN 5 THEN ($12::DECIMAL - $6::DECIMAL)
+                                        WHEN 6 THEN ($13::DECIMAL - $7::DECIMAL)
+                                     END
+                WHERE monthly_id = $1
+                  AND metrics_id IN (1, 2, 3, 4, 5, 6);
+            `; 
+        await connection.query(sqlTextUpdateMonthlyMetrics,
+                                        [ monthlyInputId,
+                                          profitMargin,
+                                          assetTurnoverRatio,
+                                          financialLeverageRatio,
+                                          returnOnEquity,
+                                          taxBurden,
+                                          interestBurden,
+                                          indProfitMargin,
+                                          indAssetTurnoverRatio,
+                                          indFinancialLeverageRatio,
+                                          indReturnOnEquity,
+                                          indTaxBurden,
+                                          indInterestBurden ]);    
+        console.log('PUT of a single month\'s metrics in /api/financial_input/ successful:',returnedId.rows[0].id );
+        connection.query('COMMIT;');
         connection.release();
-        sendStatus(500);
-    }
- })
+        // 5. Return created (200) status if successful
+        res.sendStatus(200);
+   } catch (error) {
+       console.log('Error in POST of single month\'s inputs in /api/financial_inputs/', error);
+       connection.query('ROLLBACK;');
+       connection.release();
+       res.sendStatus(500);
+   }
+})
+
+
+//     let connection;
+//     connection = await pool.connect();
+//     try {
+
+//         month = req.body.month;
+//         year = req.body.year;
+//         netIncome = req.body.netIncome;
+//         sales = req.body.sales;
+//         assets = req.body.assets;
+//         equity = req.body.equity;
+//         taxRate = req.body.taxRate;
+//         earningsBeforeTax = req.body.earningsBeforeTax;
+//         // userId = user.id;
+//         userId = 1;
+//         sqlText = `
+//             UPDATE monthly_inputs
+//                 SET year = $2,
+//                     month = $3,
+//                     net_income = $4,
+//                     sales = $5,
+//                     assets = $6,
+//                     equity = $7,
+//                     tax_rate = $8,
+//                     earnings_before_tax = $9
+//                 WHERE user_id = $1;
+//             `;
+//             const dbResponse = 
+//                  await connection.query(sqlText, [userId,
+//                                                   year,
+//                                                   month,
+//                                                   netIncome,
+//                                                   sales,
+//                                                   assets,
+//                                                   equity,
+//                                                   taxRate,
+//                                                   earningsBeforeTax ]);
+//             console.log('PUT of a single month\'s data in /api/financial_input/ successful:', dbResponse.rows )
+//             connection.release();
+//             res.sendStatus(201);
+//     } catch (error) {
+//         console.log('Error in PUT of single month\'s inputs in /api/financial_inputs/', error);
+//         connection.release();
+//         res.sendStatus(500);
+//     }
+//  })
+
+
+ /*------------------------ END ROUTES ---------------------------------------*/
 
 
 module.exports = router;

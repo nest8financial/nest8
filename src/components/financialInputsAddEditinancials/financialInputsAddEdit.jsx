@@ -10,7 +10,7 @@ import { TextField,
          Button } from '@mui/material';
 import { getMonthName } from '../../utilities/utilities';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom/cjs/react-router-dom.min';
+import { useParams, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { useSelector, useDispatch } from 'react-redux';
 
 /**
@@ -25,8 +25,10 @@ import { useSelector, useDispatch } from 'react-redux';
 function financialInputsAddEdit({month, year}) {
 
     const dispatch = useDispatch();
+    const history = useHistory();
     // const { month, year } = useParams();
-    const singleMonthInputs = useSelector(store => store.financialInputs.singleMonthInputs);
+    const singleMonthInputs = 
+        useSelector(store => store.financialInputs.singleMonthInputs);
     const [amountInputs, setAmountInputs] = useState({
         netIncome: '',
         sales: '',
@@ -34,7 +36,6 @@ function financialInputsAddEdit({month, year}) {
         equity: '',
         earningsBeforeTax: '' });
     const [taxRateInput, setTaxRateInput] = useState('');
-
     const [amountErrors, setAmountErrors] = useState({
         netIncome: false,
         sales: false,
@@ -42,18 +43,60 @@ function financialInputsAddEdit({month, year}) {
         equity: false,
         earningsBeforeTax: false });
     const [taxRateError, setTaxRateError] = useState(false);
-    const [inputMode, setInputMode] = useState(false);
+    const [newInputMonth, setNewInputMonth] = useState(false);
+    const [readOnlyMode, setReadOnlyMode] = useState(true);
+    let inputProperites;
 
+    /**
+     * Gets the single month's inputs state from the store 
+     *      upon component load
+     */
     useEffect(() => {
         dispatch({
             type: 'GET_SINGLE_MONTH_INPUTS',
             payload: { month, year } })
     }, []);
 
+    /**
+     * Handles initial load of year/month financial data
+     *      - determines if new/existing month
+     *      - sets up screen for new/exising month
+     *      (This runs when singleMonthInputs state changes)
+     */
     useEffect(() => {
-        // if no inputs for that month, assume input mode
-        if (singleMonthInputs?.length === 0) {
-            setInputMode(true);
+        // if this is a new year/month for financial inputs:
+        //      - newInputMode is true
+        //      - readOnlyMode is false
+        console.log(singleMonthInputs);
+        if (Object.keys(singleMonthInputs).length === 0) {
+            console.log('objkeys', Object.keys(singleMonthInputs))
+            setNewInputMonth(true);
+            setReadOnlyMode(false);
+            const inputProps = {
+                step: 300,
+              };
+            inputProperites = { startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                step: "0.01",
+                                readOnly: false };
+        // else if this is an existing year/month for financial inputs:
+        //      - newInputMode is false
+        //      - readOnlyMode is true
+        //      - load existing year/month data into fields
+        } else {
+            setNewInputMonth(false);
+            setReadOnlyMode(true);
+            inputProperites = { startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                step: "0.01",
+                                readOnly: true };
+            console.log('netincome', singleMonthInputs.net_income);
+            setAmountInputs({
+                netIncome: singleMonthInputs.net_income,
+                sales: singleMonthInputs.sales,
+                assets: singleMonthInputs.assets,
+                equity: singleMonthInputs.equity,
+                earningsBeforeTax: singleMonthInputs.earnings_before_tax
+            })
+            setTaxRateInput(singleMonthInputs.tax_rate);
         }
     }, [singleMonthInputs]);
 
@@ -103,117 +146,175 @@ function financialInputsAddEdit({month, year}) {
     /**
      * Submit the Financial Data for the current month to the database
      */
-    const handleSubmitFinancialData = (dispatchEvent) => {
+    const handleEditSaveButton= (event) => {
         event.preventDefault();
-        dispatch({
-            type: 'ADD_FINANCIAL_DATA',
-            payload: {
-                month: month,
-                year: year,
-                netIncome: amountInputs.netIncome,
-                sales: amountInputs.netIncome,
-                assets: amountInputs.assets,
-                equity: amountInputs.equity,
-                earningsBeforeTax: amountInputs.earningsBeforeTax
+        // if screen is in readOnly mode, button pressed is edit
+        //      - Edit button pressed: change to edit mode to allow changes
+        if (readOnlyMode) {
+            setReadOnlyMode(false);
+            inputProperites = { startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            step: "0.01",
+            readOnly: false };
+        // else, if screen is not in readOnly mode, button pressed is save
+        //      - Save button pressed: save or update financial inputs
+        } else {
+            // if new input month, add financial inputs for year/month
+            if (newInputMonth) {
+                dispatch({
+                    type: 'ADD_SINGLE_MONTH_INPUTS',
+                    payload: {
+                        month: month,
+                        year: year,
+                        netIncome: amountInputs.netIncome,
+                        sales: amountInputs.sales,
+                        assets: amountInputs.assets,
+                        equity: amountInputs.equity,
+                        taxRate: taxRateInput,  
+                        earningsBeforeTax: amountInputs.earningsBeforeTax
+                    }
+                })
+            // else existing input month, update financial inputs for year/month
+            } else {
+                dispatch({
+                    type: 'UPDATE_SINGLE_MONTH_INPUTS',
+                    payload: {
+                        month: month,
+                        year: year,
+                        netIncome: amountInputs.netIncome,
+                        sales: amountInputs.sales,
+                        assets: amountInputs.assets,
+                        equity: amountInputs.equity,
+                        taxRate: taxRateInput,
+                        earningsBeforeTax: amountInputs.earningsBeforeTax
+                    }
+                })
             }
-        })
+            // clear inputs after add or update
+            setAmountInputs({        
+                netIncome: '',
+                sales: '',
+                assets: '',
+                equity: '',
+                earningsBeforeTax: '' });
+            setTaxRateInput('');
+            // kick back to input header screen
+            // history.push('/input_header');
+        }
     }
 
-
+    // const handleEditClick = (event) => {
+    //     console.log('edit mode')
+    //     event.preventDefault();
+    //     setInputMode(true);
+    // }
+    // If inputMode === false, 
+    //      start fields read only,
+    //      display edit button, 
+    //      don't display save button
+    //      fields are loaded with initial data (above)
+    //                InputProps={{
+     //   readOnly: true,
+    //     }}
     return (
         <Container>
-            <Box component="form"
-                 onSubmit={handleSubmitFinancialData}>
+            <Box component="form">
                 <FormLabel component="legend">Input Your Financial Data for {getMonthName(month)} {year}:</FormLabel>
                 <TextField
                     required
-                    label="Net Income (required)"
+                    label={readOnlyMode ? "Net Income" : "Net Income (required)"}
                     name="netIncome"
                     type="number"
                     inputProps={{ step: "0.01" }}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                   readOnly: readOnlyMode}}
                     value={amountInputs.netIncome}
                     onChange={handleAmountChange}
-                    variant="outlined"
+                    variant={readOnlyMode ? 'standard' : 'outlined'}
                     error={amountErrors.netIncome}
                     helperText={amountErrors.netIncome ? "Please enter a valid decimal value with up to two decimal places" : 
-                        "Your Net Income is blah blah blah..."}
-                    InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}>
+                        "Your Net Income is blah blah blah..."}>
                 </TextField>
                 <TextField
                     required              
-                    label="Sales (required)"
+                    label={readOnlyMode ? "Sales" : "Sales (required)"}
                     name="sales"
                     type="number"
                     inputProps={{ step: "0.01" }}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                  readOnly: readOnlyMode }}
                     value={amountInputs.sales}
                     onChange={handleAmountChange}
-                    variant="outlined"
+                    variant={readOnlyMode ? 'standard' : 'outlined'}
                     error={amountErrors.sales}
                     helperText={amountErrors.sales ? "Please enter a valid decimal value with up to two decimal places" : 
-                        "Your Sales is blah blah blah..."}
-                    InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}>
+                        "Your Sales is blah blah blah..."}>
                 </TextField>
                 <TextField
                     required 
-                    label="Assets (required)"
+                    label={readOnlyMode ? "Assets" : "Assets (required)"}
                     name="assets"
                     type="number"
                     inputProps={{ step: "0.01" }}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                  readOnly: readOnlyMode}}
                     value={amountInputs.assets}
                     onChange={handleAmountChange}
-                    variant="outlined"
+                    variant={readOnlyMode ? 'standard' : 'outlined'}
                     error={amountErrors.assets}
                     helperText={amountErrors.assets ? "Please enter a valid decimal value with up to two decimal places" : 
-                        "Your Assets are blah blah blah..."}
-                    InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}>
+                        "Your Assets are blah blah blah..."}>
                 </TextField>
                 <TextField
                     required 
-                    label="Equity (required)"
+                    label={readOnlyMode ? "Equity" : "Equity (required)"}
                     name="equity"
                     type="number"
                     inputProps={{ step: "0.01" }}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                  readOnly: readOnlyMode}}
                     value={amountInputs.equity}
                     onChange={handleAmountChange}
-                    variant="outlined"
+                    variant={readOnlyMode ? 'standard' : 'outlined'}
                     error={amountErrors.equity}
                     helperText={amountErrors.equity ? "Please enter a valid decimal value with up to two decimal places" : 
-                        "Your Equity is blah blah blah..."}
-                    InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}>
+                        "Your Equity is blah blah blah..."}>
                 </TextField>
                 <TextField
                     required 
-                    label="Tax Rate (required)"
+                    label={readOnlyMode ? "Tax Rate" : "Tax Rate (required)"}
                     name="taxRate"
                     type="number"
                     inputProps={{ step: "0.01" }}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                  readOnly: readOnlyMode}}
                     value={taxRateInput}
                     onChange={handleTaxRateChange}
-                    variant="outlined"
+                    variant={readOnlyMode ? 'standard' : 'outlined'}
                     error={taxRateError}
                     helperText={taxRateError ? "Please enter a percentage with up to two decimal places" : 
-                        "Your Tax Rate is the blah blah blah..."}
-                    InputProps={{endAdornment: <InputAdornment position="end">%</InputAdornment>}}>
+                        "Your Tax Rate is the blah blah blah..."}>
                 </TextField>
                 <TextField
                     required 
-                    label="Earnings Before Tax (EBT) (required)"
+                    label={readOnlyMode ? "Earnings Before Tax (EBT)" : "Earnings Before Tax (EBT) (required)"}
                     name="earningsBeforeTax"
                     type="number"
                     inputProps={{ step: "0.01" }}
+                    InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                                  readOnly: readOnlyMode}}
                     value={amountInputs.earningsBeforeTax}
                     onChange={handleAmountChange}
-                    variant="outlined"
+                    variant={readOnlyMode ? 'standard' : 'outlined'}
                     error={amountErrors.earningsBeforeTax}
                     helperText={amountErrors.earningsBeforeTax ? "Please enter a valid decimal value with up to two decimal places" : 
-                        "Your Earnings Before Tax is blah blah blah..."}
-                    InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}>
+                        "Your Earnings Before Tax is blah blah blah..."}>
                 </TextField>
                 <FormHelperText id="my-helper-text">Input your basic financial data for this month</FormHelperText>
-                <Button type="submit"
+                <Button type="button"
                         variant="contained"
                         color="primary"
-                        sx={{ mt: 3, mb: 2 }}>Add</Button>
+                        sx={{ mt: 3, mb: 2 }}
+                        onClick={(e) => handleEditSaveButton(e)}>{readOnlyMode ? 'Edit' : 'Save'}</Button> 
             </Box>
         </Container>
     )

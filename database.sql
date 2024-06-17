@@ -40,7 +40,7 @@ CREATE TABLE "monthly_inputs" (
     "assets" DECIMAL, 
     "equity" DECIMAL, 
     "tax_rate"DECIMAL,
-    "earning_before_taxes" DECIMAL
+    "earnings_before_tax" DECIMAL
 );
 
 

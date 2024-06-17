@@ -9,7 +9,7 @@ function* getSingleMonthInputs(action) {
   console.log('hellllloooooo')
   try {
     console.log('in get here is action.payload', action.payload)
-    response = yield axios({
+    const response = yield axios({
         method: 'GET',
         url: `/api/financial_inputs/${action.payload.month}&${action.payload.year}`,
         headers: { 'Content-Type': 'application/json' },
@@ -28,14 +28,14 @@ function* getSingleMonthInputs(action) {
  */
 function* getMonthlyInputs(action) {
     try {
-      response = yield axios({
+      const response = yield axios({
           method: 'GET',
           url: `/api/financial_inputs`,
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true })
       yield put({
           type: 'SET_MONTHLY_INPUTS',
-          payload: response.data })
+          payload: response.data[0] })
     } catch (error) {
       console.log('Error while getting monthly inputs:', error);
     }
@@ -45,8 +45,9 @@ function* getMonthlyInputs(action) {
  * Add a single month's inputs for a user
  */
 function* addSingleMonthInputs(action) {
+  console.log('actionpayload',action.payload)
   try {
-    response = yield axios({
+    const response = yield axios({
         method: 'POST',
         url: `/api/financial_inputs`,
         data: action.payload,
@@ -63,7 +64,7 @@ function* addSingleMonthInputs(action) {
  */
 function*updateSingleMonthInputs(action) {
   try {
-    response = yield axios({
+    const response = yield axios({
         method: 'PUT',
         url: `/api/financial_inputs`,
         data: action.payload,

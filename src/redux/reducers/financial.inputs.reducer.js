@@ -10,8 +10,11 @@ import { combineReducers } from 'redux';
  * Gets a single month's input data 
  */
 const singleMonthInputs = (state = {}, action) => {
-    if (action.type === 'SET_SINGLE_MONTHS_INPUTS') {
-        return action.payload;
+    if (action.type === 'SET_SINGLE_MONTH_INPUTS') {
+        if (action.payload.length === 0) {
+          return state;
+        }
+        return action.payload[0];
     } 
     return state;
   }
