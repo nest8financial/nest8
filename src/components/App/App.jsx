@@ -19,7 +19,9 @@ import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
-
+import { ThemeProvider } from '@mui/material/styles';
+import {Theme} from '../Nav/NavTheme'
+import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
 
 function App() {
@@ -32,9 +34,11 @@ function App() {
   }, [dispatch]);
 
   return (
+    <ThemeProvider theme={Theme}>
     <Router>
       <div>
         <Nav />
+        <MenuBar/>
         <Switch>
           {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
           <Redirect exact from="/" to="/home" />
@@ -118,6 +122,7 @@ function App() {
         <Footer />
       </div>
     </Router>
+    </ThemeProvider>
   );
 }
 
