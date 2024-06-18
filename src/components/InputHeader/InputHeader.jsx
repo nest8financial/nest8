@@ -3,8 +3,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { useState } from 'react';
-import { Typography } from '@mui/material';
+import { Typography, Container, Button, Box } from '@mui/material';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+
 
 function InputHeader(){
 
@@ -13,14 +14,14 @@ const [date, setDate] = useState(dayjs());
 
 const addInput = (date) => {
     history.push({
-        pathname: 'add_input',
+        pathname: '/add_input',
         state: {month: date.format('MM'), year: date.format('YYYY')}
     })
 }
 
 const editInput = (date) => {
     history.push({
-        pathname: 'edit_input',
+        pathname: '/edit_input',
         state: {month: date.format('MM'), year: date.format('YYYY')}
 
     })
@@ -35,11 +36,11 @@ return (
           views={['month', 'year']}
           openTo='month'
           />
-        <Typography>{date.format('MMM YYYY')}</Typography>
-        <Container>
-            <Button onClick={addInput(date)}>Add Input</Button>
-            <Button onClick={editInput(date)}>Edit Input</Button>
-        </Container>
+        <Typography textAlign='center' variant='h2' fontSize={32}>{date.format('MMM YYYY')}</Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <Button variant="contained" sx={{ mb: 2, mr: 2}} onClick={() => addInput(date)}>Add Input</Button>
+            <Button variant="contained" sx={{ mb: 2, mr: 2}} onClick={() => editInput(date)}>Edit Input</Button>
+        </Box>
       </Container>
     </LocalizationProvider>
   );

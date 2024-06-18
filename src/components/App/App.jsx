@@ -23,6 +23,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import {Theme} from '../Nav/NavTheme'
 import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
+import InputHeader from '../InputHeader/InputHeader';
 
 function App() {
   const dispatch = useDispatch();
@@ -61,7 +62,7 @@ function App() {
             exact
             path="/user"
           >
-            <UserPage />
+            <InputHeader />
           </ProtectedRoute>
 
           <ProtectedRoute
