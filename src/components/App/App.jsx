@@ -21,10 +21,10 @@ import { ThemeProvider } from '@mui/material/styles';
 import {Theme} from '../Nav/NavTheme'
 import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
+import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
 import InputHeader from '../InputHeader/InputHeader';
 import FinancialInputsAddEdit from '../FinancialInputsAddEdit/financialInputsAddEdit'
 import MyData from '../MyData/MyData';
-
 
 // import ProductPage from '../ProductPage'; 
 // import FeaturesPage from '../FeaturesPage'; 
@@ -33,6 +33,7 @@ import MyData from '../MyData/MyData';
 // import ContactUsPage from '../ContactUsPage'; 
 // import OurStoryPage from '../OurStoryPage'; 
 // import MissionPage from '../MissionPage';
+
 
 function App() {
   const dispatch = useDispatch();
@@ -118,7 +119,7 @@ function App() {
           <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
             exact
-            path="/inputheader"
+            path="/input_header"
           >
             <InputHeader />
           </ProtectedRoute>
@@ -126,17 +127,25 @@ function App() {
           <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
             exact
-            path="/FinancialInputsAddEdit"
+            path="/inputs_add_edit/:month/:year"
           >
             <FinancialInputsAddEdit />
           </ProtectedRoute>
 
+          {/* Recommendation Detail Component- shows all recommendations for a 
+            year/month and allows user to add notes and checkoff action items
+            by recommendation. */}
+          <ProtectedRoute exact path="/rec_detail/:month/:year">
+            <RecommendationDetail />
+          </ProtectedRoute>
+
           <ProtectedRoute
-            // logged in shows InputHeader page, else shows LoginPage
+            // logged in shows MyData page, else shows LoginPage
             exact
             path="/MyData"
           >
             <MyData/>
+
           </ProtectedRoute>
 
           {/* If none of the other routes matched, we will show a 404. */}

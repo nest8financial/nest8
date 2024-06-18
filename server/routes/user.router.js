@@ -24,7 +24,7 @@ router.post('/register', (req, res, next) => {
    const industry = req.body.industry;
    const email = req.body.email;
   const password = encryptLib.encryptPassword(req.body.password);
-
+  console.log('In user router.  Posting user object req.body:', req.body);
   const queryText = `INSERT INTO "user" (first_name, last_name, company, industry_id, username, password)
     VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`;
   pool
@@ -36,10 +36,13 @@ router.post('/register', (req, res, next) => {
       email,
       password
     ])
-    .then(() => res.sendStatus(201))
+    .then((dbResponse) => {
+      console.log('User posted successfully in /api/user', dbResponse)
+      res.sendStatus(201)
+    })
     .catch((err) => {
       console.log("User registration failed: ", err);
-      res.sendStatus(500);
+      res.sendStatus(500)
     });
 });
 

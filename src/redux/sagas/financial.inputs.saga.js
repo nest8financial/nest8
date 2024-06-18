@@ -11,7 +11,9 @@ function* getSingleMonthInputs(action) {
     console.log('in get here is action.payload', action.payload)
     const response = yield axios({
         method: 'GET',
-        url: `/api/financial_inputs/${action.payload.month}&${action.payload.year}`})
+        url: `/api/financial_inputs/${action.payload.month}&${action.payload.year}`,
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true })
     console.log('did get, here is reposnse: ', response.data);
     yield put({
         type: 'SET_SINGLE_MONTH_INPUTS',
@@ -28,7 +30,7 @@ function* getMonthlyInputs(action) {
     try {
       const response = yield axios({
           method: 'GET',
-          url: `/api/financial_inputs` })
+          url: `/api/financial_inputs`})
       yield put({
           type: 'SET_MONTHLY_INPUTS',
           payload: response.data[0] })
