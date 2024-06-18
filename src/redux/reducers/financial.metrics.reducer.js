@@ -10,12 +10,12 @@ import { combineReducers } from 'redux';
  * Gets a single month's computed metrics and variances 
  *  along with metric texts and corresponding recommendation texts
  */
-const singleMonthMetrics = (state = {}, action) => {
+const singleMonthMetrics = (state = [], action) => {
     if (action.type === 'SET_SINGLE_MONTH_METRICS') {
         if (action.payload.length === 0) {
           return state;
         }
-        return action.payload[0];
+        return action.payload;
     } 
     return state;
   }

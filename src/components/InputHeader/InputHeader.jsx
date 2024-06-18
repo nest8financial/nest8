@@ -12,7 +12,7 @@ const history = useHistory();
 const [date, setDate] = useState(dayjs()); 
 
 const addInput = (date) => {
-    history.push(`/FinancialInputsAddEdit/${date.format('MM')}&${date.format('YYYY')}`)
+    history.push(`/inputs_add_edit/${date.format('MM')}/${date.format('YYYY')}`)
 }
 
 return (

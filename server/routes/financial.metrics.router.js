@@ -16,16 +16,18 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
     try {
-        userId = user.id;
+        const userId = req.user.id;
         const sqlTextGetMetrics = `
             SELECT monthly_metrics.*, 
-                    metrics.name AS metric_name,
+                    metrics.metric_name,
                     metrics.positive_text AS recommendation_positive_text,
                     metrics.negative_text AS recommendation_negative_text
                 FROM monthly_metrics
                 JOIN metrics
-                    ON metrics.id = monthly_metrics.metric_id
-                WHERE user_id = $1
+                    ON metrics.id = monthly_metrics.metrics_id
+                JOIN monthly_inputs
+                    ON monthly_metrics.monthly_id = monthly_inputs.id
+                WHERE monthly_inputs.user_id = $1
                 ORDER BY year, month;
             `;
             const dbResponse = await connection.query(sqlTextGetMetrics, [userId]);
@@ -46,18 +48,21 @@ router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
     try {
+        console.log('USER: ', req.user);
         const month = Number(req.params.month);
         const year = Number(req.params.year);
-        userId = user.id;
+        const userId = req.user.id;
         console.log('year, month', year, month);
         const sqlTextGetSingleMonth = `
-            SELECT monthly_metrics.*, 
-                    metrics.name AS metric_name,
-                    metrics.positive_text AS recommendation_positive_text,
-                    metrics.negative_text AS recommendation_negative_text
-                FROM monthly_metrics
+        SELECT monthly_metrics.*, 
+               metrics.metric_name,
+               metrics.positive_text AS recommendation_positive_text,
+               metrics.negative_text AS recommendation_negative_text
+            FROM monthly_metrics
                 JOIN metrics
-                 ON metrics.id = monthly_metrics.metric_id 
+                    ON metrics.id = monthly_metrics.metrics_id 
+                JOIN monthly_inputs
+                    ON monthly_metrics.monthly_id = monthly_inputs.id
                 WHERE user_id = $1
                     AND month = $2
                     AND year = $3
@@ -84,7 +89,7 @@ router.patch('/toggle_completed/:metric_id', rejectUnauthenticated, async (req, 
         const month = Number(req.body.month);
         const year = Number(req.body.year);
         const metricId = req.params.metric_id;
-        userId = user.id;
+        const userId = req.user.id;
         console.log('year, month', year, month);
         const sqlTextGetSingleMonth = `
             UPDATE monthly_metrics 
@@ -126,7 +131,7 @@ router.patch('/update_notes/:metric_id', rejectUnauthenticated, async (req, res)
         const year = Number(req.body.year);
         const metricId = req.params.metric_id;
         const notes = req.body.notes;
-        userId = user.id;
+        const userId = req.user.id;
         console.log('year, month', year, month);
         const sqlTextGetSingleMonth = `
             UPDATE monthly_metrics 

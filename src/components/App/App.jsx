@@ -48,7 +48,6 @@ function App() {
     <Router>
       <div>
         <Nav />
-        <RecommendationDetail month={2024} year={6}/>
         <MenuBar/>
         <Switch>
           {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
@@ -119,7 +118,7 @@ function App() {
           <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
             exact
-            path="/inputheader"
+            path="/input_header"
           >
             <InputHeader />
           </ProtectedRoute>
@@ -127,12 +126,17 @@ function App() {
           <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
             exact
-            path="/FinancialInputsAddEdit"
+            path="/inputs_add_edit/:month/:year"
           >
             <FinancialInputsAddEdit />
           </ProtectedRoute>
 
-
+          {/* Recommendation Detail Component- shows all recommendations for a 
+            year/month and allows user to add notes and checkoff action items
+            by recommendation. */}
+          <ProtectedRoute exact path="/rec_detail/:month/:year">
+            <RecommendationDetail />
+          </ProtectedRoute>
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
