@@ -23,6 +23,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import {Theme} from '../Nav/NavTheme'
 import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
+import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
 
 function App() {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ function App() {
     <Router>
       <div>
         <Nav />
+        <RecommendationDetail month={2024} year={6}/>
         <MenuBar/>
         <Switch>
           {/* Visiting localhost:5173 will redirect to localhost:5173/home */}

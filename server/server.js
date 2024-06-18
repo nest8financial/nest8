@@ -10,6 +10,7 @@ const passport = require('./strategies/user.strategy');
 // Route Includes
 const userRouter = require('./routes/user.router.js');
 const financialInputsRouter = require('./routes/financial.inputs.router.js');
+const financialMetricsRouter = require('./routes/financial.metrics.router.js');
 
 // Express Middleware
 app.use(express.json());
@@ -26,6 +27,7 @@ app.use(passport.session());
 // Routes
 app.use('/api/user', userRouter);
 app.use('/api/financial_inputs', financialInputsRouter);
+app.use('/api/financial_metrics', financialMetricsRouter);
 
 // Listen Server & Port
 app.listen(PORT, () => {
