@@ -10,10 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
-
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-
-import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
@@ -24,6 +21,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import {Theme} from '../Nav/NavTheme'
 import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
+import InputHeader from '../InputHeader/InputHeader';
+import FinancialInputsAddEdit from '../FinancialInputsAddEdit/financialInputsAddEdit'
 
 
 // import ProductPage from '../ProductPage'; 
@@ -52,15 +51,6 @@ function App() {
         <Switch>
           {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
           <Redirect exact from="/" to="/home" />
-
-          {/* Visiting localhost:5173/about will show the about page. */}
-          <Route
-            // shows AboutPage at all times (logged in or not)
-            exact
-            path="/about"
-          >
-            <HomePage />
-          </Route>
 
           {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:5173/user will show the UserPage if the user is logged in.
@@ -124,10 +114,29 @@ function App() {
             }
           </Route>
 
+          <ProtectedRoute
+            // logged in shows InputHeader page, else shows LoginPage
+            exact
+            path="/inputheader"
+          >
+            <InputHeader />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            // logged in shows InputHeader page, else shows LoginPage
+            exact
+            path="/FinancialInputsAddEdit"
+          >
+            <FinancialInputsAddEdit />
+          </ProtectedRoute>
+
+
+
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
             <h1>404</h1>
           </Route>
+
         </Switch>
         <Footer />
       </div>
