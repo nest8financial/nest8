@@ -1,6 +1,6 @@
 import React from 'react';
 
-function FAQPage() {
+function Pricing() {
   return (
     <div className="container">
       <div>
@@ -10,4 +10,4 @@ function FAQPage() {
   );
 }
 
-export default FAQPage;
+export default Pricing;

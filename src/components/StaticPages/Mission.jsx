@@ -1,6 +1,6 @@
 import React from 'react';
 
-function FAQPage() {
+function Mission() {
   return (
     <div className="container">
       <div>
@@ -10,4 +10,4 @@ function FAQPage() {
   );
 }
 
-export default FAQPage;
+export default Mission;
