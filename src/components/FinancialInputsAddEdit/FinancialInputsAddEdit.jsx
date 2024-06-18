@@ -1,7 +1,5 @@
 
 import { TextField,
-         FormControl, 
-         InputLabel, 
          FormHelperText, 
          FormLabel,
          Container,
@@ -26,11 +24,12 @@ import { useSelector, useDispatch } from 'react-redux';
  *          readOnlyMode (true if this is an existing month/year for user,
  *                        false if this in an existing month/year)
  */
-function FinancialInputsAddEdit({month, year}) {
+function FinancialInputsAddEdit() {
 
     const dispatch = useDispatch();
-    const history = useHistory();
-    // const { month, year } = useParams();
+    const history = useHistory();    
+    const { month, year } = useParams();
+    console.log( 'month and year', month, year, 'end')
     const singleMonthInputs = 
         useSelector(store => store.financialInputs.singleMonthInputs);
     const [amountInputs, setAmountInputs] = useState({
