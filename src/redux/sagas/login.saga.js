@@ -11,12 +11,13 @@ function* loginUser(action) {
       headers: { 'Content-Type': 'application/json' },
       withCredentials: true,
     };
-
+    const loginObject = { username: action.payload.email, 
+                          password: action.payload.password };
     // send the action.payload as the body
     // the config includes credentials which
     // allow the server session to recognize the user
-    yield axios.post('/api/user/login', action.payload, config);
-
+    console.log('login object in login sagaa', loginObject)
+    yield axios.post('/api/user/login', loginObject, config);
     // after the user has logged in
     // get the user information from the server
     yield put({ type: 'FETCH_USER' });
@@ -25,7 +26,7 @@ function* loginUser(action) {
     if (error.response.status === 401) {
       // The 401 is the error status sent from passport
       // if user isn't in the database or
-      // if the username and password don't match in the database
+      // if the email and password don't match in the database
       yield put({ type: 'LOGIN_FAILED' });
     } else {
       // Got an error that wasn't a 401
