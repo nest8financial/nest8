@@ -19,10 +19,20 @@ import InfoPage from '../InfoPage/InfoPage';
 import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
+import HomePage from '../HomePage/HomePage';
 import { ThemeProvider } from '@mui/material/styles';
 import {Theme} from '../Nav/NavTheme'
 import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
+
+
+// import ProductPage from '../ProductPage'; 
+// import FeaturesPage from '../FeaturesPage'; 
+// import PricingPage from '../PricingPage'; 
+// import FAQPage from './FAQPage'; 
+// import ContactUsPage from '../ContactUsPage'; 
+// import OurStoryPage from '../OurStoryPage'; 
+// import MissionPage from '../MissionPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -49,7 +59,7 @@ function App() {
             exact
             path="/about"
           >
-            <AboutPage />
+            <HomePage />
           </Route>
 
           {/* For protected routes, the view could show one of several things on the same route.
