@@ -118,7 +118,7 @@ function App() {
           <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
             exact
-            path="/inputheader"
+            path="/input_header"
           >
             <InputHeader />
           </ProtectedRoute>
@@ -126,7 +126,7 @@ function App() {
           <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
             exact
-            path="/FinancialInputsAddEdit"
+            path="/inputs_add_edit/:month/:year"
           >
             <FinancialInputsAddEdit />
           </ProtectedRoute>
