@@ -27,7 +27,8 @@ CREATE TABLE "user" (
     "first_name" VARCHAR NOT NULL,
     "last_name" VARCHAR NOT NULL, 
     "company" VARCHAR NOT NULL, 
-    "industry_id" int REFERENCES "industry" ON DELETE CASCADE 
+    "industry_id" int REFERENCES "industry" ON DELETE CASCADE,
+    "date_joined" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "monthly_inputs" (

@@ -23,6 +23,7 @@ import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
 import InputHeader from '../InputHeader/InputHeader';
 import FinancialInputsAddEdit from '../FinancialInputsAddEdit/financialInputsAddEdit'
+import MyData from '../MyData/MyData';
 
 
 // import ProductPage from '../ProductPage'; 
@@ -130,7 +131,13 @@ function App() {
             <FinancialInputsAddEdit />
           </ProtectedRoute>
 
-
+          <ProtectedRoute
+            // logged in shows InputHeader page, else shows LoginPage
+            exact
+            path="/MyData"
+          >
+            <MyData/>
+          </ProtectedRoute>
 
           {/* If none of the other routes matched, we will show a 404. */}
           <Route>
