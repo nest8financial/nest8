@@ -23,6 +23,7 @@ import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
 import InputHeader from '../InputHeader/InputHeader';
 import FinancialInputsAddEdit from '../FinancialInputsAddEdit/financialInputsAddEdit'
+import MyReportRecommendation from '../MyReportRecommendation/MyReportRecommendation';
 
 
 // import ProductPage from '../ProductPage'; 
@@ -99,6 +100,14 @@ function App() {
               <RegisterPage />
             }
           </Route>
+
+          <ProtectedRoute
+            exact
+            path="/my_report"
+          >
+              <MyReportRecommendation />
+            
+          </ProtectedRoute>
 
           <Route
             exact
