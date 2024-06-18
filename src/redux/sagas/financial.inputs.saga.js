@@ -61,7 +61,7 @@ function*updateSingleMonthInputs(action) {
     const response = yield axios({
         method: 'PUT',
         url: `/api/financial_inputs`,
-        data: action.payload,
+        data: action.payload})
     yield put({ type: 'GET_MONTHLY_INPUTS' });
   } catch (error) {
     console.log('Error while updating a single month\'s inputs:', error);

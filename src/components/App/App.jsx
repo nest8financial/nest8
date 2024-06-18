@@ -22,6 +22,15 @@ import RegisterPage from '../RegisterPage/RegisterPage';
 import HomePage from '../HomePage/HomePage';
 import './App.css';
 
+
+// import ProductPage from '../ProductPage'; 
+// import FeaturesPage from '../FeaturesPage'; 
+// import PricingPage from '../PricingPage'; 
+// import FAQPage from './FAQPage'; 
+// import ContactUsPage from '../ContactUsPage'; 
+// import OurStoryPage from '../OurStoryPage'; 
+// import MissionPage from '../MissionPage';
+
 function App() {
   const dispatch = useDispatch();
 
