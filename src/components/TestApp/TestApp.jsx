@@ -1,4 +1,4 @@
-import InputUpdateFinancials from "../financialInputsAddEditinancials/financialInputsAddEdit";
+import InputUpdateFinancials from "../FinancialInputsAddEditinancials/FinancialInputsAddEdit";
 import { useHistory } from 'react-router-dom';
 
 function TestApp() {
