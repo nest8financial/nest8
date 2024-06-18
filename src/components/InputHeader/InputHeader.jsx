@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { Typography, Container, Button, Box } from '@mui/material';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 
-
 function InputHeader(){
 
 const history = useHistory(); 
@@ -14,19 +13,10 @@ const [date, setDate] = useState(dayjs());
 
 const addInput = (date) => {
     history.push({
-        pathname: '/add_input',
+        pathname: '/FinancialInputsAddEdit',
         state: {month: date.format('MM'), year: date.format('YYYY')}
     })
 }
-
-const editInput = (date) => {
-    history.push({
-        pathname: '/edit_input',
-        state: {month: date.format('MM'), year: date.format('YYYY')}
-
-    })
-}
-
 
 return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -38,8 +28,7 @@ return (
           />
         <Typography textAlign='center' variant='h2' fontSize={32}>{date.format('MMM YYYY')}</Typography>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-            <Button variant="contained" sx={{ mb: 2, mr: 2}} onClick={() => addInput(date)}>Add Input</Button>
-            <Button variant="contained" sx={{ mb: 2, mr: 2}} onClick={() => editInput(date)}>Edit Input</Button>
+            <Button variant="contained" sx={{ mb: 2, mr: 2}} onClick={() => addInput(date)}>Select Month</Button>
         </Box>
       </Container>
     </LocalizationProvider>
