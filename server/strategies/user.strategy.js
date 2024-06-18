@@ -47,7 +47,7 @@ passport.use(
           // done takes an error (null in this case) and a user
           done(null, user);
         } else {
-          // Not good! Username and password do not match.
+          // Not good! email and password do not match.
           // done takes an error (null in this case) and a user (also null in this case)
           // this will result in the server returning a 401 status code
           done(null, null);

@@ -2,6 +2,7 @@ import { all } from 'redux-saga/effects';
 import loginSaga from './login.saga';
 import registrationSaga from './registration.saga';
 import userSaga from './user.saga';
+import industrySaga from './industry.saga';
 import financialInputsSaga from './financial.inputs.saga';
 import financialMetricsSaga from './financial.metrics.saga.js';
 

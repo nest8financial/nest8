@@ -8,7 +8,8 @@ const sessionMiddleware = require('./modules/session-middleware');
 const passport = require('./strategies/user.strategy');
 
 // Route Includes
-const userRouter = require('./routes/user.router.js');
+const userRouter = require('./routes/user.router');
+const industryRouter = require('./routes/industry.router');
 const financialInputsRouter = require('./routes/financial.inputs.router.js');
 const financialMetricsRouter = require('./routes/financial.metrics.router.js');
 
@@ -26,6 +27,7 @@ app.use(passport.session());
 
 // Routes
 app.use('/api/user', userRouter);
+app.use('/api/industry', industryRouter);
 app.use('/api/financial_inputs', financialInputsRouter);
 app.use('/api/financial_metrics', financialMetricsRouter);
 
