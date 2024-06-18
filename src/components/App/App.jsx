@@ -21,7 +21,7 @@ import {Theme} from '../Nav/NavTheme'
 import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
 import InputHeader from '../InputHeader/InputHeader';
-import FinancialInputsAddEdit from '../FinancialInputsAddEdit/FinancialInputsAddEdit';
+import FinancialInputsAddEdit from '../FinancialInputsAddEdit/financialInputsAddEdit';
 
 function App() {
   const dispatch = useDispatch();
