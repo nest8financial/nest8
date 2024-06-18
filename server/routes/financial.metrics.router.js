@@ -18,8 +18,13 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
     try {
         userId = user.id;
         const sqlTextGetMetrics = `
-            SELECT * 
+            SELECT monthly_metrics.*, 
+                    metrics.name AS metric_name,
+                    metrics.positive_text AS recommendation_positive_text,
+                    metrics.negative_text AS recommendation_negative_text
                 FROM monthly_metrics
+                JOIN metrics
+                    ON metrics.id = monthly_metrics.metric_id
                 WHERE user_id = $1
                 ORDER BY year, month;
             `;
@@ -46,8 +51,13 @@ router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
         userId = user.id;
         console.log('year, month', year, month);
         const sqlTextGetSingleMonth = `
-            SELECT * 
+            SELECT monthly_metrics.*, 
+                    metrics.name AS metric_name,
+                    metrics.positive_text AS recommendation_positive_text,
+                    metrics.negative_text AS recommendation_negative_text
                 FROM monthly_metrics
+                JOIN metrics
+                 ON metrics.id = monthly_metrics.metric_id 
                 WHERE user_id = $1
                     AND month = $2
                     AND year = $3

@@ -26,7 +26,7 @@ function* getSingleMonthMetrics(action) {
 /**
  * Get all the monthly inputs for a user
  */
-function* getMonthlyInputs(action) {
+function* getMonthlyMetrics(action) {
     try {
       const response = yield axios({
           method: 'GET',
@@ -76,11 +76,11 @@ function* updateMetricNotes(action) {
     }
   }
 
-function* financialInputsSaga() {
-  yield takeLatest('GET_SINGLE_MONTH_METRICS', getSingleMonthInputs);
-  yield takeLatest('GET_MONTHLY_METRICS', getMonthlyInputs);
+function* financialMetricsSaga() {
+  yield takeLatest('GET_SINGLE_MONTH_METRICS', getSingleMonthMetrics);
+  yield takeLatest('GET_MONTHLY_METRICS', getMonthlyMetrics);
   yield takeLatest('TOGGLE_METRIC_COMPLETED', toggleMetricCompleted);
   yield takeLatest('UPDATE_METRIC_NOTES', updateMetricNotes);
 }
 
-export default financialInputsSaga;
+export default financialMetricsSaga;
