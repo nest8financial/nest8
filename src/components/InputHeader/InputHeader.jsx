@@ -12,6 +12,8 @@ const history = useHistory();
 const [date, setDate] = useState(dayjs()); 
 
 const addInput = (date) => {
+  console.log('month is', date.format('MM'));
+  
     history.push(`/inputs_add_edit/${date.format('MM')}/${date.format('YYYY')}`)
 }
 
