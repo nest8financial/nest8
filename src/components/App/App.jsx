@@ -24,6 +24,7 @@ import './App.css';
 import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
 import InputHeader from '../InputHeader/InputHeader';
 import FinancialInputsAddEdit from '../FinancialInputsAddEdit/financialInputsAddEdit'
+import MyData from '../MyData/MyData';
 
 // import ProductPage from '../ProductPage'; 
 // import FeaturesPage from '../FeaturesPage'; 
@@ -136,6 +137,15 @@ function App() {
             by recommendation. */}
           <ProtectedRoute exact path="/rec_detail/:month/:year">
             <RecommendationDetail />
+          </ProtectedRoute>
+
+          <ProtectedRoute
+            // logged in shows MyData page, else shows LoginPage
+            exact
+            path="/MyData"
+          >
+            <MyData/>
+
           </ProtectedRoute>
 
           {/* If none of the other routes matched, we will show a 404. */}
