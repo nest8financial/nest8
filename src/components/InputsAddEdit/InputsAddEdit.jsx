@@ -24,7 +24,7 @@ import { useSelector, useDispatch } from 'react-redux';
  *          readOnlyMode (true if this is an existing month/year for user,
  *                        false if this in an existing month/year)
  */
-function FinancialInputsAddEdit() {
+function InputsAddEdit() {
 
     const dispatch = useDispatch();
     const history = useHistory();    
@@ -311,4 +311,4 @@ function FinancialInputsAddEdit() {
     )
 }
 
-export default FinancialInputsAddEdit;
+export default InputsAddEdit;

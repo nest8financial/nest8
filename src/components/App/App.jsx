@@ -23,8 +23,8 @@ import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
 import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
 import InputHeader from '../InputHeader/InputHeader';
-import FinancialInputsAddEdit from '../FinancialInputsAddEdit/financialInputsAddEdit'
 import MyData from '../MyData/MyData';
+import InputsAddEdit from '../InputsAddEdit/InputsAddEdit';
 
 // import ProductPage from '../ProductPage'; 
 // import FeaturesPage from '../FeaturesPage'; 
@@ -129,7 +129,7 @@ function App() {
             exact
             path="/inputs_add_edit/:month/:year"
           >
-            <FinancialInputsAddEdit />
+            <InputsAddEdit />
           </ProtectedRoute>
 
           {/* Recommendation Detail Component- shows all recommendations for a 
