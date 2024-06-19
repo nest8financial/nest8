@@ -5,8 +5,8 @@ import moment from 'moment'
 
 function MyData(){
 
-const userData = useSelector(store=> store.user)
-const monthlyInputs = useSelector(store=> store.financialInputs)
+const userData = useSelector(store=> store.user) // pulls the user data from the user store 
+const monthlyInputs = useSelector(store=> store.financialInputs) // pulls the monthly inputs for a user from the financialInputs store
 
 console.log('this is the user data', userData);
 console.log('these are the monthly inputs', monthlyInputs);
@@ -14,6 +14,12 @@ console.log('these are the monthly inputs', monthlyInputs);
 
 const today = moment();
 const todaysDate = today.format('MM, YYYY')
+const start = userData.date_joined
+const startFormatted = moment(start)
+
+console.log('this is the start date', start);
+console.log('this is the FORMATTED start date', startFormatted);
+
 
 console.log('this is todays month and year', todaysDate);
 
