@@ -20,6 +20,7 @@ export default function* rootSaga() {
     userSaga(),
     industrySaga(),
     financialInputsSaga(),
-    financialMetricsSaga()
+    financialMetricsSaga(),
+ 
   ]);
 }

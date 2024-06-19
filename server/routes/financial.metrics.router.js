@@ -88,6 +88,55 @@ router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
     }
 })
 
+
+/**
+ * GET a single month's inputs for a user
+ *      - get all metrics from monthly_metrics table for a single month,
+ *         In the form of 6 entries in the monthly_metrics table that include:
+ *          6 different computed metrics 
+ *          6 different computed variances 
+ *      - also include metric names and corresponding recommendation texts
+ */
+router.get('/summary/:month&:year', rejectUnauthenticated, async (req, res) => {
+    let connection;
+    connection = await pool.connect();
+    try {
+        console.log('USER: ', req.user);
+        const month = Number(req.params.month);
+        const year = Number(req.params.year);
+        const userId = req.user.id;
+        console.log('year, month', year, month);
+        const sqlTextGetSingleMonth = `
+        SELECT monthly_metrics.id,
+              monthly_metrics.variance_value,
+               metrics.metric_name
+            FROM monthly_metrics
+                JOIN metrics
+                    ON metrics.id = monthly_metrics.metrics_id 
+                JOIN monthly_inputs
+                    ON monthly_metrics.monthly_id = monthly_inputs.id
+                WHERE user_id = $1
+                    AND month = $2
+                    AND year = $3
+                ORDER BY year, month, id;
+            `;
+            const dbResponse = await connection.query(sqlTextGetSingleMonth, [userId, month, year]);
+            console.log('Get of single month\'s metrics in /api/financial_metrics/summary/:month&:year succesful:', dbResponse.rows )
+            connection.release();
+            res.send(dbResponse.rows);
+    } catch (error) {
+        console.log(
+          "Error in get of single month's metrics in /api/financial_metrics/summary/:month&:year",
+          error
+        );
+        connection.release();
+        res.sendStatus(500);
+    }
+})
+
+
+
+
 /**
  * PATCH - toggle a single metric's completed date 
  */
