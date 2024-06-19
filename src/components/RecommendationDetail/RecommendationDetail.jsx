@@ -1,9 +1,8 @@
 import { useParams} from "react-router-dom";
-import '../../utilities/utilities.js'
 import { getMonthName } from "../../utilities/utilities.js";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Container, Checkbox, Button, TextField, Box } from "@mui/material";
+import { Container } from "@mui/material";
 import RecommendationActionItem from "../RecommendationActionItem/RecommendationActionItem.jsx";
 
 /**
@@ -19,7 +18,6 @@ function RecommendationDetail() {
     const singleMonthMetrics = 
         useSelector(store => store.financialMetrics.singleMonthMetrics);
 
-
     useEffect(() => {
         console.log('dispatchyear, mo', year, month)
         updateSingleMonthMetrics();
@@ -33,21 +31,14 @@ function RecommendationDetail() {
         })
     }
 
-
     return (
         <Container>Recommendations for {getMonthName(month)} {year} 
-        {/* <div>wallaby {JSON.stringify(singleMonthMetrics)}</div> */}
-            {/* <Button type="button"
-                        variant="contained"
-                        color="primary"
-                        sx={{ mt: 3, mb: 2 }}
-                        onClick={handleEditButton}></Button> */}
             {singleMonthMetrics.map(metric => (
                 <RecommendationActionItem key={metric.id}
                                           metric={metric}
                                           month={month}
                                           year={year}/>
-            )
+                )
             )}
         </Container>
     )

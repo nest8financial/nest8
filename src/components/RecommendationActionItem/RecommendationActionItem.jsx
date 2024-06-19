@@ -1,28 +1,16 @@
 import { useDispatch } from "react-redux";
 import { useEffect , useState } from "react";
-import { Container, Checkbox, Button, TextField, Box } from "@mui/material";
+import { Checkbox, TextField, Box } from "@mui/material";
 
 function RecommendationActionItem({metric, month, year}) {
 
-    console.log('month, year', month, year)
     const dispatch = useDispatch();
     // const metric = metricObj.metric;
     const [completedToggleInput, setCompletedToggleInput] = 
         useState(false);
     const [notesInput, setNotesInput] = useState(metric.notes);
-  
-
-    // useEffect(() => {
-    //     if (singleMonthMetrics.completed_date) {
-    //         setCompletedCheckboxInput(true);
-    //     } else {
-    //         setCompletedCheckboxInput(false);
-    //     }
-    //     setNotesInput(metric.notes);
-    // },[] )
 
     useEffect(() => {
-        console.log('completed date', metric.completed_date)
         if (metric.completed_date === null) {
             setCompletedToggleInput(false);
         } else {
@@ -39,36 +27,17 @@ function RecommendationActionItem({metric, month, year}) {
         setCompletedToggleInput(!completedToggleInput);
     }
 
-    // useEffect(() => {
-    //     const debounceTimer = setTimeout(() => {
-    //         console.log(`Debounce timer expired. Updating debounced value:`, notesInput);
-    //         console.log(`metric id in debounce: ${metric.id}`)
-    //         dispatch({
-    //             type: 'UPDATE_METRIC_NOTES',
-    //             payload: { notes: notesInput,
-    //                        metric_id: metric.id,
-    //                        month: month,
-    //                        year: year } })
-    //     }, 500); // Debounce time: 500 milliseconds
- 
-    //     return () => {
-    //         console.log('Clearing debounce timer');
-    //         clearTimeout(debounceTimer);
-    //     };
-    // }, [notesInput]);
-
-    const startDebounce = ()  => {
+    const startDebounce = (newNotes)  => {
         const debounceTimer = setTimeout(() => {
-            console.log(`Debounce timer expired. Updating debounced value:`, notesInput);
+            console.log(`Debounce timer expired. Updating debounced value:`, newNotes);
             console.log(`metric id in debounce: ${metric.id}`)
             dispatch({
                 type: 'UPDATE_METRIC_NOTES',
-                payload: { notes: notesInput,
-                           metric_id: metric.id,
+                payload: { notes: newNotes,
+                           metricId: metric.id,
                            month: month,
                            year: year } })
-        }, 500); // Debounce time: 500 milliseconds
- 
+        }, 800); // Debounce time: 500 milliseconds
         return () => {
             console.log('Clearing debounce timer');
             clearTimeout(debounceTimer);
@@ -77,9 +46,10 @@ function RecommendationActionItem({metric, month, year}) {
 
     const handleNotesChange = (event) => {
         console.log('notes change!');
-        const newNotes = event.target.value;
-        setNotesInput(newNotes);
-        startDebounce();
+        const newNotes = event.target.value.trim();
+        console.log(`Here are notes:${newNotes}:`);
+            setNotesInput(newNotes);
+            startDebounce(newNotes);
     }
 
     return (
