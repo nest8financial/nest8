@@ -39,6 +39,12 @@ const calculateMissingMonths = (start, current) => {
 
 }
 
+const checkDatabaseForMonth = (monthStr) => {
+
+  };
+
+
+const missingMonths = calculateMissingMonths(joinMonthYear, currentMonthYear);
 
 
     return(
