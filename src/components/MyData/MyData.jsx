@@ -1,6 +1,6 @@
 import { Button, Box, Container, Typography, Link } from "@mui/material";
 import { useSelector } from "react-redux";
-
+import moment from 'moment'
 
 
 function MyData(){
@@ -12,7 +12,10 @@ console.log('this is the user data', userData);
 console.log('these are the monthly inputs', monthlyInputs);
 
 
+const today = moment();
+const todaysDate = today.format('MM, YYYY')
 
+console.log('this is todays month and year', todaysDate);
 
     return(
 
