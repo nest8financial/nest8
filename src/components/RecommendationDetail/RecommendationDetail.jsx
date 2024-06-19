@@ -22,21 +22,16 @@ function RecommendationDetail() {
 
     useEffect(() => {
         console.log('dispatchyear, mo', year, month)
+        updateSingleMonthMetrics();
+    },[])
+
+    const updateSingleMonthMetrics = () =>{
+        console.log('dispatchyear, mo', year, month)
         dispatch({
             type: 'GET_SINGLE_MONTH_METRICS',
             payload: { year, month }
         })
-    },[])
-
-    useEffect(() => {
-        if (singleMonthMetrics.completed_date) {
-            setCompletedCheckboxInput(true);
-        } else {
-            setCompletedCheckboxInput(false);
-        }
-        setNotesInput(singleMonthMetrics.notes);
-    },[singleMonthMetrics] )
-
+    }
 
 
     return (
@@ -48,7 +43,10 @@ function RecommendationDetail() {
                         sx={{ mt: 3, mb: 2 }}
                         onClick={handleEditButton}></Button> */}
             {singleMonthMetrics.map(metric => (
-                <RecommendationActionItem metric={metric}/>
+                <RecommendationActionItem key={metric.id}
+                                          metric={metric}
+                                          month={month}
+                                          year={year}/>
             )
             )}
         </Container>
