@@ -52,33 +52,30 @@ function App() {
           <MenuBar />
           <Switch>
             {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
-            <Redirect exact from="/" to="/home" />
+            <Redirect exact from="/" to="/login" />
 
             {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:5173/user will show the UserPage if the user is logged in.
             If the user is not logged in, the ProtectedRoute will show the LoginPage (component).
             Even though it seems like they are different pages, the user is always on localhost:5173/user */}
-            <ProtectedRoute
-              // logged in shows UserPage else shows LoginPage
-              exact
-              path="/user"
-            >
-              <UserPage />
-            </ProtectedRoute>
+            <Route exact path="/home">
+              <HomePage />
+            </Route>
 
-            <ProtectedRoute
+            {/* <ProtectedRoute
               // logged in shows InfoPage else shows LoginPage
               exact
               path="/info"
             >
               <InfoPage />
-            </ProtectedRoute>
+            </ProtectedRoute> */}
 
             <Route exact path="/login">
               {user.id ? (
                 // If the user is already logged in,
-                // redirect to the /user page
-                <Redirect to="/user" />
+                // redirect to the /My Reports page 
+                // right now redirect to summary until My Reports is done
+                <Redirect to="/my_summary" />
               ) : (
                 // Otherwise, show the login page
                 <LoginPage />
@@ -89,7 +86,7 @@ function App() {
               {user.id ? (
                 // If the user is already logged in,
                 // redirect them to the /user page
-                <Redirect to="/user" />
+                <Redirect to="/home" />
               ) : (
                 // Otherwise, show the registration page
                 <RegisterPage />
@@ -97,29 +94,14 @@ function App() {
             </Route>
 
             <Route exact path="/home">
-              {user.id ? (
-                // If the user is already logged in,
-                // redirect them to the /user page
-                <Redirect to="/user" />
-              ) : (
-                // Otherwise, show the Landing page
-                <LandingPage />
-              )}
+                <Redirect to="/home" />          
             </Route>
 
-            <ProtectedRoute
-              // logged in shows InputHeader page, else shows LoginPage
-              exact
-              path="/input_header"
-            >
+            <ProtectedRoute exact path="/input_header">
               <InputHeader />
             </ProtectedRoute>
 
-            <ProtectedRoute
-              // logged in shows InputHeader page, else shows LoginPage
-              exact
-              path="/inputs_add_edit/:month/:year"
-            >
+            <ProtectedRoute exact path="/inputs_add_edit/:month/:year">
               <FinancialInputsAddEdit />
             </ProtectedRoute>
 
@@ -130,20 +112,13 @@ function App() {
               <RecommendationDetail />
             </ProtectedRoute>
 
-            <ProtectedRoute
-              // logged in shows MyData page, else shows LoginPage
-              exact
-              path="/MyData"
-            >
+            <ProtectedRoute exact path="/mydata">
               <MyData />
             </ProtectedRoute>
-            <Route
-              // logged in shows MyData page, else shows LoginPage
-              exact
-              path="/mySummary"
-            >
+
+            <ProtectedRoute exact path="/my_summary">
               <FinancialSummary />
-            </Route>
+            </ProtectedRoute>
 
             {/* If none of the other routes matched, we will show a 404. */}
             <Route>

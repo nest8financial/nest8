@@ -90,12 +90,11 @@ router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
 
 
 /**
- * GET a single month's inputs for a user
+ * GET a single month's variances for a user for the summary page
  *      - get all metrics from monthly_metrics table for a single month,
  *         In the form of 6 entries in the monthly_metrics table that include:
- *          6 different computed metrics 
  *          6 different computed variances 
- *      - also include metric names and corresponding recommendation texts
+ *      - also include metric names 
  */
 router.get('/summary/:month&:year', rejectUnauthenticated, async (req, res) => {
     let connection;
