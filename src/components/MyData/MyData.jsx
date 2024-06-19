@@ -11,17 +11,35 @@ const monthlyInputs = useSelector(store=> store.financialInputs) // pulls the mo
 console.log('this is the user data', userData);
 console.log('these are the monthly inputs', monthlyInputs);
 
+const today = moment(); // pulls the current date
+const currentMonthYear = today.format('MM, YYYY') // reformats the current date to be the month and year
+const joinDate = moment(userData.date_joined) // pulls the join date from the User store for the logged in user
+const joinMonthYear = joinDate.format('MM, YYYY'); // reformats the join date to the be the month and year 
 
-const today = moment();
-const todaysDate = today.format('MM, YYYY')
-const start = userData.date_joined
-const startFormatted = moment(start)
+console.log('this is the current month and year', currentMonthYear);
+console.log('this is the join date, month and year', joinMonthYear);
 
-console.log('this is the start date', start);
-console.log('this is the FORMATTED start date', startFormatted);
+const calculateMissingMonths = (start, current) => {
+    let missingMonths = []; // initializes a missingMonths counter to an empty array 
+    let startMonth = start.clone(); // creates a startMonth variable by cloning the start date.
+
+    while (startMonth.isBefore(current)) {
+        // Check if the current month is missing in the database. If the month is missing, we execute the code inside the if block
+        const monthStr = startMonth.format('MM-YYYY');
+        const isMonthMissing = !checkDatabaseForMonth(monthStr);
+  
+        if (isMonthMissing) { 
+            missingMonths.push(monthStr); // Pushing the missing month string to the missingMonths array
+        }
+  
+        startMonth.add(1, 'month');
+      }
+  
+      return missingMonths;
+
+}
 
 
-console.log('this is todays month and year', todaysDate);
 
     return(
 
