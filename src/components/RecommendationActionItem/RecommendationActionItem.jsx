@@ -1,12 +1,22 @@
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { Container, Checkbox, Button, TextField, Box } from "@mui/material";
+import { useEffect , useState } from "react";
+import { Checkbox, TextField, Box } from "@mui/material";
 
-function RecommendationActionItem(metric, month, year) {
+function RecommendationActionItem({metric, month, year}) {
 
     const dispatch = useDispatch();
-    const [completedToggleInput, setCompletedToggleInput] = useState(false);
-    const [notesInput, setNotesInput] = useState('');
+    // const metric = metricObj.metric;
+    const [completedToggleInput, setCompletedToggleInput] = 
+        useState(false);
+    const [notesInput, setNotesInput] = useState(metric.notes);
+
+    useEffect(() => {
+        if (metric.completed_date === null) {
+            setCompletedToggleInput(false);
+        } else {
+            setCompletedToggleInput(true);
+        }
+    },[])
 
     const handleToggleCompleted = () => {
         dispatch({
@@ -17,30 +27,33 @@ function RecommendationActionItem(metric, month, year) {
         setCompletedToggleInput(!completedToggleInput);
     }
 
-    useEffect(() => {
+    const startDebounce = (newNotes)  => {
         const debounceTimer = setTimeout(() => {
-            console.log(`Debounce timer expired. Updating debounced value:`, notesInput);
+            console.log(`Debounce timer expired. Updating debounced value:`, newNotes);
+            console.log(`metric id in debounce: ${metric.id}`)
             dispatch({
                 type: 'UPDATE_METRIC_NOTES',
-                payload: { notes: notesInput,
-                           metric_id: metric.id,
+                payload: { notes: newNotes,
+                           metricId: metric.id,
                            month: month,
                            year: year } })
-        }, 500); // Debounce time: 500 milliseconds
- 
+        }, 800); // Debounce time: 500 milliseconds
         return () => {
             console.log('Clearing debounce timer');
             clearTimeout(debounceTimer);
         };
-    }, [notesInput]);
+    }
 
     const handleNotesChange = (event) => {
-        const newNotes = event.target.value;
-        setNotesInput(newNotes);
+        console.log('notes change!');
+        const newNotes = event.target.value.trim();
+        console.log(`Here are notes:${newNotes}:`);
+            setNotesInput(newNotes);
+            startDebounce(newNotes);
     }
 
     return (
-        <Box>
+        <Box>{JSON.stringify(metric.metric)}
             <Box>{metric.metric_name}
             {metric.variance_value >= 0 ? 
                 metric.recommendation_positive_text :
@@ -48,15 +61,15 @@ function RecommendationActionItem(metric, month, year) {
             </Box>
             <Checkbox label="Completed"
                 size="large"
-                defaultChecked={metric.completed_date !== null ? 
+                checked={metric.completed_date !== null ? 
                     true : false }
-                value={completedToggleInput}
+                value={completedToggleInput === null ? '' : completedToggleInput}
                 onChange={() => handleToggleCompleted(metric.id)}/>
             <Box>
             <TextField
                 label="Notes"
                 variant="outlined"
-                value={notesInput}
+                value={notesInput === null ? '' : notesInput}
                 onChange={handleNotesChange}/>
             </Box>
         </Box>
