@@ -49,9 +49,11 @@ function* toggleMetricCompleted(action) {
           url: `/api/financial_metrics/toggle_completed/${action.payload.metricId}`,
           data: { month: action.payload.month, 
                   year: action.payload.year } })
+      console.log('after patch toggle response.data',response.data)
       yield put({
           type: 'GET_SINGLE_MONTH_METRICS',
-          payload: response.data[0] })
+          payload: { month: action.payload.month, 
+                     year: action.payload.year } })
     } catch (error) {
       console.log('Error while toggling completed date for a metric:', error);
     }
@@ -70,7 +72,8 @@ function* updateMetricNotes(action) {
                   notes: action.payload.notes } })
       yield put({
           type: 'GET_SINGLE_MONTH_METRICS',
-          payload: response.data[0] })
+          payload: { month: action.payload.month, 
+            year: action.payload.year } })
     } catch (error) {
       console.log('Error while toggling completed date for a metric:', error);
     }

@@ -10,7 +10,11 @@ const { rejectUnauthenticated } =
 
 
 /**
- * GET all monthly inputs for a user
+ * GET all monthly metrics for a user
+ *      - get all data from monthly_metrics table which includes:
+ *          6 different computed metrics per month
+ *          6 different computed variances per month
+ *      - also include metric names and corresponding recommendation texts
  */
 router.get('/', rejectUnauthenticated, async (req, res) => {
     let connection;
@@ -28,7 +32,7 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
                 JOIN monthly_inputs
                     ON monthly_metrics.monthly_id = monthly_inputs.id
                 WHERE monthly_inputs.user_id = $1
-                ORDER BY year, month;
+                ORDER BY year, month, id;
             `;
             const dbResponse = await connection.query(sqlTextGetMetrics, [userId]);
             console.log('Get of monthly metrics in /api/financial_metrics succesful:', dbResponse.rows )
@@ -43,6 +47,11 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
 
 /**
  * GET a single month's inputs for a user
+ *      - get all metrics from monthly_metrics table for a single month,
+ *         In the form of 6 entries in the monthly_metrics table that include:
+ *          6 different computed metrics 
+ *          6 different computed variances 
+ *      - also include metric names and corresponding recommendation texts
  */
 router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
     let connection;
@@ -66,7 +75,7 @@ router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
                 WHERE user_id = $1
                     AND month = $2
                     AND year = $3
-                ORDER BY year, month;
+                ORDER BY year, month, id;
             `;
             const dbResponse = await connection.query(sqlTextGetSingleMonth, [userId, month, year]);
             console.log('Get of single month\'s metrics in /api/financial_metrics/:month&:year succesful:', dbResponse.rows )
@@ -95,15 +104,17 @@ router.patch('/toggle_completed/:metric_id', rejectUnauthenticated, async (req, 
             UPDATE monthly_metrics 
                 SET completed_date = 
                     CASE WHEN completed_date IS NULL
-                            THEN current_timestamp
+                            THEN CURRENT_TIMESTAMP
                          WHEN completed_date IS NOT NULL
                             THEN NULL
                     END
-                WHERE user_id = $1
-                    AND month = $2
-                    AND year = $3
-                    AND metric_id = $4
-                ORDER BY year, month;
+
+                WHERE monthly_id = (SELECT id 
+                                        FROM monthly_inputs
+                                        WHERE user_id = $1
+                                          AND month = $2
+                                          AND year = $3)
+                    AND metrics_id = $4;
             `;
             const dbResponse = 
                 await connection.query(sqlTextGetSingleMonth, [ userId,
@@ -132,15 +143,16 @@ router.patch('/update_notes/:metric_id', rejectUnauthenticated, async (req, res)
         const metricId = req.params.metric_id;
         const notes = req.body.notes;
         const userId = req.user.id;
-        console.log('year, month', year, month);
+        console.log('year, month, notes, userid, metricId', year, month, '@@@ ', notes, '@@@', userId, metricId);
         const sqlTextGetSingleMonth = `
             UPDATE monthly_metrics 
                 SET notes = $5
-                WHERE user_id = $1
-                    AND month = $2
-                    AND year = $3
-                    AND metric_id = $4
-                ORDER BY year, month;
+                WHERE monthly_id = (SELECT id 
+                                        FROM monthly_inputs
+                                        WHERE user_id = $1
+                                            AND month = $2
+                                             AND year = $3)
+                    AND metrics_id = $4;
             `;
             const dbResponse =
                  await connection.query(sqlTextGetSingleMonth, [ userId, 
