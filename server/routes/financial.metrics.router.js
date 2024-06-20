@@ -133,7 +133,87 @@ router.get('/summary/:month&:year', rejectUnauthenticated, async (req, res) => {
     }
 })
 
+/**
+ * GET all monthly graph data for a user, used for Financial Progress graph component
+ *      - get all data from monthly_metrics table which includes:
+ *          6 different computed variances per month
+ *          industry variances for user's industry
+ *      - also include metric names
+ */
+router.get('/graph_data/:from_month/:to_month/:from_year/:to_year', rejectUnauthenticated, async (req, res) => {
+    let connection;
+    connection = await pool.connect();
+    try {
+        const fromMonth = Number(req.params.from_month);
+        const toMonth = Number(req.params.to_month);
+        const fromYear = Number(req.params.from_year);
+        const toYear = Number(req.params.to_year);
+        const userId = req.user.id;
 
+        // create a month array that starts at mm/yyyy and ends at mm/yyyy
+
+        for (i=fromYear; i<=toYear; i++) {
+            for(j=fromMonth; j<= 12; j++) {
+                
+            }
+        }
+
+// 1. select a start month/year and an end month/year (default is 13 months or 
+//      whatever is availble if less than 13 available)
+// 2. get all availble months data from the metric table
+// 3. populate a month name array for the table
+// 4. populate a variance table for industry (repeated)
+// 5. populate a variace table from the metrics.variance_value column
+// 6. grab the metric name we are looking at for the table title
+// dispatch getGraphData
+//   payload: ( fromYear: fromYear,
+//              fromMonth: fromMonth,
+//                toYear: toYear,
+//              toMonth: toMonth,
+//              isDefault: true/false )
+
+  
+// { months: [] , industry_variances = [], user_variances = [] }
+
+
+
+
+
+
+
+
+
+
+        
+        const sqlTextGetMetrics = `
+            SELECT monthly_inputs.month,
+            	   monthly_inputs.year,
+            	   monthly_metrics.id, 
+            	   monthly_metrics.variance_value,
+                   metrics.metric_name,
+                   industry.*
+                FROM monthly_metrics
+                JOIN metrics
+                    ON metrics.id = monthly_metrics.metrics_id
+                JOIN monthly_inputs
+                    ON monthly_metrics.monthly_id = monthly_inputs.id
+                JOIN "user"
+                	ON "user".id = monthly_inputs.user_id
+                JOIN industry
+                	ON industry.id = "user".industry_id
+                WHERE monthly_inputs.user_id = $1
+                ORDER BY year, month, monthly_metrics.id;
+            `;
+            const dbResponse = await connection.query(sqlTextGetMetrics, [userId]);
+            console.log('Get of monthly graph data in /api/financial_metrics/graph_data succesful:', dbResponse.rows )
+            connection.release();
+            res.send(dbResponse.rows);
+    } catch (error) {
+        console.log('Error in get of monthly graph data in /api/financial_metrics/graph_data', error);
+        connection.release();
+        res.sendStatus(500);
+    }
+})
 
 
 /**
