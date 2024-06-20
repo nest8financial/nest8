@@ -26,6 +26,7 @@ import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
+import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
@@ -59,7 +60,8 @@ function App() {
             If the user is not logged in, the ProtectedRoute will show the LoginPage (component).
             Even though it seems like they are different pages, the user is always on localhost:5173/user */}
             <Route exact path="/home">
-              <HomePage />
+              {/* <HomePage /> */}
+              <MonthlyInputs/>
             </Route>
 
             {/* <ProtectedRoute
@@ -114,6 +116,10 @@ function App() {
             by recommendation. */}
             <ProtectedRoute exact path="/rec_detail/:month/:year">
               <RecommendationDetail />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/my_inputs/:month/:year">
+              <MonthlyInputs />
             </ProtectedRoute>
 
             <ProtectedRoute exact path="/mydata">
