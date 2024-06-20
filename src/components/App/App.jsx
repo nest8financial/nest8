@@ -25,6 +25,7 @@ import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
 import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
+import AddEditInputs from "../AddEditInputs/AddEditInputs";
 
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
@@ -100,13 +101,13 @@ function App() {
               <InputHeader />
             </ProtectedRoute>
 
-          {/* <ProtectedRoute
+          <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
             exact
             path="/inputs_add_edit/:month/:year"
           >
-            <FinancialInputsAddEdit />
-          </ProtectedRoute> */}
+            <AddEditInputs />
+          </ProtectedRoute>
 
             {/* Recommendation Detail Component- shows all recommendations for a 
             year/month and allows user to add notes and checkoff action items
