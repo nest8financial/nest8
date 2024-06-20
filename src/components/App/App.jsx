@@ -45,14 +45,13 @@ function App() {
 
   return (
     <ThemeProvider theme={Theme}>
-    <Router>
-      <div>
-        <Nav />
-       {user.id && <MenuBar />}
-        <Switch>
-          {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
-          <Redirect exact from="/" to="/home" />
-
+      <Router>
+        <div>
+          <Nav />
+          <MenuBar />
+          <Switch>
+            {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
+            <Redirect exact from="/" to="/login" />
 
             {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:5173/user will show the UserPage if the user is logged in.
