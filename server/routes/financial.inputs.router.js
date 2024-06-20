@@ -18,8 +18,7 @@ router.get('/',  async (req, res) => {
     connection = await pool.connect();
     try {
 
-        // userId = user.id;
-        const userId = 1;
+        const userId = req.user.id;
         const sqlTextGetInputs = `
             SELECT * 
                 FROM monthly_inputs
@@ -42,13 +41,13 @@ router.get('/',  async (req, res) => {
  */
 router.get('/:month&:year',  async (req, res) => {
     let connection;
+    console.log('requser',req.user);
     connection = await pool.connect();
     try {
         const month = Number(req.params.month);
         const year = Number(req.params.year);
-        // userId = user.id;
-        const userId = 1;
-        console.log('year, month', year, month);
+        const userId = req.user.id;
+        console.log('year, month, user', year, month, userId);
         const sqlTextGetSingleMonth = `
             SELECT * 
                 FROM monthly_inputs
@@ -95,8 +94,7 @@ router.post('/',  async (req, res) => {
        const equity = req.body.equity;
        const taxRate = req.body.taxRate;
        const earningsBeforeTax = req.body.earningsBeforeTax;
-    //    userId = user.id;
-       const userId = 1;
+       userId = req.user.id;
        // If inserts fail for either monthly_inputs or monthly_metrics,
        //   rollback all SQL changes
        connection.query('BEGIN');
@@ -227,8 +225,8 @@ router.put('/',  async (req, res) => {
        const equity = req.body.equity;
        const taxRate = req.body.taxRate;
        const earningsBeforeTax = req.body.earningsBeforeTax;
-    //    userId = user.id;
-       const userId = 1;
+       const userId = req.user.id;
+
        // If inserts fail for either monthly_inputs or monthly_metrics,
        //   rollback all SQL changes
        connection.query('BEGIN');
