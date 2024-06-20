@@ -15,7 +15,9 @@ const rootReducer = combineReducers({
   user, // user state, stores id and username when someone is logged in
   financialInputs,  // state pertaining to 6 financial user inputs per month
   financialMetrics, // state pertaining to 6 computed financial metrics & variances
-  industries
+  industries,
+ 
+
 });
 
 export default rootReducer;

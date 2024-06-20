@@ -39,6 +39,27 @@ function* getMonthlyMetrics(action) {
     }
   }
 
+  /**
+ * Get a single month's in variances
+ */
+function* getSingleMonthVariances(action) {
+
+  try {
+    console.log('in get here is action.payload', action.payload)
+    const response = yield axios({
+        method: 'GET',
+        url: `/api/financial_metrics/summary/${action.payload.month}&${action.payload.year}`,
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials: true })
+    console.log('did get, here is reposnse: ', response.data);
+    yield put({
+        type: 'SET_SINGLE_MONTH_VARIANCES',
+        payload: response.data })
+  } catch (error) {
+    console.log('Error while getting single month\'s variances:', error);
+  }
+}
+
 /**
  * Toggle the completed date on or off for a metric (when checkbox clilcked)
  */
@@ -84,6 +105,7 @@ function* financialMetricsSaga() {
   yield takeLatest('GET_MONTHLY_METRICS', getMonthlyMetrics);
   yield takeLatest('TOGGLE_METRIC_COMPLETED', toggleMetricCompleted);
   yield takeLatest('UPDATE_METRIC_NOTES', updateMetricNotes);
+  yield takeLatest('GET_SINGLE_MONTH_VARIANCES',getSingleMonthVariances)
 }
 
 export default financialMetricsSaga;
