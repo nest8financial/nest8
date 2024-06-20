@@ -18,51 +18,15 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 
 
 
 
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(3),
-    width: 'auto',
-  },
-}));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'inherit',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    width: '100%',
-    [theme.breakpoints.up('md')]: {
-      width: '20ch',
-    },
-  },
-}));
 
 
 function Nav() {
@@ -108,12 +72,13 @@ function Nav() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
     </Menu>
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
+
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{
@@ -129,26 +94,19 @@ function Nav() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
+      
+   
+      <MenuItem >
         <IconButton
           size="large"
-          aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
+          <LogoutIcon />
         </IconButton>
-        <p>Notifications</p>
+        <p>Log Out</p>
       </MenuItem>
+        
+     
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           size="large"
@@ -159,7 +117,7 @@ function Nav() {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>My Profile</p>
       </MenuItem>
     </Menu>
   );
@@ -168,10 +126,12 @@ function Nav() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
- 
-        <Stack direction="row" spacing={2}>
+          
+        {/* <Stack direction="row" spacing={2}>
       <Button variant="outlined" color="info">Log In</Button>
-    </Stack>
+    </Stack> */}
+ 
+          <Button color="inherit">Login</Button>
           <Typography
             variant="h6"
             noWrap
@@ -187,28 +147,21 @@ function Nav() {
             <IconButton
               size="large"
               color="inherit"
+              aria-controls={mobileMenuId}
             >
               <Badge  color="error">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              
-            </IconButton>
-
+          
             <IconButton
             size="large"
             edge="start"
             color="inherit"
-            aria-label="open drawer"
+            aria-label="Settings"
+            aria-controls={menuId}
+            aria-haspopup="true"
+            onClick={handleProfileMenuOpen}
             sx={{ mr: 2 }}
           >
             <MenuIcon />
