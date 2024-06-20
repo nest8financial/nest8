@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import {useHistory} from "react-router"
 import MyData from '../MyData/MyData'
 import InputHeader from '../InputHeader/InputHeader'
+import FinancialSummary from '../FinancialSummary/FinancialSummary';
 
 
 
@@ -60,7 +61,7 @@ function CustomTabPanel(props) {
         <InputHeader />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-         
+        <FinancialSummary />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
         <MyData/>
