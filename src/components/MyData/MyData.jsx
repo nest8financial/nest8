@@ -25,24 +25,26 @@ const calculateMissingMonths = (start, current) => {
 
     while (startMonth.isBefore(current)) {
         // Check if the current month is missing in the database. If the month is missing, we execute the code inside the if block
-        const monthStr = startMonth.format('MM-YYYY');
-        const isMonthMissing = !checkDatabaseForMonth(monthStr);
+        const monthStr = startMonth.format('MM, YYYY');
+        const isMonthMissing = !checkStoreForMonth(monthStr);
   
         if (isMonthMissing) { 
             missingMonths.push(monthStr); // Pushing the missing month string to the missingMonths array
         }
   
-        startMonth.add(1, 'month');
+        startMonth.add(1, 'month'); // 
       }
   
       return missingMonths;
 
 }
 
-const checkDatabaseForMonth = (monthStr) => {
-
+const checkStoreForMonth = (monthStr) => {
+    return monthlyInputs.some(input => {
+      const inputMonthYear = moment(`${input.year}-${input.month}-01`).format('MM, YYYY');
+      return inputMonthYear === monthStr;
+    });
   };
-
 
 const missingMonths = calculateMissingMonths(joinMonthYear, currentMonthYear);
 
