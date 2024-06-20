@@ -24,6 +24,7 @@ import './App.css';
 import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
 import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
+import FinancialSummary from "../FinancialSummary/FinancialSummary";
 
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
@@ -73,7 +74,7 @@ function App() {
                 // If the user is already logged in,
                 // redirect to the /My Reports page 
                 // right now redirect to summary until My Reports is done
-                <Redirect to="/my_summary" />
+                <Redirect to="/home" />
               ) : (
                 // Otherwise, show the login page
                 <LoginPage />
@@ -99,13 +100,13 @@ function App() {
               <InputHeader />
             </ProtectedRoute>
 
-          <ProtectedRoute
+          {/* <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
             exact
             path="/inputs_add_edit/:month/:year"
           >
             <FinancialInputsAddEdit />
-          </ProtectedRoute>
+          </ProtectedRoute> */}
 
             {/* Recommendation Detail Component- shows all recommendations for a 
             year/month and allows user to add notes and checkoff action items
