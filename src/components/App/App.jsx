@@ -49,7 +49,7 @@ function App() {
     <Router>
       <div>
         <Nav />
-        <MenuBar/>
+       {user.id && <MenuBar />}
         <Switch>
           {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
           <Redirect exact from="/" to="/home" />
