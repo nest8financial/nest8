@@ -23,7 +23,7 @@ const calculateMissingMonths = (start, current) => {
     let missingMonths = []; // initializes a missingMonths counter to an empty array 
     let startMonth = start.clone(); // creates a startMonth variable by cloning the start date.
 
-    while (startMonth.isBefore(current)) {
+    while (startMonth.isSameOrBefore(current)) {
         // Check if the current month is missing in the database. If the month is missing, we execute the code inside the if block
         const monthStr = startMonth.format('MM, YYYY');
         const isMonthMissing = !checkStoreForMonth(monthStr);
@@ -46,7 +46,7 @@ const checkStoreForMonth = (monthStr) => {
     });
   };
 
-const missingMonths = calculateMissingMonths(joinMonthYear, currentMonthYear);
+const missingMonthsCount = calculateMissingMonths(joinMonthYear, currentMonthYear);
 
 
     return(
@@ -63,7 +63,7 @@ const missingMonths = calculateMissingMonths(joinMonthYear, currentMonthYear);
         </Box>
         <Box>
         <Typography variant="h2" fontSize={32}>Alerts</Typography>
-
+        <List></List>
         
         </Box>
 
