@@ -8,23 +8,22 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 
-import Nav from "../Nav/Nav";
-import Footer from "../Footer/Footer";
-import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
-import UserPage from "../UserPage/UserPage";
-import InfoPage from "../InfoPage/InfoPage";
-import LandingPage from "../LandingPage/LandingPage";
-import LoginPage from "../LoginPage/LoginPage";
-import RegisterPage from "../RegisterPage/RegisterPage";
-import HomePage from "../HomePage/HomePage";
-import { ThemeProvider } from "@mui/material/styles";
-import { Theme } from "../Nav/NavTheme";
-import MenuBar from "../MenuBar/MenuBar";
-import "./App.css";
-import RecommendationDetail from "../RecommendationDetail/RecommendationDetail";
-import InputHeader from "../InputHeader/InputHeader";
-import FinancialInputsAddEdit from "../FinancialInputsAddEdit/financialInputsAddEdit";
-import MyData from "../MyData/MyData";
+import Nav from '../Nav/Nav';
+import Footer from '../Footer/Footer';
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import UserPage from '../UserPage/UserPage';
+import InfoPage from '../InfoPage/InfoPage';
+import LandingPage from '../LandingPage/LandingPage';
+import LoginPage from '../LoginPage/LoginPage';
+import RegisterPage from '../RegisterPage/RegisterPage';
+import HomePage from '../HomePage/HomePage';
+import { ThemeProvider } from '@mui/material/styles';
+import {Theme} from '../Nav/NavTheme'
+import MenuBar from '../MenuBar/MenuBar'
+import './App.css';
+import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
+import InputHeader from '../InputHeader/InputHeader';
+import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 
 // import ProductPage from '../ProductPage';
@@ -75,7 +74,7 @@ function App() {
                 // If the user is already logged in,
                 // redirect to the /My Reports page 
                 // right now redirect to summary until My Reports is done
-                <Redirect to="/my_summary" />
+                <Redirect to="/home" />
               ) : (
                 // Otherwise, show the login page
                 <LoginPage />
@@ -101,9 +100,13 @@ function App() {
               <InputHeader />
             </ProtectedRoute>
 
-            <ProtectedRoute exact path="/inputs_add_edit/:month/:year">
-              <FinancialInputsAddEdit />
-            </ProtectedRoute>
+          {/* <ProtectedRoute
+            // logged in shows InputHeader page, else shows LoginPage
+            exact
+            path="/inputs_add_edit/:month/:year"
+          >
+            <FinancialInputsAddEdit />
+          </ProtectedRoute> */}
 
             {/* Recommendation Detail Component- shows all recommendations for a 
             year/month and allows user to add notes and checkoff action items

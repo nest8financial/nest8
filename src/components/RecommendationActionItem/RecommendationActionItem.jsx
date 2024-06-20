@@ -46,14 +46,14 @@ function RecommendationActionItem({metric, month, year}) {
 
     const handleNotesChange = (event) => {
         console.log('notes change!');
-        const newNotes = event.target.value.trim();
+        const newNotes = event.target.value;
         console.log(`Here are notes:${newNotes}:`);
             setNotesInput(newNotes);
             startDebounce(newNotes);
     }
 
     return (
-        <Box>{JSON.stringify(metric.metric)}
+        <Box>
             <Box>{metric.metric_name}
             {metric.variance_value >= 0 ? 
                 metric.recommendation_positive_text :
