@@ -30,8 +30,22 @@ const monthlyMetrics = (state = [], action) => {
     } 
     return state;
 };
+/**
+ * Gets a single month's  variances 
+ */
+const singleMonthVariances = (state = [], action) => {
+    if (action.type === 'SET_SINGLE_MONTH_VARIANCES') {
+        if (action.payload.length === 0) {
+          return state;
+        }
+        return action.payload;
+    } 
+    return state;
+  }
+
 
 export default combineReducers({
   singleMonthMetrics,
-  monthlyMetrics
+  monthlyMetrics,
+  singleMonthVariances
 });
