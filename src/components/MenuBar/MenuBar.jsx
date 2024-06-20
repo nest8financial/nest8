@@ -3,12 +3,17 @@ import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+import {useHistory} from "react-router"
+import MyData from '../MyData/MyData'
+import InputHeader from '../InputHeader/InputHeader'
+import FinancialSummary from '../FinancialSummary/FinancialSummary';
 
 
 
 
 function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
+    const history = useHistory()
   
     return (
       <div
@@ -49,17 +54,17 @@ function CustomTabPanel(props) {
           <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
             <Tab label="Inputs" {...a11yProps(0)} />
             <Tab label="Reports" {...a11yProps(1)} />
-            <Tab label="My Data" {...a11yProps(2)} />
+            <Tab  label="My Data" {...a11yProps(2)} />
           </Tabs>
         </Box>
         <CustomTabPanel value={value} index={0}>
-        
+        <InputHeader />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={1}>
-         
+        <FinancialSummary />
         </CustomTabPanel>
         <CustomTabPanel value={value} index={2}>
-          
+        <MyData/>
         </CustomTabPanel>
       </Box>
     );
