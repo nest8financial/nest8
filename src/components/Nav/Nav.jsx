@@ -1,6 +1,7 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { useHistory} from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,6 +13,7 @@ import Button from '@mui/material/Button';
 import Badge from '@mui/material/Badge';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
@@ -20,6 +22,12 @@ export default function Navbar() {
   const [notifications, setNotifications] = React.useState(5); // Example number of notifications
   const history = useHistory();
   const dispatch = useDispatch();
+
+  const user = useSelector((store) => store.user);
+
+  useEffect(() => {
+    dispatch({ type: "FETCH_USER" });
+  }, [dispatch]);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -50,6 +58,11 @@ export default function Navbar() {
     history.push('/login');
   }
 
+  const handleHomeButton = (e) => {
+    console.log('home clicked!')
+    history.push('/home');
+  }
+
   const handleNest8Icon = (e) => {
     console.log('nest 8 clicked!  home page??')
   }
@@ -71,8 +84,12 @@ export default function Navbar() {
               <NotificationsIcon />
             </Badge>
           </IconButton>
+          {!user.id && (
           <Button color="inherit"
-                  onClick={(e) => handleLoginButton(e)}>Login</Button>
+          onClick={(e) => handleLoginButton(e)}>Login</Button>
+
+          )}
+
           <IconButton
               size="large"
               edge="end"
@@ -97,6 +114,7 @@ export default function Navbar() {
             }}
             open={Boolean(anchorEl)}
             onClose={handleClose}>
+            <MenuItem onClick={(e) => handleHomeButton(e)}><HomeIcon/><pre> </pre>Home</MenuItem>
             <MenuItem onClick={(e) => handleProfileButton(e)}><AccountCircle/><pre> </pre>Profile</MenuItem>
             <MenuItem onClick={(e) => handleLogoutButton(e)}><LogoutIcon /><pre> </pre>Logout</MenuItem>
           </Menu>
