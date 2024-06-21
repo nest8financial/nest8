@@ -11,6 +11,7 @@
 //           -returns:   "February"
 //             (default locale to english US)
 export function getMonthName(monthNumber, locale = 'en-US') {
+    console.log("month Number", monthNumber)
     // return blank if no month
     if (!monthNumber || monthNumber === '' || monthNumber === 0) {
         return '';

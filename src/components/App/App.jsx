@@ -26,8 +26,7 @@ import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
-import { Button } from "@mui/material";
-
+import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';
@@ -120,6 +119,10 @@ function App() {
             by recommendation. */}
             <ProtectedRoute exact path="/rec_detail/:month/:year">
               <RecommendationDetail />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/my_inputs/:month/:year">
+              <MonthlyInputs />
             </ProtectedRoute>
 
             <ProtectedRoute exact path="/mydata">
