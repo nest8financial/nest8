@@ -1,21 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Typography, Container, Card, CardContent, Grid, Box, Paper} from '@mui/material';
+import { Typography, Container, Grid, Box, Paper} from '@mui/material';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { useState } from "react";
 import { experimentalStyled as styled } from '@mui/material/styles';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { red, green } from '@mui/material/colors';
+import { useHistory } from "react-router-dom";
+import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
+// const setDate = (month, year) => ({
+//   type: 'SET_DATE',
+//   payload: { month, year }
+// });
 
-// import Grid from '@mui/material/Grid';
 
 function FinancialSummary(){
 
     const variances =  useSelector(store => store.financialMetrics.singleMonthVariances);
+    const history = useHistory();
 
     const dispatch = useDispatch();
     const [date, setDate] = useState(dayjs()); 
@@ -35,22 +40,30 @@ function FinancialSummary(){
         payload: { month: date.format('MM'),
                    year: date.format('YYYY') } 
      });
-    }, [])
+    }, [dispatch,date])
 
+    // const handleDateChange = (newValue) => {
+    //   setDateState(newValue);
+    //   const month = newValue.format('MM');
+    //   const year = newValue.format('YYYY');
+    //   dispatch(setDate(month, year));
+    //   history.push(`/financial_recommendation`);
+    // };
+  
 
     return(
-      <Container>
+      <Container> 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
 
           <DateCalendar 
-          value={date} onChange={(newValue) => setDate(newValue)} 
+          value={date} 
+          onChange={newValue => setDate(newValue)}
           views={['month', 'year']}
           openTo='month'
           />
         <Typography textAlign='center' variant='h2' fontSize={32}>{date.format('MMM YYYY')}</Typography>
 
       </LocalizationProvider>
-      {/* {variances.map(variance => ( */}
 
             <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
@@ -67,35 +80,11 @@ function FinancialSummary(){
                 </Grid>
               ))}
             </Grid>
-          </Box>
-
-
-
-
-
-       {/* <Card key={variance.id}
-                sx={{ minWidth: 275 }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-            {variance.metric_name}
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              adjective
-            </Typography>
-            <Typography variant="body">
-              well meaning and kindly.
-              <br />
-              {'"a benevolent smile"'}
-            </Typography>
-          </CardContent>
-        </Card> */}
-        {/* <Box key={variance.id}>
-          <Box></Box>
-          {variance.metric_name}
-          {variance.variance_value >= 0 ? 'good!' : 'bad'}
-        </Box>  */}
-
+          </Box>        
+<FinancialRecommendation  month= {date.format('MM')}
+year= {date.format('YYYY')}/>
     </Container>
+    
     )
 }
 
