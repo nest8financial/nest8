@@ -21,6 +21,5 @@ export default function* rootSaga() {
     industrySaga(),
     financialInputsSaga(),
     financialMetricsSaga(),
- 
   ]);
 }
