@@ -8,15 +8,16 @@ import {
   ListItemText,
   Paper,
 } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { differenceInMonths, startOfMonth, endOfMonth, parse, format, parseISO } from 'date-fns';
+import { useEffect } from "react";
 
 function MyData() {
   const userData = useSelector((store) => store.user); // pulls the user data from the user store
   const monthlyInputs = useSelector((store) => store.financialInputs); // pulls the monthly inputs for a user from the financialInputs store
 
-  console.log("this is the user data", userData);
-  console.log("these are the monthly inputs", monthlyInputs);
+//   console.log("this is the user data", userData);
+//   console.log("these are the monthly inputs", monthlyInputs.monthlyInputs);
 
   const today = new Date(); // pulls the current date
   const currentMonthYear = format(today, 'MM, yyyy') // reformats to provide just the month and year 
@@ -28,6 +29,12 @@ function MyData() {
 
 //   console.log('this is the parsed date', parsedJoinDate);
 //   console.log('this is the join date', joinDate);
+
+const dispatch = useDispatch(); 
+
+useEffect(() => {
+    dispatch({ type: 'GET_MONTHLY_INPUTS'})
+}, [])
 
 const calculateMissingMonths = (startDate, endDate) => {
 
