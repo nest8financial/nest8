@@ -37,7 +37,7 @@ function FinancialSummary(){
         payload: { month: date.format('MM'),
                    year: date.format('YYYY') } 
      });
-    }, [])
+    }, [dispatch])
 
 
     return(
