@@ -39,13 +39,30 @@ export default function Navbar() {
 
   const handleLoginButton = (e) => {
     console.log('in handleClick for login button');
-    handleClose();
     history.push('/login');
   }
+
+  const handleInputButton = (e) => {
+    console.log('profile clicked!');
+    history.push('/input_header');
+  }
+
+  const handleReportButton = (e) => {
+    console.log('/my_summary');
+    history.push('/my_summary');
+  }
+
+  const handleDataButton = (e) => {
+    console.log('/mydata');
+    history.push('/mydata');
+  }
+
   const handleProfileButton = (e) => {
     console.log('profile clicked!');
+    handleClose();
     // history.push('/profile');
   }
+  
 
   const handleAlertsBell = (e) => {
     console.log('bell clicked!');
@@ -54,13 +71,15 @@ export default function Navbar() {
 
   const handleLogoutButton = (e) => {
     console.log('logout clicked!');
+    handleClose();
     dispatch({ type: 'LOGOUT' });
-    history.push('/login');
+    history.push('/home');
   }
 
   const handleHomeButton = (e) => {
     console.log('home clicked!')
     history.push('/home');
+    handleClose();
   }
 
   const handleNest8Icon = (e) => {
@@ -77,6 +96,27 @@ export default function Navbar() {
                       sx={{ flexGrow: 1 }}>
             Nest8
           </Typography>
+          
+          <Box component="div" sx={{ flexGrow: 1 }}>
+            {user.id && (
+            <Button color="inherit"
+            onClick={(e) => handleInputButton(e)}>Inputs</Button>
+            )}
+            {user.id && (
+            <Button color="inherit"
+            onClick={(e) => handleReportButton(e)}>Reports</Button>
+            )}
+            {user.id && (
+            <Button color="inherit"
+            onClick={(e) => handleDataButton(e)}>Data</Button>
+            )}
+          </Box>
+
+
+          {!user.id && (
+          <Button color="inherit"
+          onClick={(e) => handleLoginButton(e)}>Login</Button>
+          )}
           <IconButton size="large"
                       color="inherit"
                       onClick={() => {(e) => {handleAlertsBell(e)}}}>
@@ -84,12 +124,6 @@ export default function Navbar() {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          {!user.id && (
-          <Button color="inherit"
-          onClick={(e) => handleLoginButton(e)}>Login</Button>
-
-          )}
-
           <IconButton
               size="large"
               edge="end"
@@ -116,7 +150,7 @@ export default function Navbar() {
             onClose={handleClose}>
             <MenuItem onClick={(e) => handleHomeButton(e)}><HomeIcon/><pre> </pre>Home</MenuItem>
             <MenuItem onClick={(e) => handleProfileButton(e)}><AccountCircle/><pre> </pre>Profile</MenuItem>
-            <MenuItem onClick={(e) => handleLogoutButton(e)}><LogoutIcon /><pre> </pre>Logout</MenuItem>
+            {user.id && <MenuItem onClick={(e) => handleLogoutButton(e)}><LogoutIcon /><pre> </pre>Logout</MenuItem>}
           </Menu>
         </Toolbar>
       </AppBar>

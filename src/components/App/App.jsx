@@ -19,7 +19,6 @@ import RegisterPage from '../RegisterPage/RegisterPage';
 import HomePage from '../HomePage/HomePage';
 import { ThemeProvider } from '@mui/material/styles';
 import {Theme} from '../Nav/NavTheme'
-import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
 import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
 import InputHeader from '../InputHeader/InputHeader';
@@ -76,7 +75,7 @@ function App() {
                 // If the user is already logged in,
                 // redirect to the /My Reports page 
                 // right now redirect to summary until My Reports is done
-                <Redirect to="/menu_bar" />
+                <Redirect to="/my_summary" />
               ) : (
                 // Otherwise, show the login page
                 <LoginPage />
@@ -97,10 +96,6 @@ function App() {
             <Route exact path="/home">
                 <Redirect to="/home" />          
             </Route>
-
-            <ProtectedRoute exact path="/menu_bar">
-              <MenuBar />
-            </ProtectedRoute>
 
             <ProtectedRoute exact path="/input_header">
               <InputHeader />
@@ -123,7 +118,8 @@ function App() {
 
             <ProtectedRoute exact path="/my_inputs/:month/:year">
               <MonthlyInputs />
-            </ProtectedRoute>
+
+nw            </ProtectedRoute>
 
             <ProtectedRoute exact path="/mydata">
               <MyData />
