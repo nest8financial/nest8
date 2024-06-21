@@ -1,227 +1,125 @@
-import React from 'react'
-import './Nav.css';
-import { useSelector } from 'react-redux';
-import { styled, alpha } from '@mui/material/styles';
+import React from 'react';
+import { useEffect } from 'react';
+import { useHistory} from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import Badge from '@mui/material/Badge';
-import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
+import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import Badge from '@mui/material/Badge';
+import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
+import HomeIcon from '@mui/icons-material/Home';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
-
-
-
-
-
-
-
-
-
-function Nav() {
-  const user = useSelector((store) => store.user);
+export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [notifications, setNotifications] = React.useState(3); // Example number of notifications
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-  const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const user = useSelector((store) => store.user);
 
-  const handleProfileMenuOpen = (event) => {
+  useEffect(() => {
+    dispatch({ type: "FETCH_USER" });
+  }, [dispatch]);
+
+  const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleMobileMenuClose = () => {
-    setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
+  const handleClose = () => {
     setAnchorEl(null);
-    handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
-  };
+  const handleLoginButton = (e) => {
+    console.log('in handleClick for login button');
+    handleClose();
+    history.push('/login');
+  }
+  const handleProfileButton = (e) => {
+    console.log('profile clicked!');
+    // history.push('/profile');
+  }
 
-  const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
-    </Menu>
-  );
+  const handleAlertsBell = (e) => {
+    console.log('bell clicked!');
+    // history.push('/profile');
+  }
 
-  const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
+  const handleLogoutButton = (e) => {
+    console.log('logout clicked!');
+    dispatch({ type: 'LOGOUT' });
+    history.push('/login');
+  }
 
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      
-   
-      <MenuItem >
-        <IconButton
-          size="large"
-          color="inherit"
-        >
-          <LogoutIcon />
-        </IconButton>
-        <p>Log Out</p>
-      </MenuItem>
-        
-     
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>My Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+  const handleHomeButton = (e) => {
+    console.log('home clicked!')
+    history.push('/home');
+  }
+
+  const handleNest8Icon = (e) => {
+    console.log('nest 8 clicked!  home page??')
+  }
+
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          
-        {/* <Stack direction="row" spacing={2}>
-      <Button variant="outlined" color="info">Log In</Button>
-    </Stack> */}
- 
-          <Button color="inherit">Login</Button>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
-          >
-            
+          <Typography variant="h6" 
+                      component="div" 
+                      sx={{ flexGrow: 1 }}>
+            Nest8
           </Typography>
-          
-          <Box sx={{ flexGrow: 1 }} />
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-           
-            <IconButton
-              size="large"
-              color="inherit"
-              aria-controls={mobileMenuId}
-            >
-              <Badge  color="error">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
-          
-            <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="Settings"
-            aria-controls={menuId}
-            aria-haspopup="true"
-            onClick={handleProfileMenuOpen}
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
+          <IconButton size="large"
+                      color="inherit"
+                      onClick={() => {(e) => {handleAlertsBell(e)}}}>
+            <Badge badgeContent={notifications} color="error">
+              <NotificationsIcon />
+            </Badge>
           </IconButton>
-          </Box>
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
+          {!user.id && (
+          <Button color="inherit"
+          onClick={(e) => handleLoginButton(e)}>Login</Button>
+
+          )}
+
+          <IconButton
               size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
+              edge="end"
               color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}>
+            <MenuIcon/>
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorEl}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}>
+            <MenuItem onClick={(e) => handleHomeButton(e)}><HomeIcon/><pre> </pre>Home</MenuItem>
+            <MenuItem onClick={(e) => handleProfileButton(e)}><AccountCircle/><pre> </pre>Profile</MenuItem>
+            <MenuItem onClick={(e) => handleLogoutButton(e)}><LogoutIcon /><pre> </pre>Logout</MenuItem>
+          </Menu>
         </Toolbar>
       </AppBar>
-      {renderMobileMenu}
-      {renderMenu}
     </Box>
-   
   );
 }
-
-export default Nav;
-
-
-
- // <div className="nav">
-    //   <Link to="/home">
-    //     <h2 className="nav-title">Prime Solo Project</h2>
-    //   </Link>
-    //   <div>
-    //     {/* If no user is logged in, show these links */}
-    //     {!user.id && (
-    //       // If there's no user, show login/registration links
-    //       <Link className="navLink" to="/login">
-    //         Login / Register
-    //       </Link>
-    //     )}
-
-    //     {/* If a user is logged in, show these links */}
-    //     {user.id && (
-    //       <>
-    //         <Link className="navLink" to="/user">
-    //           Home
-    //         </Link>
-
-    //         <Link className="navLink" to="/info">
-    //           Info Page
-    //         </Link>
-
-    //         <LogOutButton className="navLink" />
-    //       </>
-    //     )}
-
-    //     <Link className="navLink" to="/about">
-    //       About
-    //     </Link>
-    //   </div>
-    // </div>
