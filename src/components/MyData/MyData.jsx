@@ -13,22 +13,22 @@ import { differenceInMonths, startOfMonth, endOfMonth, parse, format, parseISO }
 import { useEffect } from "react";
 
 function MyData() {
-  const userData = useSelector((store) => store.user); // pulls the user data from the user store
-  const monthlyInputs = useSelector((store) => store.financialInputs.missingMonthlyInputs); // pulls the monthly inputs for a user from the financialInputs store
+  const missingInputs = useSelector((store) => store.financialInputs.missingMonthlyInputs); // pulls the monthly inputs for a user from the financialInputs store
 
-//   console.log("this is the user data", userData);
 //   console.log("these are the monthly inputs", monthlyInputs.monthlyInputs);
 
-  const today = new Date(); // pulls the current date
-  const currentMonthYear = format(today, 'MM, yyyy') // reformats to provide just the month and year 
+const today = new Date(); // pulls the current date
+const currentMonthYear = format(today, 'yyyy, MM') // reformats to provide just the month and year **make sure this is formatted to be an integer 
 
 //   console.log('this is todays month', currentMonthYear);
 
-  const parsedJoinDate = parseISO(userData.date_joined) // parses the date joined frmo the userData object
-  const joinDate = format(parsedJoinDate, 'MM, yyyy') // reformats to provide just the month and year 
+  const parsedJoinDate = parseISO(userData.date_joined) // parses the date joined from the userData object
+  const joinDate =  format(parsedJoinDate, 'yyyy, MM') // reformats to provide just the month and year 
 
-//   console.log('this is the parsed date', parsedJoinDate);
-//   console.log('this is the join date', joinDate);
+  console.log('this is today date', today);
+  console.log('this is the Parsed join date', parsedJoinDate);
+
+
 
 const dispatch = useDispatch(); 
 

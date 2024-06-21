@@ -2,9 +2,7 @@ const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
 const { rejectUnauthenticated } = require('../modules/authentication-middleware');
-const helperFunctions = require('../modules/helper-functions-missing-inputs'); 
-
-
+const { convertToDatesWeHave, generateDatesWeShouldHave } = require('../modules/helper-functions-missing-inputs'); 
 
 /* ------------------------- ROUTES ----------------------------------------*/
 
@@ -21,13 +19,19 @@ router.get('/missing',  async (req, res) => {
 
         const userId = req.user.id;
         const sqlTextGetInputs = `
-            SELECT month, year  
-                FROM monthly_inputs
+            SELECT 
+                monthly_inputs.month, 
+                monthly_inputs.year,
+                user.date_joined   
+            FROM monthly_inputs
+            JOIN user
+                ON users.id = monthly_inputs.user_id
                 WHERE user_id = $1
                 ORDER BY year, month;
             `;
             const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
-            console.log('Get of missing monthly inputs in /api/financial_inputs/missing succesful:', dbResponse.rows )
+            let arrayOfDatesWeHave = convertToDatesWeHave(dbResponse.rows)
+            console.log('this is the array of arrays we have', arrayOfDatesWeHave);
             connection.release();
             res.send(dbResponse.rows);
     } catch (error) {

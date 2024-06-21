@@ -44,10 +44,12 @@ function* getMonthlyInputs(action) {
  * Get all the MISSING monthly inputs for a user
  */
 function* getMissingMonthlyInputs(action) {
+  console.log('action.payload for the missing monthly inputs is', action.payload);
   try {
     const response = yield axios({
         method: 'GET',
-        url: `/api/financial_inputs/missing`})
+        url: `/api/financial_inputs/missing/`})
+        
     yield put({
         type: 'SET_MISSING_MONTHLY_INPUTS',
         payload: response.data})
