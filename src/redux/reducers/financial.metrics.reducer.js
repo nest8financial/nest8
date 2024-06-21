@@ -56,6 +56,7 @@ const singleMonthVariances = (state = [], action) => {
     } 
     return state;
   }
+ 
 
 
 export default combineReducers({
@@ -63,4 +64,5 @@ export default combineReducers({
   monthlyMetrics,
   singleMonthVariances,
   monthlyGraphData
+
 });

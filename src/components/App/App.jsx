@@ -19,14 +19,15 @@ import RegisterPage from '../RegisterPage/RegisterPage';
 import HomePage from '../HomePage/HomePage';
 import { ThemeProvider } from '@mui/material/styles';
 import {Theme} from '../Nav/NavTheme'
-import MenuBar from '../MenuBar/MenuBar'
 import './App.css';
 import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
 import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
+import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
+
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';
@@ -76,7 +77,7 @@ function App() {
                 // If the user is already logged in,
                 // redirect to the /My Reports page 
                 // right now redirect to summary until My Reports is done
-                <Redirect to="/menu_bar" />
+                <Redirect to="/my_summary" />
               ) : (
                 // Otherwise, show the login page
                 <LoginPage />
@@ -98,13 +99,10 @@ function App() {
                 <Redirect to="/home" />          
             </Route>
 
-            <ProtectedRoute exact path="/menu_bar">
-              <MenuBar />
-            </ProtectedRoute>
-
             <ProtectedRoute exact path="/input_header">
               <InputHeader />
             </ProtectedRoute>
+          
 
           <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
@@ -123,7 +121,8 @@ function App() {
 
             <ProtectedRoute exact path="/my_inputs/:month/:year">
               <MonthlyInputs />
-            </ProtectedRoute>
+
+nw            </ProtectedRoute>
 
             <ProtectedRoute exact path="/mydata">
               <MyData />
@@ -133,6 +132,10 @@ function App() {
               <FinancialSummary />
             </ProtectedRoute>
 
+          
+            <ProtectedRoute path="/financial_recommendation" >
+            <FinancialRecommendation />
+            </ProtectedRoute>
             {/* If none of the other routes matched, we will show a 404. */}
             <Route>
               <h1>404</h1>

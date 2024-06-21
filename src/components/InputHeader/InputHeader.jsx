@@ -5,10 +5,13 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { useState } from 'react';
 import { Typography, Container, Button, Box } from '@mui/material';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useDispatch } from 'react-redux';
+
 
 function InputHeader(){
 
 const history = useHistory(); 
+const dispatch = useDispatch()
 const [date, setDate] = useState(dayjs()); 
 
 const addInput = (date) => {
