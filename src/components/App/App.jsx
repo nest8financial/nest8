@@ -26,7 +26,7 @@ import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
-
+import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';
@@ -45,11 +45,12 @@ function App() {
   }, [dispatch]);
 
   return (
+    
     <ThemeProvider theme={Theme}>
       <Router>
         <div>
           <Nav />
-          <MenuBar />
+
           <Switch>
             {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
             <Redirect exact from="/" to="/login" />
@@ -75,7 +76,7 @@ function App() {
                 // If the user is already logged in,
                 // redirect to the /My Reports page 
                 // right now redirect to summary until My Reports is done
-                <Redirect to="/home" />
+                <Redirect to="/menu_bar" />
               ) : (
                 // Otherwise, show the login page
                 <LoginPage />
@@ -97,6 +98,10 @@ function App() {
                 <Redirect to="/home" />          
             </Route>
 
+            <ProtectedRoute exact path="/menu_bar">
+              <MenuBar />
+            </ProtectedRoute>
+
             <ProtectedRoute exact path="/input_header">
               <InputHeader />
             </ProtectedRoute>
@@ -114,6 +119,10 @@ function App() {
             by recommendation. */}
             <ProtectedRoute exact path="/rec_detail/:month/:year">
               <RecommendationDetail />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/my_inputs/:month/:year">
+              <MonthlyInputs />
             </ProtectedRoute>
 
             <ProtectedRoute exact path="/mydata">

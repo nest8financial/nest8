@@ -10,6 +10,7 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { red, green } from '@mui/material/colors';
+import FinancialProgress from "../FinancialProgress/FinancialProgress";
 
 // import Grid from '@mui/material/Grid';
 
@@ -94,7 +95,7 @@ function FinancialSummary(){
           {variance.metric_name}
           {variance.variance_value >= 0 ? 'good!' : 'bad'}
         </Box>  */}
-
+    <FinancialProgress />
     </Container>
     )
 }

@@ -33,7 +33,7 @@ function* getMonthlyInputs(action) {
           url: `/api/financial_inputs`})
       yield put({
           type: 'SET_MONTHLY_INPUTS',
-          payload: response.data[0] })
+          payload: response.data})
     } catch (error) {
       console.log('Error while getting monthly inputs:', error);
     }

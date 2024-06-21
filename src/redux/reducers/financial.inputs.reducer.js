@@ -23,6 +23,7 @@ const singleMonthInputs = (state = {}, action) => {
  * Gets all of the monthly inputs for a user
  */
 const monthlyInputs = (state = [], action) => {
+  console.log("action.payload", action.payload)
     if (action.type === 'SET_MONTHLY_INPUTS') {
         return action.payload;
     } 
