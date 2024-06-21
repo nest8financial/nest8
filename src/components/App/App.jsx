@@ -26,12 +26,9 @@ import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
-<<<<<<< HEAD
 import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
-
-=======
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
->>>>>>> main
+
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';

@@ -31,11 +31,19 @@ console.log('year',year);
 
     return(
         <Stack spacing={2} sx={{ maxWidth: 600 }}>
-        <SnackbarContent message=" " />
+          <br/>
+            
+        <SnackbarContent message="Recommendations" />
         {recommendations?.map((recommendation) => (
             <SnackbarContent
                 key={recommendation.id}
                 message={`${recommendation.metric_name} ${recommendation.variance_value >= 0 ? recommendation.recommendation_positive_text : recommendation.recommendation_negative_text}`}
+               
+                sx={{
+                    backgroundColor: recommendation.variance_value >= 0 ? 'green' : 'red',
+                    color: 'white'
+                }}
+
                 />
         ))}
     </Stack>
