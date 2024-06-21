@@ -43,6 +43,40 @@ export function getShortMonthName(monthNumber, locale = 'en-US') {
     return monthName;
   }
 
+  export function generateMonthYearArray(startMonth, startYear, endMonth, endYear) {
+    const result = [];
+    let currentYear = startYear;
+    let currentMonth = startMonth;
+
+    while (currentYear < endYear || (currentYear === endYear && currentMonth <= endMonth)) {
+        result.push({ month: currentMonth, year: currentYear });
+        // Increment month and handle year change
+        currentMonth++;
+        if (currentMonth > 12) {
+            currentMonth = 1;
+            currentYear++;
+        }
+    }
+    return result;
+}
+
+export function generateMonthShortNameArray(startMonth, startYear, endMonth, endYear) {
+    const monthNameArray = [];
+    let currentYear = startYear;
+    let currentMonth = startMonth;
+    while (currentYear < endYear || (currentYear === endYear && currentMonth <= endMonth)) {
+        monthNameArray.push(getShortMonthName(currentMonth));
+        // Increment month and handle year change
+        currentMonth++;
+        if (currentMonth > 12) {
+            currentMonth = 1;
+            currentYear++;
+        }
+    }
+    console.log(`Here's your array from ${fromYear} ${fromMonth} to ${toYear} ${toMonth}:`, monthNameArray)
+    return monthNameArray;
+}
+
 
 // (end Date Utilities)
 // --------------------------------------------------------------------------

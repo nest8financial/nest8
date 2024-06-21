@@ -1,20 +1,78 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { 
-    Container,
-    Box, 
-    Button } from '@mui/material';
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, 
+                           LinearScale, 
+                           PointElement,
+                           LineElement,
+                           Title, 
+                           Tooltip,
+                           Legend, 
+                           Filler } from 'chart.js';
+import { getShortMonthName } from "../../utilities/utilities";
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 function FinancialProgress() {
-    const dispatch = useDispatch();
-    const graphData = useSelector(store => store.financialMetrics.monthlyGraphData);
+  const dispatch = useDispatch();
+  const graphData = useSelector(store => store.financialMetrics.monthlyGraphData);
 
-    useEffect(() => {
-        dispatch({
-            type: 'GET_MONTHLY_GRAPH_DATA',
-            payload: { isDefault: true }
-        })
-    }, [])
+  useEffect(() => {
+      dispatch({
+          type: 'GET_MONTHLY_GRAPH_DATA',
+          payload: { isDefault: true }
+      })
+  }, [])
+
+// 1. select a start month/year and an end month/year (default is 13 months or 
+//      whatever is availble if less than 13 available)
+// 2. get all availble months data from the metric table
+// 3. populate a month name array for the table
+// 4. populate a variance table for industry (repeated)
+// 5. populate a variace table from the metrics.variance_value column
+// 6. grab the metric name we are looking at for the table title
+// dispatch getGraphData
+//   payload: ( fromYear, fromMonth, toYear, toMonth )
+
+  const fromMonth = 6;
+  const fromYear =2022;
+
+  const toMonth = 2;
+  const toYear = 2024
+
+  // create a month array that starts at mm/yyyy and ends at mm/yyyy
+  let monthRangeArray = []; //month numbers to display
+  let stopMonth;
+  let startMonth;
+  for (let i=fromYear; i<=toYear; i++) {
+      if (i === toYear) {
+        stopMonth = toMonth;
+      } else {
+        stopMonth = 12;
+      }
+      if (i !== fromYear) {
+        startMonth = 1;
+      } else {
+        startMonth = fromMonth;
+      }
+      for(let j=startMonth; j<= stopMonth; j++) {
+          // console.log('year:', i, 'month', j);
+          // look in our piece of state that contains an array of year/months
+          
+
+
+
+          // monthRangeArray.push(getShortMonthName(j));
+      }
+  }
+  console.log(monthRangeArray);
+
+// { months: [] , industry_variances = [], user_variances = [] }
+
+//    MM/YYYY to MM/YYYY  // validate input so this is true!!!
+//assumption is the first mm/yyyy is an earlier or same month as the second
+//  mm/yyyy
+
+
 
     
     const startMonthName = 'June';
@@ -43,7 +101,7 @@ function FinancialProgress() {
         },
       ],
     };
-  
+  ``
     const options = {
       responsive: true,
       scales: {

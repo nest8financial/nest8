@@ -26,6 +26,7 @@ import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
+import { Button } from "@mui/material";
 
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
@@ -45,11 +46,13 @@ function App() {
   }, [dispatch]);
 
   return (
+    
     <ThemeProvider theme={Theme}>
+      <Button onClick={() => dispatch({ type: 'LOGOUT' })}>LOGOUT</Button>
       <Router>
         <div>
           <Nav />
-          <MenuBar />
+          {/* <MenuBar /> */}
           <Switch>
             {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
             <Redirect exact from="/" to="/login" />
