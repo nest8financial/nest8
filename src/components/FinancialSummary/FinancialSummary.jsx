@@ -11,8 +11,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { red, green } from '@mui/material/colors';
 import FinancialProgress from "../FinancialProgress/FinancialProgress";
+import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 
-// import Grid from '@mui/material/Grid';
+
 
 function FinancialSummary(){
 
@@ -36,7 +37,7 @@ function FinancialSummary(){
         payload: { month: date.format('MM'),
                    year: date.format('YYYY') } 
      });
-    }, [])
+    }, [dispatch])
 
 
     return(
@@ -72,29 +73,8 @@ function FinancialSummary(){
 
 
 
-
-
-       {/* <Card key={variance.id}
-                sx={{ minWidth: 275 }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-            {variance.metric_name}
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              adjective
-            </Typography>
-            <Typography variant="body">
-              well meaning and kindly.
-              <br />
-              {'"a benevolent smile"'}
-            </Typography>
-          </CardContent>
-        </Card> */}
-        {/* <Box key={variance.id}>
-          <Box></Box>
-          {variance.metric_name}
-          {variance.variance_value >= 0 ? 'good!' : 'bad'}
-        </Box>  */}
+    <FinancialRecommendation month={date.format('MM')}
+                             year={date.format('YYYY')}/>
     <FinancialProgress />
     </Container>
     )
