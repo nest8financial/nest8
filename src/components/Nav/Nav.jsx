@@ -19,7 +19,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [notifications, setNotifications] = React.useState(5); // Example number of notifications
+  const [notifications, setNotifications] = React.useState(3); // Example number of notifications
   const history = useHistory();
   const dispatch = useDispatch();
 

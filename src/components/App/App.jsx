@@ -48,7 +48,6 @@ function App() {
   return (
     
     <ThemeProvider theme={Theme}>
-      <Button onClick={() => dispatch({ type: 'LOGOUT' })}>LOGOUT</Button>
       <Router>
         <div>
           <Nav />
