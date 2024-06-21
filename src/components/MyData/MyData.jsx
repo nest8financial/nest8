@@ -14,7 +14,7 @@ import { useEffect } from "react";
 
 function MyData() {
   const userData = useSelector((store) => store.user); // pulls the user data from the user store
-  const monthlyInputs = useSelector((store) => store.financialInputs); // pulls the monthly inputs for a user from the financialInputs store
+  const monthlyInputs = useSelector((store) => store.financialInputs.missingMonthlyInputs); // pulls the monthly inputs for a user from the financialInputs store
 
 //   console.log("this is the user data", userData);
 //   console.log("these are the monthly inputs", monthlyInputs.monthlyInputs);
@@ -33,14 +33,10 @@ function MyData() {
 const dispatch = useDispatch(); 
 
 useEffect(() => {
-    dispatch({ type: 'GET_MONTHLY_INPUTS'})
+    dispatch({ type: 'GET_MISSING_MONTLY_INPUTS'})
 }, [])
 
-const calculateMissingMonths = (startDate, endDate) => {
 
-
-
-}
 
 const missingMonths = []; 
 

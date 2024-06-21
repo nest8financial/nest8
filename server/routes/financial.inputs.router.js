@@ -11,6 +11,35 @@ const { rejectUnauthenticated } =
 /**  ****  rejectUnauthenticated, put this in when login done */
 
 /**
+ * GET all MISSING monthly inputs for a user
+ */
+
+router.get('/missing',  async (req, res) => {
+    let connection;
+    connection = await pool.connect();
+    try {
+
+        const userId = req.user.id;
+        const sqlTextGetInputs = `
+            SELECT month, year  
+                FROM monthly_inputs
+                WHERE user_id = $1
+                ORDER BY year, month;
+            `;
+            const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
+            console.log('Get of missing monthly inputs in /api/financial_inputs/missing succesful:', dbResponse.rows )
+            connection.release();
+            res.send(dbResponse.rows);
+    } catch (error) {
+        console.log('Error in get of missing monthly inputs in /api/financial_inputs/missing', error);
+        connection.release();
+        res.sendStatus(500);
+    }
+})
+
+
+
+/**
  * GET all monthly inputs for a user
  */
 router.get('/',  async (req, res) => {
