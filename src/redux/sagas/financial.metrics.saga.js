@@ -24,7 +24,7 @@ function* getSingleMonthMetrics(action) {
 }
 
 /**
- * Get all the monthly inputs for a user
+ * Get all the monthly metrics for a user
  */
 function* getMonthlyMetrics(action) {
     try {
@@ -33,11 +33,27 @@ function* getMonthlyMetrics(action) {
           url: `/api/financial_metrics`})
       yield put({
           type: 'SET_MONTHLY_METRICS',
-          payload: response.data[0] })
+          payload: response.data })
     } catch (error) {
       console.log('Error while getting monthly metrics:', error);
     }
   }
+
+/**
+ * Get all the monthly metrics and industry data for a user
+ */
+function* getMonthlyGraphData(action) {
+  try {
+    const response = yield axios({
+        method: 'GET',
+        url: `/api/financial_metrics/graph_data`})
+    yield put({
+        type: 'SET_MONTHLY_GRAPH_DATA',
+        payload: response.data })
+  } catch (error) {
+    console.log('Error while getting monthly graph data:', error);
+  }
+}
 
   /**
  * Get a single month's in variances
@@ -105,7 +121,8 @@ function* financialMetricsSaga() {
   yield takeLatest('GET_MONTHLY_METRICS', getMonthlyMetrics);
   yield takeLatest('TOGGLE_METRIC_COMPLETED', toggleMetricCompleted);
   yield takeLatest('UPDATE_METRIC_NOTES', updateMetricNotes);
-  yield takeLatest('GET_SINGLE_MONTH_VARIANCES',getSingleMonthVariances)
+  yield takeLatest('GET_SINGLE_MONTH_VARIANCES',getSingleMonthVariances);
+  yield takeLatest('GET_MONTHLY_GRAPH_DATA', getMonthlyGraphData);
 }
 
 export default financialMetricsSaga;
