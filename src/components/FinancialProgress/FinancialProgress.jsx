@@ -19,8 +19,11 @@ function FinancialProgress() {
   useEffect(() => {
       dispatch({
           type: 'GET_MONTHLY_GRAPH_DATA',
-          payload: { isDefault: true }
-      })
+          payload: { fromMonth: 6, 
+                     toMonth: 6,
+                     fromYear: 2024,
+                     toYear: 2024 }
+           })
   }, [])
 
 // 1. select a start month/year and an end month/year (default is 13 months or 

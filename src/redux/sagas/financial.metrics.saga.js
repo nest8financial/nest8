@@ -44,9 +44,11 @@ function* getMonthlyMetrics(action) {
  */
 function* getMonthlyGraphData(action) {
   try {
+    console.log('actionpayload:', action.payload);
     const response = yield axios({
         method: 'GET',
-        url: `/api/financial_metrics/graph_data`})
+        url: `/api/financial_metrics/graph_data/${action.payload.fromMonth}/${action.payload.toMonth}/${action.payload.fromYear}/${action.payload.toYear}`})
+        console.log('response.data', response.data)
     yield put({
         type: 'SET_MONTHLY_GRAPH_DATA',
         payload: response.data })
