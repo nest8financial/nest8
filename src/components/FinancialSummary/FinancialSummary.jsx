@@ -11,8 +11,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { red, green } from '@mui/material/colors';
 import FinancialProgress from "../FinancialProgress/FinancialProgress";
+import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 
-// import Grid from '@mui/material/Grid';
+
 
 function FinancialSummary(){
 
@@ -36,7 +37,7 @@ function FinancialSummary(){
         payload: { month: date.format('MM'),
                    year: date.format('YYYY') } 
      });
-    }, [])
+    }, [dispatch])
 
 
     return(
@@ -69,6 +70,8 @@ function FinancialSummary(){
               ))}
             </Grid>
           </Box>
+    <FinancialRecommendation month={date.format('MM')}
+                             year={date.format('YYYY')}/>
     <FinancialProgress />
     </Container>
     )

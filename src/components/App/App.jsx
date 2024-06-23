@@ -25,7 +25,9 @@ import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
+import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
+
 import FinancialsPage from "../FinancialsPage/FinancialsPage";
 
 // import ProductPage from '../ProductPage';
@@ -102,6 +104,7 @@ function App() {
             <ProtectedRoute exact path="/input_header">
               <InputHeader />
             </ProtectedRoute>
+          
 
           <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
@@ -135,6 +138,10 @@ nw            </ProtectedRoute>
               <FinancialSummary />
             </ProtectedRoute>
 
+          
+            <ProtectedRoute path="/financial_recommendation" >
+            <FinancialRecommendation />
+            </ProtectedRoute>
             {/* If none of the other routes matched, we will show a 404. */}
             <Route>
               <h1>404</h1>

@@ -63,6 +63,7 @@ const singleMonthVariances = (state = [], action) => {
   }
 
 
+
 export default combineReducers({
   singleMonthMetrics,
   monthlyMetrics,
