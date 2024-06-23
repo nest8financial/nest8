@@ -1,11 +1,11 @@
-import MenuBar from "../MenuBar/MenuBar";
+
 
 function FinancialsPage() {
 
 
 
     return (
-        <MenuBar />
+
     )
 }
 

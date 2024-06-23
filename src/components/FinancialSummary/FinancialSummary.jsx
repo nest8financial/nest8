@@ -69,32 +69,6 @@ function FinancialSummary(){
               ))}
             </Grid>
           </Box>
-
-
-
-
-
-       {/* <Card key={variance.id}
-                sx={{ minWidth: 275 }}>
-          <CardContent>
-            <Typography variant="h5" component="div">
-            {variance.metric_name}
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-              adjective
-            </Typography>
-            <Typography variant="body">
-              well meaning and kindly.
-              <br />
-              {'"a benevolent smile"'}
-            </Typography>
-          </CardContent>
-        </Card> */}
-        {/* <Box key={variance.id}>
-          <Box></Box>
-          {variance.metric_name}
-          {variance.variance_value >= 0 ? 'good!' : 'bad'}
-        </Box>  */}
     <FinancialProgress />
     </Container>
     )

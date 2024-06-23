@@ -48,8 +48,8 @@ export default function Navbar() {
   }
 
   const handleReportButton = (e) => {
-    console.log('/my_summary');
-    history.push('/my_summary');
+    console.log('/financials');
+    history.push('/financials');
   }
 
   const handleDataButton = (e) => {

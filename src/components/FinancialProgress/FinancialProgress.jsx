@@ -1,6 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Container, Box, ToggleButtonGroup, ToggleButton } from "@mui/material";
+import { Container, 
+         Box,
+         ToggleButtonGroup, 
+         ToggleButton, 
+         Typography,
+         Paper,
+         Divider } from "@mui/material";
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, 
                            LinearScale, 
@@ -62,20 +68,26 @@ function FinancialProgress() {
         borderColor: 'rgba(75,192,192,1)',
         backgroundColor: 'rgba(75,192,192,0.2)', // green - good
         fill: 'end',
-        disableTooltip: true
+        disableTooltip: true,
+        pointStyle: 'rect',
+        pointRadius: 6
       },
       {
         data: graphData.industryVariances, 
         borderColor: 'rgba(75,192,192,1)',
         backgroundColor: 'rgba(251, 80, 74, 0.37)', //red - bad
-        fill: 'start'
+        fill: 'start',
+        pointStyle: 'rect',
+        pointRadius: 6
       },
       {
         // This will be user variance values for each month for a given metric
         data: graphData.userVariances,
         borderColor: 'rgba(153,102,255,1)',
         backgroundColor: 'rgba(153,102,255,0.2)',
-        customTooltip: `Your`
+        customTooltip: `Your`,
+        pointStyle: 'circle',
+        pointRadius: 7
       },
     ],
   };
@@ -135,7 +147,7 @@ function FinancialProgress() {
               return 'rgba(0,0,0,0)'; // Make text transparent for disabled tooltip
             }
             return context.chart.options.plugins.tooltip.bodyColor || 'black';
-          }
+          },          
         } 
       }
     }
@@ -143,38 +155,55 @@ function FinancialProgress() {
 
   return (
     <Container>
-      <Box>
-        {graphData ? (<Line key={graphData.metric_id}
-                  data={data} 
-                  options={options} />) : null}
-      </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
-      <ToggleButtonGroup
-        value={metricSelected}
-        exclusive
-        onChange={handleMetricChange}
-        aria-label="metric selection"
-      >
-        <ToggleButton value={1} aria-label="Metric 1">
-          Profit Margin
-        </ToggleButton>
-        <ToggleButton value={2} aria-label="Metric 2">
-          Asset Turnover Ratio
-        </ToggleButton>
-        <ToggleButton value={3} aria-label="Metric 3">
-          Financial Leverage Ratio
-        </ToggleButton>
-        <ToggleButton value={4} aria-label="Metric 4">
-          Return on Equity (ROE)
-        </ToggleButton>
-        <ToggleButton value={5} aria-label="Metric 5">
-          Tax Burden
-        </ToggleButton>
-        <ToggleButton value={6} aria-label="Metric 6">
-          Interest Burden
-        </ToggleButton>
-      </ToggleButtonGroup>
-    </Box>
+      <br></br><br></br>
+      <Divider sx={{ my: 2 }} align="left" >FINANCIAL PROGRESS </Divider>{/* Add margin top and bottom */}
+      <br></br>
+      <Paper elevation={10}>
+        <Typography variant="h4" align="center">
+          {(graphData.metric_name && graphData.metric_name)} </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center"}}>
+          <Box
+            sx={{
+              width: 10,
+              height: 10,
+              backgroundColor: 'rgba(111, 189, 191, 1)',
+              marginRight: 1, // Add margin for spacing between box and text
+            }}
+          />
+          <Box sx={{ display: 'inline' }}>Industry Standard</Box>
+        </Box>
+          <Box>
+            {graphData ? (<Line key={graphData.metric_id}
+                      data={data} 
+                      options={options} />) : null}
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4, flexWrap: 'wrap', gap: 1, }}>
+          <ToggleButtonGroup value={metricSelected}
+                            size="small" // Set the size of the buttons
+                            exclusive
+                            onChange={handleMetricChange}
+                            aria-label="financial metric selection">
+            <ToggleButton value={1} aria-label="Profit Margin">
+              Profit Margin
+            </ToggleButton>
+            <ToggleButton value={2} aria-label="Asset Turnover Ratio">
+              Asset Turnover Ratio
+            </ToggleButton>
+            <ToggleButton value={3} aria-label="Financial Leverage Ratio">
+              Financial Leverage Ratio
+            </ToggleButton>
+            <ToggleButton value={4} aria-label="Return on Equity (ROE)">
+              Return on Equity (ROE)
+            </ToggleButton>
+            <ToggleButton value={5} aria-label="Tax Burden">
+              Tax Burden
+            </ToggleButton>
+            <ToggleButton value={6} aria-label="Interest Burden">
+              Interest Burden
+            </ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
+      </Paper>
     </Container>
   )
 
