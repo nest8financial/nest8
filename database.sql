@@ -48,6 +48,7 @@ CREATE TABLE "monthly_inputs" (
 CREATE TABLE "metrics" (
     "id" SERIAL PRIMARY KEY,
     "metric_name" VARCHAR,
+    "metric_description" VARCHAR,
     "positive_text" VARCHAR,
     "negative_text" VARCHAR
 );

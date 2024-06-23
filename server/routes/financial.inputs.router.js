@@ -159,16 +159,21 @@ router.post('/',  async (req, res) => {
         const indTaxBurden = Number(industryMetrics.rows[0].ind_tax_burden);
         const indInterestBurden = Number(industryMetrics.rows[0].ind_interest_burden);
         console.log(profitMargin, assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, indProfitMargin, indAssetTurnoverRatio, indFinancialLeverageRatio, indReturnOnEquity, indTaxBurden, indInterestBurden, '***********');
+        // To calculate variances:
+        //      Because a larger value is better for metric 1, 2, 4:
+        //           calculate variance = (user - industry)
+        //      Because a smaller value is better for metric 3, 5, 6:
+        //           calculate variance = (industry - user)
         const sqlTextInsertMonthlyMetrics = `
                 INSERT INTO monthly_metrics
                     (monthly_id, metrics_id, metric_value, variance_value)
                     VALUES 
                     ($1, 1, $2, ($8::DECIMAL - $2::DECIMAL)),      
                     ($1, 2, $3, ($9::DECIMAL - $3::DECIMAL)),      
-                    ($1, 3, $4, ($10::DECIMAL - $4::DECIMAL)),     
+                    ($1, 3, $4, ($4::DECIMAL - $10::DECIMAL)),     
                     ($1, 4, $5, ($11::DECIMAL - $5::DECIMAL)),     
-                    ($1, 5, $6, ($12::DECIMAL - $6::DECIMAL)),    
-                    ($1, 6, $7, ($13::DECIMAL - $7::DECIMAL));    
+                    ($1, 5, $6, ($6::DECIMAL - $12::DECIMAL)),    
+                    ($1, 6, $7, ($7::DECIMAL - $13::DECIMAL));    
         `;
         await connection.query(sqlTextInsertMonthlyMetrics,
                                         [ monthlyInputId,
@@ -290,6 +295,11 @@ router.put('/',  async (req, res) => {
         const indInterestBurden = Number(industryMetrics.rows[0].ind_interest_burden);
         console.log(profitMargin, assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, indProfitMargin, indAssetTurnoverRatio, indFinancialLeverageRatio, indReturnOnEquity, indTaxBurden, indInterestBurden, '***********');
         // 4. Update the monthly_metrics table:
+        //   To calculate variances:
+        //      Because a larger value is better for metric 1, 2, 4:
+        //              calculate variance = (user - industry)
+        //      Because a smaller value is better for metric 3, 5, 6:
+        //              calculate variance = (industry - user)
         const sqlTextUpdateMonthlyMetrics = `
             UPDATE monthly_metrics
                 SET metric_value = CASE metrics_id
@@ -303,10 +313,10 @@ router.put('/',  async (req, res) => {
                     variance_value = CASE metrics_id
                                         WHEN 1 THEN ($8::DECIMAL - $2::DECIMAL)
                                         WHEN 2 THEN ($9::DECIMAL - $3::DECIMAL)
-                                        WHEN 3 THEN ($10::DECIMAL - $4::DECIMAL)
+                                        WHEN 3 THEN ($4::DECIMAL - $10::DECIMAL)
                                         WHEN 4 THEN ($11::DECIMAL - $5::DECIMAL)
-                                        WHEN 5 THEN ($12::DECIMAL - $6::DECIMAL)
-                                        WHEN 6 THEN ($13::DECIMAL - $7::DECIMAL)
+                                        WHEN 5 THEN ($6::DECIMAL - $12::DECIMAL)
+                                        WHEN 6 THEN ($7::DECIMAL - $13::DECIMAL)
                                      END
                 WHERE monthly_id = $1
                   AND metrics_id IN (1, 2, 3, 4, 5, 6);

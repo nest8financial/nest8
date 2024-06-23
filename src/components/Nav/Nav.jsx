@@ -25,9 +25,9 @@ export default function Navbar() {
 
   const user = useSelector((store) => store.user);
 
-  useEffect(() => {
-    dispatch({ type: "FETCH_USER" });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch({ type: "FETCH_USER" });
+  // }, [user]);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -73,6 +73,7 @@ export default function Navbar() {
     console.log('logout clicked!');
     handleClose();
     dispatch({ type: 'LOGOUT' });
+    dispatch({ type: "FETCH_USER" });
     history.push('/home');
   }
 

@@ -102,15 +102,3 @@ function FinancialSummary(){
 
 export default FinancialSummary;
 
-
-// industry - user
-//  profit margin variance .1 - .2 = -.1 BAD  user- industry
-//  asset turnover variance 2.0 - 1.5  =  .5 GOOD
-//  financial leverage variance  1.25 - 2 = 
-// roe                .3 - .25
-// tax burden         .2 - .5
-// interest burden    .3 - .2 
-
-
-// for metric 3, 5 and 6 variance is industry - user
-// for metric 1, 2, and 4 variance is user - industry

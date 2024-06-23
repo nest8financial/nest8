@@ -40,24 +40,6 @@ function* getMonthlyMetrics(action) {
   }
 
 /**
- * Get all the monthly metrics and industry data for a user
- */
-function* getMonthlyGraphData(action) {
-  try {
-    console.log('actionpayload:', action.payload);
-    const response = yield axios({
-        method: 'GET',
-        url: `/api/financial_metrics/graph_data/${action.payload.fromMonth}/${action.payload.toMonth}/${action.payload.fromYear}/${action.payload.toYear}`})
-        console.log('response.data', response.data)
-    yield put({
-        type: 'SET_MONTHLY_GRAPH_DATA',
-        payload: response.data })
-  } catch (error) {
-    console.log('Error while getting monthly graph data:', error);
-  }
-}
-
-  /**
  * Get a single month's in variances
  */
 function* getSingleMonthVariances(action) {
@@ -118,13 +100,32 @@ function* updateMetricNotes(action) {
     }
   }
 
+  /**
+ * Get all the monthly metrics and industry data for a user
+ */
+function* getGraphData(action) {
+  try {
+    console.log('actionpayload for graph data:', action.payload);
+    const response = yield axios({
+        method: 'GET',
+        url: `/api/financial_metrics/graph_data/${action.payload.fromMonth}/${action.payload.toMonth}/${action.payload.fromYear}/${action.payload.toYear}/${action.payload.metricId}`})
+        console.log('response.data for graph:', response.data)
+    yield put({
+        type: 'SET_GRAPH_DATA',
+        payload: response.data })
+  } catch (error) {
+    console.log('Error while getting monthly graph data:', error);
+  }
+}
+
+
 function* financialMetricsSaga() {
   yield takeLatest('GET_SINGLE_MONTH_METRICS', getSingleMonthMetrics);
   yield takeLatest('GET_MONTHLY_METRICS', getMonthlyMetrics);
   yield takeLatest('TOGGLE_METRIC_COMPLETED', toggleMetricCompleted);
   yield takeLatest('UPDATE_METRIC_NOTES', updateMetricNotes);
   yield takeLatest('GET_SINGLE_MONTH_VARIANCES',getSingleMonthVariances);
-  yield takeLatest('GET_MONTHLY_GRAPH_DATA', getMonthlyGraphData);
+  yield takeLatest('GET_GRAPH_DATA', getGraphData);
 }
 
 export default financialMetricsSaga;

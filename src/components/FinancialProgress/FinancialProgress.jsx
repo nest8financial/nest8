@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Container, Box, ToggleButtonGroup, ToggleButton } from "@mui/material";
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, 
                            LinearScale, 
@@ -9,125 +10,173 @@ import { Chart as ChartJS, CategoryScale,
                            Tooltip,
                            Legend, 
                            Filler } from 'chart.js';
-import { getShortMonthName } from "../../utilities/utilities";
+
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 function FinancialProgress() {
+  const today = new Date();
   const dispatch = useDispatch();
-  const graphData = useSelector(store => store.financialMetrics.monthlyGraphData);
+  const graphData = useSelector(store => store.financialMetrics.graphData);
+  // Set initial date range for 13 month span ending on today's month
+  const [dateRange, setDateRange] = useState({ toMonth: today.getMonth() + 1,
+                                               fromMonth: today.getMonth() + 1,
+                                               toYear: today.getFullYear(),
+                                               fromYear: today.getFullYear() - 1 });
+  // These correspond to metrics 1-6 in the metrics table
+  //    (default to Profit Margin)
+  const [metricSelected, setMetricSelected] = useState(1);
+  const [alignment, setAlignment] = useState('left') // State to manage selected value
 
   useEffect(() => {
       dispatch({
-          type: 'GET_MONTHLY_GRAPH_DATA',
-          payload: { fromMonth: 6, 
-                     toMonth: 6,
-                     fromYear: 2024,
-                     toYear: 2024 }
+          type: 'GET_GRAPH_DATA',
+          payload: { fromMonth: dateRange.fromMonth, 
+                     toMonth: dateRange.toMonth,
+                     fromYear: dateRange.fromYear,
+                     toYear: dateRange.toYear,
+                     metricId: metricSelected }
            })
-  }, [])
+  }, [dispatch, dateRange, metricSelected])
 
-// 1. select a start month/year and an end month/year (default is 13 months or 
-//      whatever is availble if less than 13 available)
-// 2. get all availble months data from the metric table
-// 3. populate a month name array for the table
-// 4. populate a variance table for industry (repeated)
-// 5. populate a variace table from the metrics.variance_value column
-// 6. grab the metric name we are looking at for the table title
-// dispatch getGraphData
-//   payload: ( fromYear, fromMonth, toYear, toMonth )
+// First MM/YYYY in selection is less than or equal to second MM/YYYY selection
 
-  const fromMonth = 6;
-  const fromYear =2022;
+// useEffect(() => {
+//   console.log('graph data updated!')
+//   console.log(graphData);
+// },[graphData])
 
-  const toMonth = 2;
-  const toYear = 2024
-
-  // create a month array that starts at mm/yyyy and ends at mm/yyyy
-  let monthRangeArray = []; //month numbers to display
-  let stopMonth;
-  let startMonth;
-  for (let i=fromYear; i<=toYear; i++) {
-      if (i === toYear) {
-        stopMonth = toMonth;
-      } else {
-        stopMonth = 12;
-      }
-      if (i !== fromYear) {
-        startMonth = 1;
-      } else {
-        startMonth = fromMonth;
-      }
-      for(let j=startMonth; j<= stopMonth; j++) {
-          // console.log('year:', i, 'month', j);
-          // look in our piece of state that contains an array of year/months
-          
-
-
-
-          // monthRangeArray.push(getShortMonthName(j));
-      }
+  const handleMetricChange = (event, newMetric) => {
+    if (newMetric !== null) {
+      setMetricSelected(newMetric);
+    }
   }
-  console.log(monthRangeArray);
-
-// { months: [] , industry_variances = [], user_variances = [] }
-
-//    MM/YYYY to MM/YYYY  // validate input so this is true!!!
-//assumption is the first mm/yyyy is an earlier or same month as the second
-//  mm/yyyy
-
-
-
-    
-    const startMonthName = 'June';
-    const startYear = 2023;
-    const endMonthName = 'June';
-    const endYear = 2024;
-    const metricName = 'Profit Margin';  // will be from metrics.metric_name
-    const numTicks = 7;
-  
-    const data = {
-      labels: ['JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN'],
-      // labels: ['JUN', '', 'AUG', '', 'OCT', '', 'DEC', '', 'FEB', '', 'APR', '', 'JUN'],
-      datasets: [
-        {
-          data: [.2, .2, .2, .2, .2, .2, .2, .2, .2, .2, .2, .2, .2], 
-          borderColor: 'rgba(75,192,192,1)',
-          backgroundColor: 'rgba(75,192,192,0.2)',
-          // fill: true,
-        },
-        {
-          // this will be variance_values for each month for a given metric
-          data: [-1.2, -.4, -.6, -.5, -.2, 1, 0, .4, .7, .6, .8, .8, .7],
-          borderColor: 'rgba(153,102,255,1)',
-          backgroundColor: 'rgba(153,102,255,0.2)',
-          // fill: true,
-        },
-      ],
-    };
-  ``
-    const options = {
-      responsive: true,
-      scales: {
-        x: {
-            ticks: {
-                maxTicksLimit: numTicks
-            }
-        }
+   
+  const numTicks = 7;
+  const data = {
+    labels: (graphData.shortMonthNameArray),
+    datasets: [
+      {
+        // NOTE: There are two industry data graphs so we can show green 
+        //       and red fill zones above and below industry standards
+        data: graphData.industryVariances,
+        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: 'rgba(75,192,192,0.2)', // green - good
+        fill: 'end',
+        disableTooltip: true
       },
-      plugins: {
-        legend: {
-          display: false
-        },
-        title: {
-          display: true,
-          text: `${metricName}`,
-        },  
+      {
+        data: graphData.industryVariances, 
+        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: 'rgba(251, 80, 74, 0.37)', //red - bad
+        fill: 'start'
+      },
+      {
+        // This will be user variance values for each month for a given metric
+        data: graphData.userVariances,
+        borderColor: 'rgba(153,102,255,1)',
+        backgroundColor: 'rgba(153,102,255,0.2)',
+        customTooltip: `Your`
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    scales: {
+      x: {
+          // Sets the maximum number of ticks on the x-axis
+          ticks: {
+              maxTicksLimit: numTicks
+          }
+      },
+      y: {
+        beginAtZero: false,
+        // These provide space above and below the lines:
+        //    set the minimum y-axis tick to the minimum graph value 
+        //        minus 30% the range of y-axis values
+        //    set the maximum y-axis tick to the maximum graph value 
+        //        minus 30% the range of y-axis values
+        // min: ((graphData.userVariances && graphData.industryVariances) && Math.min(...graphData.userVariances)),
+        min: ((graphData.userVariances && graphData.industryVariances) && 
+          (Math.min(...graphData.userVariances , ...graphData.industryVariances)) - 
+          (0.30 *(Math.max(...graphData.userVariances , ...graphData.industryVariances) - Math.min(...graphData.userVariances, ...graphData.industryVariances))) ), 
+        max: ((graphData.userVariances && graphData.industryVariances) && 
+          (Math.max(...graphData.userVariances , ...graphData.industryVariances)) + 
+          (0.30 *(Math.max(...graphData.userVariances , ...graphData.industryVariances) - Math.min(...graphData.userVariances, ...graphData.industryVariances))) )
+      },
+    },
+    plugins: {
+      legend: {
+        display: false
+      },
+      title: {
+        display: true,
+        // pull the graph title based on the metric selected
+        text: (graphData.metric_name && graphData.metric_name)
+      }, 
+      // disable tooltips for the industry standards
+      tooltip: {
+        enabled: true,
+        callbacks: {
+          label: (context) => {
+            // Check if the dataset has the disableTooltip property
+            const dataset = context.dataset;
+            if (dataset.customTooltip) {
+              return `${dataset.customTooltip} ${graphData.metric_name}: ${context.raw}`
+            } else if (dataset.disableTooltip) {
+              return null; // Return null to disable the tooltip for this dataset
+            }
+            // // Default tooltip label
+            return `Industry Standard ${graphData.metric_name}: ${context.raw}`;
+          },
+          labelTextColor: (context) => {
+            const dataset = context.dataset;
+            if (dataset.disableTooltip) {
+              return 'rgba(0,0,0,0)'; // Make text transparent for disabled tooltip
+            }
+            return context.chart.options.plugins.tooltip.bodyColor || 'black';
+          }
+        } 
       }
     }
-  
-  
-    return <Line data={data} options={options} />;
+  }
 
+  return (
+    <Container>
+      <Box>
+        {graphData ? (<Line key={graphData.metric_id}
+                  data={data} 
+                  options={options} />) : null}
+      </Box>
+      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4 }}>
+      <ToggleButtonGroup
+        value={metricSelected}
+        exclusive
+        onChange={handleMetricChange}
+        aria-label="metric selection"
+      >
+        <ToggleButton value={1} aria-label="Metric 1">
+          Profit Margin
+        </ToggleButton>
+        <ToggleButton value={2} aria-label="Metric 2">
+          Asset Turnover Ratio
+        </ToggleButton>
+        <ToggleButton value={3} aria-label="Metric 3">
+          Financial Leverage Ratio
+        </ToggleButton>
+        <ToggleButton value={4} aria-label="Metric 4">
+          Return on Equity (ROE)
+        </ToggleButton>
+        <ToggleButton value={5} aria-label="Metric 5">
+          Tax Burden
+        </ToggleButton>
+        <ToggleButton value={6} aria-label="Metric 6">
+          Interest Burden
+        </ToggleButton>
+      </ToggleButtonGroup>
+    </Box>
+    </Container>
+  )
 
 }
 
