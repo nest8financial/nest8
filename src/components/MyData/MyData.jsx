@@ -11,52 +11,69 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { getMonthName } from "../../utilities/utilities";
 
 function MyData() {
-  const missingInputs = useSelector((store) => store.financialInputs.missingMonthlyInputs); // pulls the monthly inputs for a user from the financialInputs store
+  const missingInputs = useSelector(
+    (store) => store.financialInputs.missingMonthlyInputs
+  ); // pulls the monthly inputs for a user from the financialInputs store
 
-  console.log("these are the monthly inputs", missingInputs);
+  console.log("these are the missing monthly inputs", missingInputs);
 
-const dispatch = useDispatch(); 
-const history = useHistory();
+function separateOutMonthAndYear(arrayOfDates) {
+    let formattedMissingInputs = []; 
+    for (let eachMonth of arrayOfDates) {
+      let monthName = getMonthName(eachMonth[1]); // pulls the month from the provided array and converts to a string
+    //   console.log("this is the month name", monthName);
+      let eachMonthFormatted = [eachMonth[0], monthName]; //resets each array to be a string for the month 
+    //   console.log("formatted month is", eachMonthFormatted);
 
-useEffect(() => {
-    dispatch({ type: 'GET_MISSING_MONTLY_INPUTS'})  // updates the store upon page load with all missing inputs to render alerts 
-}, [])
+    formattedMissingInputs.push(eachMonthFormatted) // pushes formatted array into formattedMissingInputs
+      
+    }
+    return formattedMissingInputs // returns a new array of arrays with formatted months
+  }
 
-// Button routing functions 
-function changeToMyReports(){
-    history.push('/financials')
-}
+ console.log('TESTING', separateOutMonthAndYear(missingInputs)) 
 
-function changeToMyProfile(){
-    history.push('/myprofile')
-}
+  const dispatch = useDispatch();
+  const history = useHistory();
 
-function changeToMySavedInputs(){
-    history.push('/mysavedinputs')
-}
-
+  useEffect(() => {
+    dispatch({ type: "GET_MISSING_MONTLY_INPUTS" }); // updates the store upon page load with all missing inputs to render alerts
+  }, []);
 
   return (
     <Container>
       <Box>
-        <Button onClick={changeToMyReports} variant="contained" sx={{ mt: 6, mb: 2, mr: 2 }}>
+        <Button
+          onClick={() => history.push("/financials")}
+          variant="contained"
+          sx={{ mt: 6, mb: 2, mr: 2 }}
+        >
           My Reports
         </Button>
       </Box>
       <Box>
-        <Button onClick={changeToMyProfile} variant="contained" sx={{ mb: 2, mr: 2 }}>
+        <Button
+          onClick={() => history.push("/myprofile")}
+          variant="contained"
+          sx={{ mb: 2, mr: 2 }}
+        >
           My Profile
         </Button>
       </Box>
       <Box>
-        <Button onClick={changeToMySavedInputs} variant="contained" sx={{ mb: 2, mr: 2 }}>
+        <Button
+          onClick={() => history.push("/mysavedinputs")}
+          variant="contained"
+          sx={{ mb: 2, mr: 2 }}
+        >
           My Saved Inputs
         </Button>
       </Box>
       <Box>
-        <Typography  sx={{ mt: 2 }} variant="h2" fontSize={32}>
+        <Typography sx={{ mt: 2 }} variant="h2" fontSize={32}>
           Alerts
         </Typography>
         {missingInputs.length > 0 && (
@@ -66,19 +83,20 @@ function changeToMySavedInputs(){
                 <ListItem key={month}>
                   <Paper>
                     <Box>
-                        <ListItemText
+                      <ListItemText
                         primary={
-                            <Typography variant="subtitle1" fontWeight="bold">
+                          <Typography variant="subtitle1" fontWeight="bold">
                             {month}
-                            </Typography>
+                          </Typography>
                         }
                         secondary={
-                            <Typography variant="body2" color="error">
-                            You have uncompleted recommendation action items for{month}
+                          <Typography variant="body2" color="error">
+                            You have uncompleted recommendation action items for
                             {month}
-                            </Typography>
+                            {month}
+                          </Typography>
                         }
-                        />
+                      />
                     </Box>
                   </Paper>
                 </ListItem>
