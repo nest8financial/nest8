@@ -15,18 +15,7 @@ import { useEffect } from "react";
 function MyData() {
   const missingInputs = useSelector((store) => store.financialInputs.missingMonthlyInputs); // pulls the monthly inputs for a user from the financialInputs store
 
-//   console.log("these are the monthly inputs", monthlyInputs.monthlyInputs);
-
-const today = new Date(); // pulls the current date
-const currentMonthYear = format(today, 'yyyy, MM') // reformats to provide just the month and year **make sure this is formatted to be an integer 
-
-//   console.log('this is todays month', currentMonthYear);
-
-  const parsedJoinDate = parseISO(userData.date_joined) // parses the date joined from the userData object
-  const joinDate =  format(parsedJoinDate, 'yyyy, MM') // reformats to provide just the month and year 
-
-  console.log('this is today date', today);
-  console.log('this is the Parsed join date', parsedJoinDate);
+  console.log("these are the monthly inputs", missingInputs);
 
 
 
