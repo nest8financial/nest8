@@ -110,3 +110,20 @@ input {
   margin: 5px;
   margin-bottom: 10px;
 }
+
+input {
+  background-color: rgb(202,202,214,0.73);
+  background-color: rgb(81,80,115,0.87);
+background-color: rgb(180,188,243,0.73);
+background-color: #bdbdbd;
+background-color: #223737;
+background-color: #4c7171;
+background-color: #254c4c;
+background-color: #576469;
+
+background-color: rgb(40, 40, 42);
+
+background-color: rgb(187, 52, 42);
+background-color: rgb(35, 236, 176);
+background-color: none;
+}
