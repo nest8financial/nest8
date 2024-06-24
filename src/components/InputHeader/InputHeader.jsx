@@ -14,12 +14,11 @@ const history = useHistory();
 const dispatch = useDispatch()
 const [date, setDate] = useState(dayjs()); 
 
-// const addInput = (date) => {
-//   const month = date.format('MM');
-//     const year = date.format('YYYY');
-//     dispatch(setDate(month, year));
-//     history.push(`/financial_recommendation`);
-// }
+const addInput = (date) => {
+  console.log('month is', date.format('MM'));
+  console.log('year is', date.format('YYYY'));
+    history.push(`/inputs_add_edit/${date.format('MM')}/${date.format('YYYY')}`)
+}
 
 return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

@@ -1,14 +1,56 @@
 const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
-const { rejectUnauthenticated } = 
-    require('../modules/authentication-middleware');
-
-
-
+const { rejectUnauthenticated } = require('../modules/authentication-middleware');
+const { convertToDatesWeHave, generateDatesWeShouldHave, getMissingMonths } = require('../modules/helper-functions-missing-inputs'); 
 /* ------------------------- ROUTES ----------------------------------------*/
 
 /**  ****  rejectUnauthenticated, put this in when login done */
+
+/**
+ * GET all MISSING monthly inputs for a user
+ */
+
+router.get('/missing',  async (req, res) => {
+    let connection;
+    connection = await pool.connect();
+    try {
+
+        const userId = req.user.id;
+        const sqlTextGetInputs = `
+        SELECT 
+            "monthly_inputs"."month", 
+            "monthly_inputs"."year",
+            "user"."date_joined",
+            "user"."id" AS user_id   
+        FROM "monthly_inputs"
+            JOIN "user"
+                ON "user"."id" = "monthly_inputs"."user_id"
+                WHERE user_id = $1
+                ORDER BY year, month;
+                `;
+            const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
+            let arrayOfDatesWeHave = convertToDatesWeHave(dbResponse.rows) // uses helper function to loop through the input dates in the database and creates an array of dates we have 
+           
+            const joinDate = dbResponse.rows[0].date_joined
+            const formattedMonth = joinDate.getMonth() + 1
+            const formattedYear = joinDate.getFullYear()
+            const formattedJoinDate = [formattedYear, formattedMonth] // formats join date to [Number('YYYY'), Number('MM')] format
+         
+            let arrayOfDatesWeShouldHave = generateDatesWeShouldHave(formattedJoinDate) // uses helper function to generate an array of arrays with dates from the join date to current date
+      
+            let missingMonthsResponse = getMissingMonths(arrayOfDatesWeShouldHave, arrayOfDatesWeHave)
+            console.log('these are the missing months', missingMonthsResponse);
+            connection.release();
+            res.send(missingMonthsResponse);
+    } catch (error) {
+        console.log('Error in get of missing monthly inputs in /api/financial_inputs/missing', error);
+        connection.release();
+        res.sendStatus(500);
+    }
+})
+
+
 
 /**
  * GET all monthly inputs for a user
