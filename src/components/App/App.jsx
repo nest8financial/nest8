@@ -26,6 +26,7 @@ import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
+import MembershipPlan from "../MembershipPlan/MembershipPlan";
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';
@@ -100,6 +101,10 @@ function App() {
             <ProtectedRoute exact path="/input_header">
               <InputHeader />
             </ProtectedRoute>
+
+            <Route exact path="/my_plan">
+              <MembershipPlan/>
+            </Route>
 
           <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
