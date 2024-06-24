@@ -27,9 +27,8 @@ import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
-
-import FinancialsPage from "../FinancialsPage/FinancialsPage";
-
+import MembershipPlan from "../MembershipPlan/MembershipPlan";
+import FinancialsPage from "../FinancialsPage/FinancialsPage"
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';
@@ -104,7 +103,10 @@ function App() {
             <ProtectedRoute exact path="/input_header">
               <InputHeader />
             </ProtectedRoute>
-          
+
+            <Route exact path="/my_plan">
+              <MembershipPlan/>
+            </Route>
 
           <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage

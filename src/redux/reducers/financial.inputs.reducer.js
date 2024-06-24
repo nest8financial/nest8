@@ -30,7 +30,21 @@ const monthlyInputs = (state = [], action) => {
     return state;
 };
 
+
+/**
+ * Gets all of the MISSING monthly inputs for a user
+ */
+const missingMonthlyInputs = (state = [], action) => {
+  
+  if (action.type === 'SET_MISSING_MONTHLY_INPUTS') {
+      return action.payload;
+  } 
+  return state;
+}
+
+
 export default combineReducers({
   singleMonthInputs,
-  monthlyInputs
+  monthlyInputs,
+  missingMonthlyInputs
 });
