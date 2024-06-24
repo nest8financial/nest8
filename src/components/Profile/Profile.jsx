@@ -38,19 +38,19 @@ function Profile()  {
           component="form"
           sx={{
             '& > :not(style)': { m: 3 },
-            position: 'relative' // Added this line to make the card the reference point for absolute positioning
+            position: 'relative' // Ensure Card is relative for absolute positioning if needed
           }}
           noValidate
           autoComplete="off"
         >
-          <Box sx={{ position: 'absolute', top: 8, right: 8 }}> {/* Added this Box for absolute positioning */}
-            <IconButton  >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Typography gutterBottom variant="h4" component="div">
+              My Profile
+            </Typography>
+            <IconButton sx={{ ml: 2 }}>
               <EditIcon />
             </IconButton>
           </Box>
-          <Typography gutterBottom variant="h4" component="div">
-            My Profile
-          </Typography>
           <Stack
             direction="row"
             justifyContent="left"
