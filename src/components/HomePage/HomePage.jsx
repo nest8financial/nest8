@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Typography, Container, Grid, Link, List, ListItem, ListItemIcon, ListItemText, IconButton } from '@mui/material';
+import { Button, Typography, Container, Grid, Link, List, ListItem, ListItemIcon, ListItemText, IconButton, Box } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -16,10 +16,29 @@ function HomePage() {
   };
 
   return (
-    <div>
-        
-      <Container style={{ paddingTop: '20px' }}>
-        <section id="educate-users">
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        overflowY: 'scroll',
+        height: '100vh',
+        scrollSnapType: 'y mandatory',
+        scrollBehavior: 'smooth',
+        // '& > *': {
+        //   scrollSnapAlign: 'start',
+        //   height: '100vh',
+        //   display: 'flex',
+        //   flexDirection: 'column',
+        //   justifyContent: 'center',
+        //   alignItems: 'center',
+        //   padding: '20px',
+        //   border: '1px solid #e0e0e0',
+        // }
+      }}
+    >
+
+      <Container sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '20px', border: '1px solid #e0e0e0', scrollSnapAlign: 'start', boxSizing: 'border-box', }}> 
+        <section id="educate-users" sx={{ flexGrow: 1, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography variant="h4" gutterBottom>
             Learn what Nest 8 can do
           </Typography>
@@ -40,7 +59,7 @@ function HomePage() {
               <ListItemIcon>
                 <CheckBoxIcon color="primary" />
               </ListItemIcon>
-              <ListItemText primary="Empowers your buisness decisions" />
+              <ListItemText primary="Empowers your business decisions" />
             </ListItem>
             <ListItem>
               <ListItemIcon>
@@ -59,16 +78,21 @@ function HomePage() {
            Explore All Features
           </Typography>
         </section>
-        <section id="free-trial" style={{ marginTop: '40px' }}>
+        </Container>
+
+      <Container sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '20px', border: '1px solid #e0e0e0', scrollSnapAlign: 'center', boxSizing: 'border-box',  }}>
+        <section id="free-trial" sx={{ flexGrow: 1, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography variant="h4" gutterBottom>
             How Nest 8 works for your buisness type
           </Typography>
-          
           <Button variant="contained" color="primary" onClick={() => handleClick('/product')}>
             Sign up for free 
           </Button>
         </section>
-        <section id="links" style={{ marginTop: '40px' }}>
+      </Container>
+
+      <Container sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '20px', border: '1px solid #e0e0e0', scrollSnapAlign: 'end', boxSizing: 'border-box',  }}>
+        <section id="links" sx={{ flexGrow: 1, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
         <Typography variant="h4" gutterBottom>
             Quick Links
           </Typography>
@@ -128,7 +152,7 @@ function HomePage() {
           <Link href="/legal">Legal</Link> | <Link href="/privacy">Privacy Notice</Link> | <Link href="/accessibility">Accessibility</Link>
         </section>
       </Container>
-    </div>
+    </Box>
   );
 }
 
