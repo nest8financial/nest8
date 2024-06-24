@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Container, 
-         Box,
+import { Box,
          ToggleButtonGroup, 
          ToggleButton, 
          Typography,
@@ -19,7 +18,7 @@ import { Chart as ChartJS, CategoryScale,
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-function FinancialProgress() {
+function FinancialProgress({company}) {
   const today = new Date();
   const dispatch = useDispatch();
   const graphData = useSelector(store => store.financialMetrics.graphData);
@@ -154,13 +153,14 @@ function FinancialProgress() {
   }
 
   return (
-    <Container>
-      <br></br><br></br>
-      <Divider sx={{ my: 2 }} align="left" >FINANCIAL PROGRESS </Divider>{/* Add margin top and bottom */}
+    <Box>
+      <Divider sx={{ my: 2 }} textAlign="left" >FINANCIAL PROGRESS </Divider>{/* Add margin top and bottom */}
       <br></br>
       <Paper elevation={10}>
+        <br></br><br></br>
         <Typography variant="h4" align="center">
-          {(graphData.metric_name && graphData.metric_name)} </Typography>
+          {(graphData.metric_name && graphData.metric_name)} for {company} </Typography>
+          <br></br>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center"}}>
           <Box
             sx={{
@@ -204,7 +204,7 @@ function FinancialProgress() {
           </ToggleButtonGroup>
         </Box>
       </Paper>
-    </Container>
+    </Box>
   )
 
 }
