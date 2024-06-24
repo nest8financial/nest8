@@ -83,7 +83,7 @@ function separateOutMonthAndYear(arrayOfDates) {
         <Typography sx={{ mt: 2 }} variant="h2" fontSize={32}>
           Alerts
         </Typography>
-        {missingInputsToDisplay.length > 0 && (
+        {missingInputsToDisplay.length > 0 ? (
           <>
             <List>
               {missingInputsToDisplay.map((date) => (
@@ -119,6 +119,10 @@ function separateOutMonthAndYear(arrayOfDates) {
               ))}
             </List>
           </>
+        ) : (
+            <Typography variant="body1" sx={{ mt: 2, color: 'green' }}>
+                No current alerts. All monthly inputs are up to date. 
+            </Typography>
         )}
       </Box>
     </Container>
