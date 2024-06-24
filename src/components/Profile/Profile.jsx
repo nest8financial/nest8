@@ -14,7 +14,9 @@ import Typography from '@mui/material/Typography';
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Select, MenuItem } from "@mui/material";
+import { Select, MenuItem, Icon } from "@mui/material";
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
 
 
 function Profile()  {
@@ -31,88 +33,89 @@ function Profile()  {
     
   
     
-return(
-
-
-    
-    <Card 
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 3 },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-        <Typography gutterBottom variant="h4" component="div">
-           My Profile
-          </Typography>
-      <Stack
-        direction="row"
-        justifyContent="left"
-        alignItems="center"
-        sx={{ height: '10vh' }}
-      >
-
-      </Stack>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={4}>
-          <FormControl variant="standard" fullWidth>
-            <InputLabel htmlFor="component-simple">First Name</InputLabel>
-            <Input id="component-simple" />
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <FormControl variant="standard" fullWidth>
-            <InputLabel htmlFor="component-helper">Last Name</InputLabel>
-            <Input
-              id="component-helper"
-              aria-describedby="component-helper-text"
-            />
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <FormControl variant="standard" fullWidth>
-            <InputLabel htmlFor="component-simple">Company</InputLabel>
-            <Input id="component-simple" />
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4} >
-        <FormControl value="" variant="standard" fullWidth>
-            <Select
-        labelId="dynamic-select-label"
-          value={industry}
-          onChange={(event) => setIndustry(event.target.value)}
-          displayEmpty
-          label="Industry"
-          sx={{ mt: 2}}
-       
+      return (
+        <Card 
+          component="form"
+          sx={{
+            '& > :not(style)': { m: 3 },
+            position: 'relative' // Added this line to make the card the reference point for absolute positioning
+          }}
+          noValidate
+          autoComplete="off"
         >
-            <MenuItem value="" disabled>
-            Industry
-          </MenuItem>
-          {industries?.map((industry) => (
-            <MenuItem key={industry.id} value={industry.id}>
-              {industry.name}
-            </MenuItem>
-          ))}
-           </Select>
-           </FormControl>
+          <Box sx={{ position: 'absolute', top: 8, right: 8 }}> {/* Added this Box for absolute positioning */}
+            <IconButton  >
+              <EditIcon />
+            </IconButton>
+          </Box>
+          <Typography gutterBottom variant="h4" component="div">
+            My Profile
+          </Typography>
+          <Stack
+            direction="row"
+            justifyContent="left"
+            alignItems="center"
+            sx={{ height: '10vh' }}
+          >
+          </Stack>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl variant="standard" fullWidth>
+                <InputLabel htmlFor="component-simple">First Name</InputLabel>
+                <Input id="component-simple" />
+              </FormControl>
+            </Grid>
+      
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl variant="standard" fullWidth>
+                <InputLabel htmlFor="component-helper">Last Name</InputLabel>
+                <Input
+                  id="component-helper"
+                  aria-describedby="component-helper-text"
+                />
+              </FormControl>
+            </Grid>
+      
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl variant="standard" fullWidth>
+                <InputLabel htmlFor="component-simple">Company</InputLabel>
+                <Input id="component-simple" />
+              </FormControl>
+            </Grid>
+      
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl value="" variant="standard" fullWidth>
+                <Select
+                  labelId="dynamic-select-label"
+                  value={industry}
+                  onChange={(event) => setIndustry(event.target.value)}
+                  displayEmpty
+                  label="Industry"
+                  sx={{ mt: 2 }}
+                >
+                  <MenuItem value="" disabled>
+                    Industry
+                  </MenuItem>
+                  {industries?.map((industry) => (
+                    <MenuItem key={industry.id} value={industry.id}>
+                      {industry.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+      
+            <Grid item xs={12} sm={6} md={4}>
+              <FormControl variant="standard" fullWidth>
+                <InputLabel htmlFor="component-simple">Email</InputLabel>
+                <Input id="component-simple" />
+              </FormControl>
+            </Grid>
+          </Grid>
+        </Card>
+      );
+      
 
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={4}>
-          <FormControl variant="standard" fullWidth>
-    
-            <InputLabel htmlFor="component-simple">Email</InputLabel>
-            <Input id="component-simple"  />
-          </FormControl>
-        </Grid>
-      </Grid>
-      </Card>
-);
 
 }
 
