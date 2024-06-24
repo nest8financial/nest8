@@ -44,6 +44,12 @@ export function getShortMonthName(monthNumber, locale = 'en-US') {
     return monthName;
   }
 
+  /**
+   *  This function generates an array of objects with month and year
+   *    properties, given a:
+   *            - start Month, start Year
+   *            - end Month, end Year
+   */
   export function generateMonthYearArray(startMonth, startYear, endMonth, endYear) {
     const result = [];
     let currentYear = startYear;
@@ -61,6 +67,12 @@ export function getShortMonthName(monthNumber, locale = 'en-US') {
     return result;
 }
 
+/** 
+ * This function generates an array of short Month Names
+ *    -  it takes in a startMonth, startYear, endMonth, endYear
+ *    -  it returns an array of the short month text names only
+ *          (without years)                    
+ */
 export function generateMonthShortNameArray(startMonth, startYear, endMonth, endYear) {
     const monthNameArray = [];
     let currentYear = startYear;
@@ -76,6 +88,17 @@ export function generateMonthShortNameArray(startMonth, startYear, endMonth, end
     }
     console.log(`Here's your array from ${fromYear} ${fromMonth} to ${toYear} ${toMonth}:`, monthNameArray)
     return monthNameArray;
+}
+
+/**
+ * This function takes in a date (in the form of a javascript Date object)
+ *     and returns the same date a year prior
+ */
+export function getLastYearsDate(date) {
+    let year = date.getFullYear();
+    year--;
+    date.setFullYear(year);
+    return date;
 }
 
 

@@ -27,7 +27,8 @@ import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
-
+import MembershipPlan from "../MembershipPlan/MembershipPlan";
+import FinancialsPage from "../FinancialsPage/FinancialsPage"
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';
@@ -77,7 +78,7 @@ function App() {
                 // If the user is already logged in,
                 // redirect to the /My Reports page 
                 // right now redirect to summary until My Reports is done
-                <Redirect to="/my_summary" />
+                <Redirect to="/financials" />
               ) : (
                 // Otherwise, show the login page
                 <LoginPage />
@@ -102,7 +103,10 @@ function App() {
             <ProtectedRoute exact path="/input_header">
               <InputHeader />
             </ProtectedRoute>
-          
+
+            <Route exact path="/my_plan">
+              <MembershipPlan/>
+            </Route>
 
           <ProtectedRoute
             // logged in shows InputHeader page, else shows LoginPage
@@ -119,23 +123,26 @@ function App() {
               <RecommendationDetail />
             </ProtectedRoute>
 
-            <ProtectedRoute exact path="/my_inputs/:month/:year">
+            <ProtectedRoute exact path="/my_inputs">
               <MonthlyInputs />
+            </ProtectedRoute>
 
-nw            </ProtectedRoute>
-
-            <ProtectedRoute exact path="/mydata">
+            <ProtectedRoute exact path="/my_data">
               <MyData />
             </ProtectedRoute>
 
-            <ProtectedRoute exact path="/my_summary">
-              <FinancialSummary />
+            <ProtectedRoute exact path="/financials">
+              <FinancialsPage />
             </ProtectedRoute>
 
+            {/* <ProtectedRoute exact path="/my_summary">
+              <FinancialSummary />
+            </ProtectedRoute> */}
+
           
-            <ProtectedRoute path="/financial_recommendation" >
+            {/* <ProtectedRoute path="/financial_recommendation" >
             <FinancialRecommendation />
-            </ProtectedRoute>
+            </ProtectedRoute> */}
             {/* If none of the other routes matched, we will show a 404. */}
             <Route>
               <h1>404</h1>
