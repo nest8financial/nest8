@@ -54,7 +54,7 @@ export default function Navbar() {
 
   const handleDataButton = (e) => {
     console.log('/mydata');
-    history.push('/mydata');
+    history.push('/my_data');
   }
 
   const handleProfileButton = (e) => {
