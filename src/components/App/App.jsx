@@ -25,7 +25,8 @@ import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
-import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
+import MonthlyInputs from "../MonthyInputs/MonthlyInputs"; 
+import Profile from '../Profile/Profile'
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';
@@ -127,6 +128,10 @@ nw            </ProtectedRoute>
 
             <ProtectedRoute exact path="/my_summary">
               <FinancialSummary />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/profile">
+              <Profile />
             </ProtectedRoute>
 
             {/* If none of the other routes matched, we will show a 404. */}
