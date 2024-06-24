@@ -28,6 +28,7 @@ import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
+import FinancialsPage from "../FinancialsPage/FinancialsPage"
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';
