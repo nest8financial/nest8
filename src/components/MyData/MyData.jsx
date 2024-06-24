@@ -9,51 +9,60 @@ import {
   Paper,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { differenceInMonths, startOfMonth, endOfMonth, parse, format, parseISO } from 'date-fns';
 import { useEffect } from "react";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 function MyData() {
   const missingInputs = useSelector((store) => store.financialInputs.missingMonthlyInputs); // pulls the monthly inputs for a user from the financialInputs store
 
   console.log("these are the monthly inputs", missingInputs);
 
-
-
 const dispatch = useDispatch(); 
+const history = useHistory();
 
 useEffect(() => {
-    dispatch({ type: 'GET_MISSING_MONTLY_INPUTS'})
+    dispatch({ type: 'GET_MISSING_MONTLY_INPUTS'})  // updates the store upon page load with all missing inputs to render alerts 
 }, [])
 
+// Button routing functions 
+function changeToMyReports(){
+    history.push('/financials')
+}
 
+function changeToMyProfile(){
+    history.push('/myprofile')
+}
 
-const missingMonths = []; 
+function changeToMySavedInputs(){
+    history.push('/mysavedinputs')
+}
+
 
   return (
     <Container>
       <Box>
-        <Button variant="contained" sx={{ mb: 2, mr: 2 }}>
+        <Button onClick={changeToMyReports} variant="contained" sx={{ mt: 6, mb: 2, mr: 2 }}>
           My Reports
         </Button>
       </Box>
       <Box>
-        <Button variant="contained" sx={{ mb: 2, mr: 2 }}>
+        <Button onClick={changeToMyProfile} variant="contained" sx={{ mb: 2, mr: 2 }}>
           My Profile
         </Button>
       </Box>
       <Box>
-        <Button variant="contained" sx={{ mb: 2, mr: 2 }}>
+        <Button onClick={changeToMySavedInputs} variant="contained" sx={{ mb: 2, mr: 2 }}>
           My Saved Inputs
         </Button>
       </Box>
       <Box>
-        <Typography variant="h2" fontSize={32}>
+        <Typography  sx={{ mt: 2 }} variant="h2" fontSize={32}>
           Alerts
         </Typography>
-        {missingMonths.length > 0 && (
+        {missingInputs.length > 0 && (
           <>
             <List>
-              {missingMonths.map((month) => (
+              {missingInputs.map((month) => (
                 <ListItem key={month}>
                   <Paper>
                     <Box>
