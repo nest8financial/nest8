@@ -25,9 +25,9 @@ export default function Navbar() {
 
   const user = useSelector((store) => store.user);
 
-  useEffect(() => {
-    dispatch({ type: "FETCH_USER" });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch({ type: "FETCH_USER" });
+  // }, [user]);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -48,13 +48,13 @@ export default function Navbar() {
   }
 
   const handleReportButton = (e) => {
-    console.log('/my_summary');
-    history.push('/my_summary');
+    console.log('/financials');
+    history.push('/financials');
   }
 
   const handleDataButton = (e) => {
     console.log('/mydata');
-    history.push('/mydata');
+    history.push('/my_data');
   }
 
   const handleProfileButton = (e) => {
@@ -73,6 +73,7 @@ export default function Navbar() {
     console.log('logout clicked!');
     handleClose();
     dispatch({ type: 'LOGOUT' });
+    dispatch({ type: "FETCH_USER" });
     history.push('/home');
   }
 

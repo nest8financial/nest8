@@ -1,14 +1,56 @@
 const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
-const { rejectUnauthenticated } = 
-    require('../modules/authentication-middleware');
-
-
-
+const { rejectUnauthenticated } = require('../modules/authentication-middleware');
+const { convertToDatesWeHave, generateDatesWeShouldHave, getMissingMonths } = require('../modules/helper-functions-missing-inputs'); 
 /* ------------------------- ROUTES ----------------------------------------*/
 
 /**  ****  rejectUnauthenticated, put this in when login done */
+
+/**
+ * GET all MISSING monthly inputs for a user
+ */
+
+router.get('/missing',  async (req, res) => {
+    let connection;
+    connection = await pool.connect();
+    try {
+
+        const userId = req.user.id;
+        const sqlTextGetInputs = `
+        SELECT 
+            "monthly_inputs"."month", 
+            "monthly_inputs"."year",
+            "user"."date_joined",
+            "user"."id" AS user_id   
+        FROM "monthly_inputs"
+            JOIN "user"
+                ON "user"."id" = "monthly_inputs"."user_id"
+                WHERE user_id = $1
+                ORDER BY year, month;
+                `;
+            const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
+            let arrayOfDatesWeHave = convertToDatesWeHave(dbResponse.rows) // uses helper function to loop through the input dates in the database and creates an array of dates we have 
+           
+            const joinDate = dbResponse.rows[0].date_joined
+            const formattedMonth = joinDate.getMonth() + 1
+            const formattedYear = joinDate.getFullYear()
+            const formattedJoinDate = [formattedYear, formattedMonth] // formats join date to [Number('YYYY'), Number('MM')] format
+         
+            let arrayOfDatesWeShouldHave = generateDatesWeShouldHave(formattedJoinDate) // uses helper function to generate an array of arrays with dates from the join date to current date
+      
+            let missingMonthsResponse = getMissingMonths(arrayOfDatesWeShouldHave, arrayOfDatesWeHave)
+            console.log('these are the missing months', missingMonthsResponse);
+            connection.release();
+            res.send(missingMonthsResponse);
+    } catch (error) {
+        console.log('Error in get of missing monthly inputs in /api/financial_inputs/missing', error);
+        connection.release();
+        res.sendStatus(500);
+    }
+})
+
+
 
 /**
  * GET all monthly inputs for a user
@@ -159,16 +201,21 @@ router.post('/',  async (req, res) => {
         const indTaxBurden = Number(industryMetrics.rows[0].ind_tax_burden);
         const indInterestBurden = Number(industryMetrics.rows[0].ind_interest_burden);
         console.log(profitMargin, assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, indProfitMargin, indAssetTurnoverRatio, indFinancialLeverageRatio, indReturnOnEquity, indTaxBurden, indInterestBurden, '***********');
+        // To calculate variances:
+        //      Because a larger value is better for metric 1, 2, 4:
+        //           calculate variance = (user - industry)
+        //      Because a smaller value is better for metric 3, 5, 6:
+        //           calculate variance = (industry - user)
         const sqlTextInsertMonthlyMetrics = `
                 INSERT INTO monthly_metrics
                     (monthly_id, metrics_id, metric_value, variance_value)
                     VALUES 
                     ($1, 1, $2, ($8::DECIMAL - $2::DECIMAL)),      
                     ($1, 2, $3, ($9::DECIMAL - $3::DECIMAL)),      
-                    ($1, 3, $4, ($10::DECIMAL - $4::DECIMAL)),     
+                    ($1, 3, $4, ($4::DECIMAL - $10::DECIMAL)),     
                     ($1, 4, $5, ($11::DECIMAL - $5::DECIMAL)),     
-                    ($1, 5, $6, ($12::DECIMAL - $6::DECIMAL)),    
-                    ($1, 6, $7, ($13::DECIMAL - $7::DECIMAL));    
+                    ($1, 5, $6, ($6::DECIMAL - $12::DECIMAL)),    
+                    ($1, 6, $7, ($7::DECIMAL - $13::DECIMAL));    
         `;
         await connection.query(sqlTextInsertMonthlyMetrics,
                                         [ monthlyInputId,
@@ -290,6 +337,11 @@ router.put('/',  async (req, res) => {
         const indInterestBurden = Number(industryMetrics.rows[0].ind_interest_burden);
         console.log(profitMargin, assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, indProfitMargin, indAssetTurnoverRatio, indFinancialLeverageRatio, indReturnOnEquity, indTaxBurden, indInterestBurden, '***********');
         // 4. Update the monthly_metrics table:
+        //   To calculate variances:
+        //      Because a larger value is better for metric 1, 2, 4:
+        //              calculate variance = (user - industry)
+        //      Because a smaller value is better for metric 3, 5, 6:
+        //              calculate variance = (industry - user)
         const sqlTextUpdateMonthlyMetrics = `
             UPDATE monthly_metrics
                 SET metric_value = CASE metrics_id
@@ -303,10 +355,10 @@ router.put('/',  async (req, res) => {
                     variance_value = CASE metrics_id
                                         WHEN 1 THEN ($8::DECIMAL - $2::DECIMAL)
                                         WHEN 2 THEN ($9::DECIMAL - $3::DECIMAL)
-                                        WHEN 3 THEN ($10::DECIMAL - $4::DECIMAL)
+                                        WHEN 3 THEN ($4::DECIMAL - $10::DECIMAL)
                                         WHEN 4 THEN ($11::DECIMAL - $5::DECIMAL)
-                                        WHEN 5 THEN ($12::DECIMAL - $6::DECIMAL)
-                                        WHEN 6 THEN ($13::DECIMAL - $7::DECIMAL)
+                                        WHEN 5 THEN ($6::DECIMAL - $12::DECIMAL)
+                                        WHEN 6 THEN ($7::DECIMAL - $13::DECIMAL)
                                      END
                 WHERE monthly_id = $1
                   AND metrics_id IN (1, 2, 3, 4, 5, 6);

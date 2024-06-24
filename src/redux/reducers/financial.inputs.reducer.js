@@ -12,7 +12,7 @@ import { combineReducers } from 'redux';
 const singleMonthInputs = (state = {}, action) => {
     if (action.type === 'SET_SINGLE_MONTH_INPUTS') {
         if (action.payload.length === 0) {
-          return state;
+          return {};
         }
         return action.payload[0];
     } 
@@ -30,7 +30,21 @@ const monthlyInputs = (state = [], action) => {
     return state;
 };
 
+
+/**
+ * Gets all of the MISSING monthly inputs for a user
+ */
+const missingMonthlyInputs = (state = [], action) => {
+  
+  if (action.type === 'SET_MISSING_MONTHLY_INPUTS') {
+      return action.payload;
+  } 
+  return state;
+}
+
+
 export default combineReducers({
   singleMonthInputs,
-  monthlyInputs
+  monthlyInputs,
+  missingMonthlyInputs
 });

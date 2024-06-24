@@ -13,7 +13,7 @@ import { combineReducers } from 'redux';
 const singleMonthMetrics = (state = [], action) => {
     if (action.type === 'SET_SINGLE_MONTH_METRICS') {
         if (action.payload.length === 0) {
-          return state;
+          return [];
         }
         return action.payload;
     } 
@@ -36,10 +36,15 @@ const monthlyMetrics = (state = [], action) => {
  * Gets all computed variances and industry variances for graph component
  *  along with metric texts and corresponding recommendation texts
  */
-const monthlyGraphData = (state = [], action) => {
-  console.log('in metrics get all reducer action.payload', action.payload)
-    if (action.type === 'SET_MONTHLY_GRAPH_DATA') {
-        return action.payload;
+const graphData = (state = {}, action) => {
+  console.log('Setting monthly graph data:', action.payload)
+    if (action.type === 'SET_GRAPH_DATA') {
+       console.log('in set of graph data, action.payload:', action.payload)
+        if (Object.keys(action.payload).length !== 0) {
+          return action.payload;
+        } else {
+          return {};
+        }
     } 
     return state;
 };
@@ -49,8 +54,9 @@ const monthlyGraphData = (state = [], action) => {
  */
 const singleMonthVariances = (state = [], action) => {
     if (action.type === 'SET_SINGLE_MONTH_VARIANCES') {
+        console.log('action.paylod in singleMonthVar reducer:', action.payload)
         if (action.payload.length === 0) {
-          return state;
+          return [];
         }
         return action.payload;
     } 
@@ -58,9 +64,10 @@ const singleMonthVariances = (state = [], action) => {
   }
 
 
+
 export default combineReducers({
   singleMonthMetrics,
   monthlyMetrics,
   singleMonthVariances,
-  monthlyGraphData
+  graphData
 });
