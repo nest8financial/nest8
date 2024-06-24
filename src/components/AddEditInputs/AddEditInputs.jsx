@@ -189,7 +189,7 @@ const handleEditSaveButton= (event) => {
            earningsBeforeTax: '' });
        setTaxRateInput('');
        // kick back to input header screen
-       // history.push('/input_header');
+       history.push('/input_header');
    }
 }
 

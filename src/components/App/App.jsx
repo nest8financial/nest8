@@ -28,6 +28,8 @@ import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 
+import FinancialsPage from "../FinancialsPage/FinancialsPage";
+
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';
@@ -77,7 +79,7 @@ function App() {
                 // If the user is already logged in,
                 // redirect to the /My Reports page 
                 // right now redirect to summary until My Reports is done
-                <Redirect to="/my_summary" />
+                <Redirect to="/financials" />
               ) : (
                 // Otherwise, show the login page
                 <LoginPage />
@@ -126,6 +128,10 @@ nw            </ProtectedRoute>
 
             <ProtectedRoute exact path="/mydata">
               <MyData />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/financials">
+              <FinancialsPage />
             </ProtectedRoute>
 
             <ProtectedRoute exact path="/my_summary">
