@@ -5,15 +5,21 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { useState } from 'react';
 import { Typography, Container, Button, Box } from '@mui/material';
 import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useDispatch } from 'react-redux';
+
 
 function InputHeader(){
 
 const history = useHistory(); 
+const dispatch = useDispatch()
 const [date, setDate] = useState(dayjs()); 
 
-const addInput = (date) => {
-    history.push(`/inputs_add_edit/${date.format('MM')}/${date.format('YYYY')}`)
-}
+// const addInput = (date) => {
+//   const month = date.format('MM');
+//     const year = date.format('YYYY');
+//     dispatch(setDate(month, year));
+//     history.push(`/financial_recommendation`);
+// }
 
 return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>

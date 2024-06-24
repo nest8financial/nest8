@@ -25,6 +25,7 @@ import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
+import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
 // import ProductPage from '../ProductPage';
@@ -76,7 +77,7 @@ function App() {
                 // If the user is already logged in,
                 // redirect to the /My Reports page 
                 // right now redirect to summary until My Reports is done
-                <Redirect to="/my_summary" />
+                <Redirect to="/financials" />
               ) : (
                 // Otherwise, show the login page
                 <LoginPage />
@@ -130,10 +131,18 @@ nw            </ProtectedRoute>
               <MyData />
             </ProtectedRoute>
 
+            <ProtectedRoute exact path="/financials">
+              <FinancialsPage />
+            </ProtectedRoute>
+
             <ProtectedRoute exact path="/my_summary">
               <FinancialSummary />
             </ProtectedRoute>
 
+          
+            <ProtectedRoute path="/financial_recommendation" >
+            <FinancialRecommendation />
+            </ProtectedRoute>
             {/* If none of the other routes matched, we will show a 404. */}
             <Route>
               <h1>404</h1>
