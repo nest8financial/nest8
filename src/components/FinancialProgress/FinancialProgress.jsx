@@ -1,3 +1,4 @@
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Box,
@@ -15,33 +16,46 @@ import { Chart as ChartJS, CategoryScale,
                            Tooltip,
                            Legend, 
                            Filler } from 'chart.js';
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers'
+import { getLastYearsDate } from "../../utilities/utilities";
+import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+
+
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 function FinancialProgress({company}) {
+
   const today = new Date();
   const dispatch = useDispatch();
   const graphData = useSelector(store => store.financialMetrics.graphData);
+
+  // const [dateRange, setDateRange] = useState({ toMonth: today.getMonth() + 1,
+  //                                              fromMonth: today.getMonth() + 1,
+  //                                              toYear: today.getFullYear(),
+  //                                              fromYear: today.getFullYear() - 1 });
   // Set initial date range for 13 month span ending on today's month
-  const [dateRange, setDateRange] = useState({ toMonth: today.getMonth() + 1,
-                                               fromMonth: today.getMonth() + 1,
-                                               toYear: today.getFullYear(),
-                                               fromYear: today.getFullYear() - 1 });
+  const [fromDateSelected, setFromDateSelected] = useState(dayjs()); 
+  const [toDateSelected, setToDateSelected] = useState(dayjs()); 
+  const [errorMessage, setErrorMsg] = useState('');
+                                             
   // These correspond to metrics 1-6 in the metrics table
   //    (default to Profit Margin)
   const [metricSelected, setMetricSelected] = useState(1);
-  const [alignment, setAlignment] = useState('left') // State to manage selected value
 
   useEffect(() => {
       dispatch({
           type: 'GET_GRAPH_DATA',
-          payload: { fromMonth: dateRange.fromMonth, 
-                     toMonth: dateRange.toMonth,
-                     fromYear: dateRange.fromYear,
-                     toYear: dateRange.toYear,
+          payload: { fromMonth: fromDateSelected.format('MM'), 
+                     toMonth: toDateSelected.format('MM'),
+                     fromYear: fromDateSelected.format('YYYY'),
+                     toYear: toDateSelected.format('YYYY'),
                      metricId: metricSelected }
            })
-  }, [dispatch, dateRange, metricSelected])
+  }, [dispatch, fromDateSelected, toDateSelected, metricSelected])
 
 // First MM/YYYY in selection is less than or equal to second MM/YYYY selection
 
@@ -55,6 +69,26 @@ function FinancialProgress({company}) {
       setMetricSelected(newMetric);
     }
   }
+
+  const handleDateRangeChange = (value, mode) => {
+    const newSelectedDate = value;
+    if (mode = 'from') {
+      if (newSelectedDate <= toDateSelected) {
+        setFromDateSelected(newSelectedDate);
+        setErrorMsg('');
+      } else {
+        setErrorMsg('From date is less than to date, please re-select range to see graphs');
+      }
+    } else {
+      if (fromDateSelected <= newSelectedDate) {
+        setToDateSelected(newSelectedDate);
+        setErrorMsg('');
+      } else {
+        setErrorMsg('From date is less than to date, please re-select range to see graphs');
+      }
+    }
+  }
+
    
   const numTicks = 7;
   const data = {
@@ -137,7 +171,7 @@ function FinancialProgress({company}) {
             } else if (dataset.disableTooltip) {
               return null; // Return null to disable the tooltip for this dataset
             }
-            // // Default tooltip label
+            // Default tooltip label
             return `Industry Standard ${graphData.metric_name}: ${context.raw}`;
           },
           labelTextColor: (context) => {
@@ -160,6 +194,29 @@ function FinancialProgress({company}) {
         <br></br><br></br>
         <Typography variant="h4" align="center">
           {(graphData.metric_name && graphData.metric_name)} for {company} </Typography>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            {/* Date range picker: From date  */}
+            <Box align='center'
+                 sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+              <Box sx={{ ml: 2 }} textAlign="left">
+                  <DatePicker label="From Month / Year"
+                              value={fromDateSelected}
+                              onChange={(value) => {handleDateRangeChange(value, 'from')}}
+                              views={['month', 'year']}
+                              maxDate={dayjs()}>            
+                  </DatePicker>
+              </Box>
+              {/* Date range picker: To date */}
+              <Box sx={{ ml: 2 }} textAlign="left">
+                  <DatePicker label="To Month / Year"
+                              value={toDateSelected}
+                              onChange={(value) => {handleDateRangeChange(value, 'from')}}
+                              views={['month', 'year']}
+                              maxDate={dayjs()}>            
+                  </DatePicker>
+              </Box>
+            </Box>
+        </LocalizationProvider>
           <br></br>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center"}}>
           <Box
@@ -172,7 +229,7 @@ function FinancialProgress({company}) {
           />
           <Box sx={{ display: 'inline' }}>Industry Standard</Box>
         </Box>
-          <Box>
+          <Box sx={{ display: 'flex', justifyContent: "center"}}>
             {graphData ? (<Line key={graphData.metric_id}
                       data={data} 
                       options={options} />) : null}

@@ -190,7 +190,7 @@ router.get('/summary/:month&:year', rejectUnauthenticated, async (req, res) => {
     }
 })
 
-/**            GRAPHY*****13294545723405234572034572348965 HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/*
  * GET all monthly graph data for a user, used for Financial Progress graph component
  *     Get all data for 6 separate financial progress graphs
  *         - 6 arrays of computed variances for a month/year range

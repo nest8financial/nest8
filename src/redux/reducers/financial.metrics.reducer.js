@@ -13,7 +13,7 @@ import { combineReducers } from 'redux';
 const singleMonthMetrics = (state = [], action) => {
     if (action.type === 'SET_SINGLE_MONTH_METRICS') {
         if (action.payload.length === 0) {
-          return state;
+          return [];
         }
         return action.payload;
     } 
@@ -43,7 +43,7 @@ const graphData = (state = {}, action) => {
         if (Object.keys(action.payload).length !== 0) {
           return action.payload;
         } else {
-          return state;
+          return {};
         }
     } 
     return state;
@@ -54,8 +54,9 @@ const graphData = (state = {}, action) => {
  */
 const singleMonthVariances = (state = [], action) => {
     if (action.type === 'SET_SINGLE_MONTH_VARIANCES') {
+        console.log('action.paylod in singleMonthVar reducer:', action.payload)
         if (action.payload.length === 0) {
-          return state;
+          return [];
         }
         return action.payload;
     } 

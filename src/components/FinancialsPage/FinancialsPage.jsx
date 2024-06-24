@@ -19,13 +19,13 @@ function FinancialsPage() {
 
     const [dateSelected, setDateSelected] = useState(dayjs()); 
     const userData = useSelector(store => store.user);
-    const Item = styled(Paper)(({ theme }) => ({
-      backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-      ...theme.typography.body2,
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    }));
+    // const Item = styled(Paper)(({ theme }) => ({
+    //   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    //   ...theme.typography.body2,
+    //   padding: theme.spacing(2),
+    //   textAlign: 'center',
+    //   color: theme.palette.text.secondary,
+    // }));
     
 
     useEffect(() => {
@@ -40,7 +40,7 @@ function FinancialsPage() {
             <Box sx={{ ml: 2 }} textAlign="left">
                 <DatePicker label="Select Month and Year"
                             value={dateSelected}
-                            onChange={(newValue) => setValue(newValue)} 
+                            onChange={(newValue) => setDateSelected(newValue)} 
                             views={['month', 'year']}>            
                 </DatePicker>
             </Box>
