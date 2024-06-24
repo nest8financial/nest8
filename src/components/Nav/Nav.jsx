@@ -60,7 +60,7 @@ export default function Navbar() {
   const handleProfileButton = (e) => {
     console.log('profile clicked!');
     handleClose();
-    // history.push('/profile');
+    history.push('/profile');
   }
   
 
@@ -150,7 +150,7 @@ export default function Navbar() {
             open={Boolean(anchorEl)}
             onClose={handleClose}>
             <MenuItem onClick={(e) => handleHomeButton(e)}><HomeIcon/><pre> </pre>Home</MenuItem>
-            <MenuItem onClick={(e) => handleProfileButton(e)}><AccountCircle/><pre> </pre>Profile</MenuItem>
+            {user.id && <MenuItem onClick={(e) => handleProfileButton(e)}><AccountCircle/><pre> </pre>Profile</MenuItem>}
             {user.id && <MenuItem onClick={(e) => handleLogoutButton(e)}><LogoutIcon /><pre> </pre>Logout</MenuItem>}
           </Menu>
         </Toolbar>
