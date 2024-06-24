@@ -39,6 +39,27 @@ function* getMonthlyInputs(action) {
     }
   }
 
+
+/**
+ * Get all the MISSING monthly inputs for a user
+ */
+function* getMissingMonthlyInputs(action) {
+  console.log('action.payload for the missing monthly inputs is', action.payload);
+  try {
+    const response = yield axios({
+        method: 'GET',
+        url: `/api/financial_inputs/missing/`})
+        
+    yield put({
+        type: 'SET_MISSING_MONTHLY_INPUTS',
+        payload: response.data})
+  } catch (error) {
+    console.log('Error while getting missing monthly inputs:', error);
+  }
+}
+
+
+
 /**
  * Add a single month's inputs for a user
  */
@@ -75,6 +96,7 @@ function* financialInputsSaga() {
   yield takeLatest('GET_MONTHLY_INPUTS', getMonthlyInputs);
   yield takeLatest('ADD_SINGLE_MONTH_INPUTS', addSingleMonthInputs);
   yield takeLatest('UPDATE_SINGLE_MONTH_INPUTS', updateSingleMonthInputs);
+  yield takeLatest('GET_MISSING_MONTLY_INPUTS', getMissingMonthlyInputs)
 }
 
 export default financialInputsSaga;
