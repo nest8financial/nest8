@@ -6,7 +6,8 @@ import {
   List,
   ListItem,
   ListItemText,
-  Paper,
+  Paper, 
+  Link
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
@@ -34,14 +35,20 @@ function separateOutMonthAndYear(arrayOfDates) {
     return formattedMissingInputs // returns a new array of arrays with formatted months
   }
 
- console.log('TESTING', separateOutMonthAndYear(missingInputs)) 
+  let missingInputsToDisplay = separateOutMonthAndYear(missingInputs);
+
+  const handleLinkClick = (e, year, month) => {
+    e.preventDefault();
+    history.push(`/my_inputs/:${month}/:${year}/`);
+  };
 
   const dispatch = useDispatch();
   const history = useHistory();
 
   useEffect(() => {
     dispatch({ type: "GET_MISSING_MONTLY_INPUTS" }); // updates the store upon page load with all missing inputs to render alerts
-  }, []);
+    separateOutMonthAndYear(missingInputs)
+}, []);
 
   return (
     <Container>
@@ -76,25 +83,34 @@ function separateOutMonthAndYear(arrayOfDates) {
         <Typography sx={{ mt: 2 }} variant="h2" fontSize={32}>
           Alerts
         </Typography>
-        {missingInputs.length > 0 && (
+        {missingInputsToDisplay.length > 0 && (
           <>
             <List>
-              {missingInputs.map((month) => (
-                <ListItem key={month}>
-                  <Paper>
+              {missingInputsToDisplay.map((date) => (
+                <ListItem key={`${date[0]}-${date[1]}`}>
+                  <Paper elevation={4} sx={{width: '600px', height: '100px', mb: 2, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '16px'}}>
                     <Box>
                       <ListItemText
                         primary={
-                          <Typography variant="subtitle1" fontWeight="bold">
-                            {month}
+                          <Typography component="span" variant="subtitle1" fontWeight="bold">
+                            {date[1]} {date[0]}
                           </Typography>
                         }
                         secondary={
-                          <Typography variant="body2" color="error">
-                            You have uncompleted recommendation action items for
-                            {month}
-                            {month}
-                          </Typography>
+                        <Link
+                            href="#"
+                            onClick={(e) => handleLinkClick(e, date[0], date[1])}
+                            sx={{
+                              cursor: 'pointer',
+                              '&:hover': {
+                                textDecoration: 'underline',
+                              },
+                            }}
+                          >
+                            <Typography component="span" variant="body2" color="error">
+                                You have uncompleted recommendation action items for {date[1]} {date[0]}
+                            </Typography>
+                          </Link>
                         }
                       />
                     </Box>
