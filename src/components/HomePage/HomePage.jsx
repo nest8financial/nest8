@@ -80,7 +80,7 @@ function HomePage() {
         </section>
         </Container>
 
-      <Container sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '20px', border: '1px solid #e0e0e0', scrollSnapAlign: 'center', boxSizing: 'border-box',  }}>
+      <Container sx={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '3$0px', border: '1px solid #e0e0e0', scrollSnapAlign: 'center', boxSizing: 'border-box',  }}>
         <section id="free-trial" sx={{ flexGrow: 1, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography variant="h4" gutterBottom>
             How Nest 8 works for your buisness type
