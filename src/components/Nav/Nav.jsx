@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import AppBar from '@mui/material/AppBar';
@@ -19,15 +19,24 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [notifications, setNotifications] = React.useState(3); // Example number of notifications
+  const missingInputs = 
+  useSelector((store) => store.financialInputs.missingMonthlyInputs); 
+  const [notifications, setNotifications] = 
+    useState(0); 
+  console.log('missinginputs', missingInputs);
+  
   const history = useHistory();
   const dispatch = useDispatch();
 
   const user = useSelector((store) => store.user);
 
-  // useEffect(() => {
-  //   dispatch({ type: "FETCH_USER" });
-  // }, [user]);
+  useEffect(() => {
+    dispatch({ type: "GET_MISSING_MONTHLY_INPUTS" });
+  }, [user]);
+
+  useEffect(() => {
+    setNotifications(missingInputs.length);
+  },[missingInputs])
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -60,7 +69,7 @@ export default function Navbar() {
   const handleProfileButton = (e) => {
     console.log('profile clicked!');
     handleClose();
-    // history.push('/profile');
+    history.push('/profile');
   }
   
 
@@ -150,7 +159,7 @@ export default function Navbar() {
             open={Boolean(anchorEl)}
             onClose={handleClose}>
             <MenuItem onClick={(e) => handleHomeButton(e)}><HomeIcon/><pre> </pre>Home</MenuItem>
-            <MenuItem onClick={(e) => handleProfileButton(e)}><AccountCircle/><pre> </pre>Profile</MenuItem>
+            {user.id && <MenuItem onClick={(e) => handleProfileButton(e)}><AccountCircle/><pre> </pre>Profile</MenuItem>}
             {user.id && <MenuItem onClick={(e) => handleLogoutButton(e)}><LogoutIcon /><pre> </pre>Logout</MenuItem>}
           </Menu>
         </Toolbar>
