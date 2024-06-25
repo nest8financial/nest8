@@ -1,12 +1,14 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Typography, Container, Grid, Link, List, ListItem, ListItemIcon, ListItemText, IconButton } from '@mui/material';
+import { Button, Typography, Container, Grid, Link, List, ListItem, ListItemIcon, ListItemText, IconButton, Box, Card, CardContent, Paper } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import farmsImage from '../../Assets/images/farms.png';
+import nonprofitsImage from '../../Assets/images/non-profit.png';
 
 function HomePage() {
   const history = useHistory();
@@ -19,6 +21,7 @@ function HomePage() {
     <div>
         
       <Container style={{ paddingTop: '20px' }}>
+      <Paper elevation= {10} style={{ padding: '20px', marginBottom: '40px' }}>
         <section id="educate-users">
           <Typography variant="h4" gutterBottom>
             Learn what Nest 8 can do
@@ -59,16 +62,43 @@ function HomePage() {
            Explore All Features
           </Typography>
         </section>
+        </Paper>
         <section id="free-trial" style={{ marginTop: '40px' }}>
-          <Typography variant="h4" gutterBottom>
-            How Nest 8 works for your buisness type
-          </Typography>
-          
-          <Button variant="contained" color="primary" onClick={() => handleClick('/product')}>
-            Sign up for free 
-          </Button>
+        <Paper elevation= {10} style={{ padding: '20px', marginBottom: '40px' }}>
+            <Typography variant="h4" gutterBottom>
+                How Nest 8 works for your business type
+            </Typography>
+            
+            <Box sx={{ display: 'flex', gap: '20px', flexDirection: { xs: 'column', md: 'row' } }}>
+              <Card sx={{ maxWidth: 300 }}>
+                <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <img src={farmsImage} alt="Farms" style={{ width: '100px', height: 'auto' }} />
+                  <CardContent>
+                    <Typography variant="body1" gutterBottom>
+                      Farmers: Improve efficiency of your operations, assess your business health, identify growth opportunities.
+                    </Typography>
+                  </CardContent>
+                </Box>
+              </Card>
+              <Card sx={{ maxWidth: 300 }}>
+                <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <img src={nonprofitsImage} alt="Non-profits" style={{ width: '100px', height: 'auto' }} />
+                  <CardContent>
+                    <Typography variant="body1" gutterBottom>
+                      Non-profits: Assess how effective your fundraising efforts are compared to other non-profits.
+                    </Typography>
+                  </CardContent>
+                </Box>
+              </Card>
+            </Box>
+
+            <Button variant="contained" color="primary" onClick={() => handleClick('/product')}>
+                Sign up for free
+            </Button>
+          </Paper>  
         </section>
         <section id="links" style={{ marginTop: '40px' }}>
+        <Paper elevation= {10} style={{ padding: '20px', marginBottom: '40px' }}>
         <Typography variant="h4" gutterBottom>
             Quick Links
           </Typography>
@@ -126,6 +156,7 @@ function HomePage() {
             &copy; {new Date().getFullYear()} Nest 8. All rights reserved.
           </Typography>
           <Link href="/legal">Legal</Link> | <Link href="/privacy">Privacy Notice</Link> | <Link href="/accessibility">Accessibility</Link>
+          </Paper>
         </section>
       </Container>
     </div>
