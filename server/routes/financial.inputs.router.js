@@ -42,7 +42,45 @@ function getRecommendationsForMonth(user_id, month, year){
         `
         const recommendation = await connection.query(sqlText, [user_id, month, year]); 
 
-  
+        const prompt = 
+        `Look through the following table and provide a simplified recommendation text taking into account the corresponding industry and adjusting the recommendation based on if the text is suggesting ways the user can improve or if the user is already meeting industry standards.  
+        Use language that the user would understand, taking into account what industry they work in. Please provide 2 recommendations for each metric type and base these recommendations off of the two recommendations provided within the table.
+        For your response, respond using JSON format. The response should consist of the metric name and the simplified recommendation text as the description. Each item should hold the following: a simplified description. 
+        Content: {
+        "profit margin": "description",
+        "asset_turnover_ration": "description",
+        "financial_leverage_ratio": "description",
+        "return_on_equity": "description", 
+        "tax_burden": "description",
+        "interest_burden": "description
+        }`;
+        const apiRequestData = {
+          model: 'gpt-4o',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a helpful assistant receiving financial recommendations and describing them in simple terms to a small business owner.'
+            },
+            {
+              role: 'user',
+              content: `${prompt}`
+            }
+          ],
+          max_tokens: 600,
+          temperature: 1
+        };
+      console.log('apiRequest', apiRequestData);
+      console.log('Make call to openAI *****************')
+    //6. make call to openAI assistant with data and prompt
+      const AIresponse = await axios({
+        method: 'POST',
+        url: `${openAIurl}`,
+        headers: openAIheaders,
+        data: apiRequestData
+      });
+      console.log('Get recommendations back from openAI *****************')
+      // 7. get recommendations response back from openAI
+      console.log(AIresponse.data);
 
 
 
