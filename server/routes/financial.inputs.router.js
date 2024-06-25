@@ -26,15 +26,19 @@ function getRecommendationsForMonth(user_id, month, year){
         const sqlText = 
         `
         SELECT monthly_metrics.id, metrics.id AS metric_id,
-        metrics.metric_name,
-        CASE WHEN monthly_metrics.variance_value >= 0 THEN positive_text
-        		WHEN monthly_metrics.variance_value < 0 THEN negative_text
-        END AS recommendation_text
+        metrics.metric_name, industry.name AS industry_name,
+	        CASE WHEN monthly_metrics.variance_value >= 0 THEN positive_text
+	        		WHEN monthly_metrics.variance_value < 0 THEN negative_text
+	        END AS recommendation_text
       FROM monthly_metrics
         JOIN metrics
           ON metrics.id = monthly_metrics.metrics_id
         JOIN monthly_inputs
           ON monthly_metrics.monthly_id = monthly_inputs.id
+        JOIN "user"
+        	ON monthly_inputs.user_id = "user".id
+        JOIN industry
+        	ON industry.id = "user".industry_id
         WHERE user_id = $1
           AND month = $2
           AND year = $3
@@ -43,10 +47,10 @@ function getRecommendationsForMonth(user_id, month, year){
         const recommendation = await connection.query(sqlText, [user_id, month, year]); 
 
         const prompt = 
-        `Look through the following table and provide a simplified recommendation text taking into account the corresponding industry and adjusting the recommendation based on if the text is suggesting ways the user can improve or if the user is already meeting industry standards.  
-        Use language that the user would understand, taking into account what industry they work in. Please provide 2 recommendations for each metric type and base these recommendations off of the two recommendations provided within the table.
-        For your response, respond using JSON format. The response should consist of the metric name and the simplified recommendation text as the description. Each item should hold the following: a simplified description. 
-        Content: {
+        `Look through the following table and provide a simplified recommendation based on the recommendation provided, taking into account the corresponding industry and adjusting the recommendation based on if the text is suggesting ways the user can improve or if the user is already meeting industry standards.  
+        Use language that the user would understand, based on what industry they work in. For example, use more straightfoward, simple language or analogies for a farmer. For concepts that cannot be simplified, break them down and explain each part. Please provide 2 recommendations for each metric type and base these recommendations off of the two recommendations provided within the table.
+        For your response, respond using JSON format. The content response should consist of the metric name and the simplified recommendation text as the description. 
+        Content: 
         "profit margin": "description",
         "asset_turnover_ration": "description",
         "financial_leverage_ratio": "description",
