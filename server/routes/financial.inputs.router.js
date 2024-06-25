@@ -8,6 +8,71 @@ const { convertToDatesWeHave, generateDatesWeShouldHave, getMissingMonths } = re
 /**  ****  rejectUnauthenticated, put this in when login done */
 
 /**
+ * Helper function for AI calls 
+ */
+
+// API Keys 
+const OPENAI_API_KEY= process.env.OPENAI_API_KEY;
+const openAIurl = 'https://api.openai.com/v1/chat/completions';
+const openAIheaders = { 'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}` };
+
+
+function getRecommendationsForMonth(user_id, month, year){
+    let connection; // initialize DB connection
+
+    try{
+        connection = await pool.connect()
+        const sqlText = 
+        `
+        SELECT monthly_metrics.id, metrics.id AS metric_id,
+        metrics.metric_name,
+        CASE WHEN monthly_metrics.variance_value >= 0 THEN positive_text
+        		WHEN monthly_metrics.variance_value < 0 THEN negative_text
+        END AS recommendation_text
+      FROM monthly_metrics
+        JOIN metrics
+          ON metrics.id = monthly_metrics.metrics_id
+        JOIN monthly_inputs
+          ON monthly_metrics.monthly_id = monthly_inputs.id
+        WHERE user_id = $1
+          AND month = $2
+          AND year = $3
+        ORDER BY year, month, metrics_id;
+        `
+        const recommendation = await connection.query(sqlText, [user_id, month, year]); 
+
+  
+
+
+
+
+
+
+    }
+
+  
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
  * GET all MISSING monthly inputs for a user
  */
 
@@ -389,6 +454,7 @@ router.put('/',  async (req, res) => {
        res.sendStatus(500);
    }
 })
+
 
 
  /*------------------------ END ROUTES ---------------------------------------*/

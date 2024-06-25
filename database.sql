@@ -50,7 +50,9 @@ CREATE TABLE "metrics" (
     "metric_name" VARCHAR,
     "metric_description" VARCHAR,
     "positive_text" VARCHAR,
-    "negative_text" VARCHAR
+    "positive_text_AI_enhanced" VARCHAR,
+    "negative_text" VARCHAR,
+    "negative_text_AI_enhanced" VARCHAR
 );
 
 CREATE TABLE "monthly_metrics" (
