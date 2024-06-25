@@ -8,6 +8,16 @@ DROP TABLE IF EXISTS "monthly_inputs" CASCADE;
 DROP TABLE IF EXISTS "metrics" CASCADE;
 DROP TABLE IF EXISTS "monthly_metrics" CASCADE;
 DROP TABLE IF EXISTS "industry" CASCADE;
+DROP TABLE IF EXISTS "product" CASCADE;
+
+
+CREATE TABLE "product" (
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR,
+    "description" VARCHAR,
+    "price" DECIMAL,
+    "promo_price" DECIMAL
+);
 
 CREATE TABLE "industry" (
     "id" SERIAL PRIMARY KEY,
@@ -45,13 +55,7 @@ CREATE TABLE "monthly_inputs" (
     "earnings_before_tax" DECIMAL
 );
 
-CREATE TABLE "product" (
-    "id" SERIAL PRIMARY KEY,
-    "name" VARCHAR,
-    "description" VARCHAR,
-    "price" DECIMAL,
-    "promo_price" DECIMAL
-);
+
 
 
 CREATE TABLE "metrics" (
