@@ -23,10 +23,11 @@ function MyData() {
 
 function separateOutMonthAndYear(arrayOfDates) {
     let formattedMissingInputs = []; 
+    console.log('arrayyyyy',arrayOfDates)
     for (let eachMonth of arrayOfDates) {
       let monthName = getMonthName(eachMonth[1]); // pulls the month from the provided array and converts to a string
     //   console.log("this is the month name", monthName);
-      let eachMonthFormatted = [eachMonth[0], monthName]; //resets each array to be a string for the month 
+      let eachMonthFormatted = [eachMonth[0], monthName, eachMonth[1]]; //resets each array to be a string for the month 
     //   console.log("formatted month is", eachMonthFormatted);
 
     formattedMissingInputs.push(eachMonthFormatted) // pushes formatted array into formattedMissingInputs
@@ -39,14 +40,15 @@ function separateOutMonthAndYear(arrayOfDates) {
 
   const handleLinkClick = (e, year, month) => {
     e.preventDefault();
-    history.push(`/my_inputs/:${month}/:${year}/`);
+    console.log('month and year, about to history.push:', month, year,':')
+    history.push(`/inputs_add_edit/${month}/${year}/`);
   };
 
   const dispatch = useDispatch();
   const history = useHistory();
 
   useEffect(() => {
-    dispatch({ type: "GET_MISSING_MONTLY_INPUTS" }); // updates the store upon page load with all missing inputs to render alerts
+    dispatch({ type: "GET_MISSING_MONTHLY_INPUTS" }); // updates the store upon page load with all missing inputs to render alerts
     separateOutMonthAndYear(missingInputs)
 }, []);
 
@@ -54,7 +56,7 @@ function separateOutMonthAndYear(arrayOfDates) {
     <Container>
       <Box>
         <Button
-          onClick={() => history.push("/financials")}
+          onClick={() => history.push("/my_reports_recommendations")}
           variant="contained"
           sx={{ mt: 6, mb: 2, mr: 2 }}
         >
@@ -63,7 +65,7 @@ function separateOutMonthAndYear(arrayOfDates) {
       </Box>
       <Box>
         <Button
-          onClick={() => history.push("/myprofile")}
+          onClick={() => history.push("/my_profile")}
           variant="contained"
           sx={{ mb: 2, mr: 2 }}
         >
@@ -72,7 +74,7 @@ function separateOutMonthAndYear(arrayOfDates) {
       </Box>
       <Box>
         <Button
-          onClick={() => history.push("/mysavedinputs")}
+          onClick={() => history.push("/my_inputs")}
           variant="contained"
           sx={{ mb: 2, mr: 2 }}
         >
@@ -99,7 +101,7 @@ function separateOutMonthAndYear(arrayOfDates) {
                         secondary={
                         <Link
                             href="#"
-                            onClick={(e) => handleLinkClick(e, date[0], date[1])}
+                            onClick={(e) => handleLinkClick(e, date[0], date[2])}
                             sx={{
                               cursor: 'pointer',
                               '&:hover': {
