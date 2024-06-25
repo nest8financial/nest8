@@ -26,9 +26,9 @@ function* fetchNewProductSelected() {
     }
   }
 
-function* productSaga() {
+function* productsSaga() {
   yield takeLatest("FETCH_PRODUCTS", fetchProducts);
   yield takeLatest("FETCH_NEW_PRODUCT_SELECTED", fetchNewProductSelected);
 }
 
-export default productSaga;
+export default productsSaga;
