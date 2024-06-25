@@ -28,6 +28,7 @@ CREATE TABLE "user" (
     "last_name" VARCHAR NOT NULL, 
     "company" VARCHAR NOT NULL, 
     "industry_id" int REFERENCES "industry" ON DELETE CASCADE,
+    "product_id" int REFERENCES "product" ON DELETE CASCADE,
     "date_joined" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -42,6 +43,14 @@ CREATE TABLE "monthly_inputs" (
     "equity" DECIMAL, 
     "tax_rate"DECIMAL,
     "earnings_before_tax" DECIMAL
+);
+
+CREATE TABLE "product" (
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR,
+    "description" VARCHAR,
+    "price" DECIMAL,
+    "promo_price" DECIMAL
 );
 
 

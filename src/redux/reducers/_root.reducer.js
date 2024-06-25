@@ -4,6 +4,7 @@ import user from './user.reducer';
 import industries from './industry.reducer';
 import financialInputs from './financial.inputs.reducer.js';
 import financialMetrics from './financial.metrics.reducer.js';
+import products from './products.reducer.js'
 
 
 // rootReducer is the primary reducer for the project
@@ -16,8 +17,8 @@ const rootReducer = combineReducers({
   financialInputs,  // state pertaining to 6 financial user inputs per month
   financialMetrics, // state pertaining to 6 computed financial metrics & variances
   industries,
+  products
  
-
 });
 
 export default rootReducer;
