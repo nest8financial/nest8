@@ -37,7 +37,7 @@ function HomePage() {
       }}
     >
 
-      <Container sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '20px', border: '1px solid #e0e0e0', scrollSnapAlign: 'start', boxSizing: 'border-box', }}> 
+      <Container sx={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '20px', border: '1px solid #e0e0e0', scrollSnapAlign: 'start', boxSizing: 'border-box', }}> 
         <section id="educate-users" sx={{ flexGrow: 1, width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <Typography variant="h4" gutterBottom>
             Learn what Nest 8 can do
@@ -74,7 +74,7 @@ function HomePage() {
               <ListItemText primary="Everything you need in your pocket" />
             </ListItem>
            </List>
-           <Typography variant="h4" gutterBottom>
+           <Typography variant="h5" gutterBottom>
            Explore All Features
           </Typography>
         </section>
