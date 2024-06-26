@@ -28,6 +28,7 @@ import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyRe
 import Profile from "../Profile/Profile";
 import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
 import OrderConfirmation from "../OrderConfirmation/OrderConfirmation";
+import UseCasePage from '../StaticPages/UseCasePage';
 
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
@@ -149,6 +150,10 @@ function App() {
 
             <ProtectedRoute exact path="/my_profile">
               <Profile />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/use_case">
+              < UseCasePage />
             </ProtectedRoute>
 
           
