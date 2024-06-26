@@ -1,8 +1,12 @@
-import { FormControlLabel, Typography } from "@mui/material";
+import { FormControlLabel, Typography, Button} from "@mui/material";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
-function OrderConfirmation({productNumber}) {
 
+function OrderConfirmation() {
+
+    const productNumber = useSelector(store => store.products.newProductSelected);
     const history = useHistory();
 
     return (
