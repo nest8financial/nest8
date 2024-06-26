@@ -28,7 +28,7 @@ import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyRe
 import Profile from "../Profile/Profile";
 import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
 import OrderConfirmation from "../OrderConfirmation/OrderConfirmation";
-import UseCasePage from './static pages/use_case';
+import UseCasePage from '../StaticPages/UseCasePage';
 
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
