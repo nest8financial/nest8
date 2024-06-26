@@ -96,7 +96,7 @@ function* financialInputsSaga() {
   yield takeLatest('GET_MONTHLY_INPUTS', getMonthlyInputs);
   yield takeLatest('ADD_SINGLE_MONTH_INPUTS', addSingleMonthInputs);
   yield takeLatest('UPDATE_SINGLE_MONTH_INPUTS', updateSingleMonthInputs);
-  yield takeLatest('GET_MISSING_MONTLY_INPUTS', getMissingMonthlyInputs)
+  yield takeLatest('GET_MISSING_MONTHLY_INPUTS', getMissingMonthlyInputs)
 }
 
 export default financialInputsSaga;

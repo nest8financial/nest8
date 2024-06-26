@@ -11,9 +11,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import UserPage from '../UserPage/UserPage';
-import InfoPage from '../InfoPage/InfoPage';
-import LandingPage from '../LandingPage/LandingPage';
 import LoginPage from '../LoginPage/LoginPage';
 import RegisterPage from '../RegisterPage/RegisterPage';
 import HomePage from '../HomePage/HomePage';
@@ -23,13 +20,20 @@ import './App.css';
 import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
 import InputHeader from '../InputHeader/InputHeader';
 import MyData from '../MyData/MyData';
-import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
-import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
 import FinancialsPage from "../FinancialsPage/FinancialsPage"
-import Profile from '../Profile/Profile'
+
+
+
+import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyReportsRecomendations";
+import Profile from "../Profile/Profile";
+import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
+import OrderConfirmation from "../OrderConfirmation/OrderConfirmation";
+import UseCasePage from '../StaticPages/UseCasePage';
+
+
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';
@@ -101,11 +105,19 @@ function App() {
                 <Redirect to="/home" />          
             </Route>
 
+            <Route exact path="/review_cart">
+                <ReviewCartPlaceOrder />          
+            </Route>
+
+            <Route exact path="/order_confirmation">
+                <OrderConfirmation />          
+            </Route>
+
             <ProtectedRoute exact path="/input_header">
               <InputHeader />
             </ProtectedRoute>
 
-            <Route exact path="/my_plan">
+            <Route exact path="/product_page">
               <MembershipPlan/>
             </Route>
 
@@ -140,9 +152,17 @@ function App() {
               <FinancialsPage />
             </ProtectedRoute>
 
-            {/* <ProtectedRoute exact path="/my_summary">
-              <FinancialSummary />
-            </ProtectedRoute> */}
+            <ProtectedRoute exact path="/my_reports_recommendations">
+              < MyReportsRecommendations />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/my_profile">
+              <Profile />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/use_case">
+              < UseCasePage />
+            </ProtectedRoute>
 
           
             {/* <ProtectedRoute path="/financial_recommendation" >
