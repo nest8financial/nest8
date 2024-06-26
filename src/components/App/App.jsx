@@ -23,7 +23,10 @@ import MyData from "../MyData/MyData";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
-import FinancialsPage from "../FinancialsPage/FinancialsPage";
+import FinancialsPage from "../FinancialsPage/FinancialsPage"
+
+
+
 import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyReportsRecomendations";
 import Profile from "../Profile/Profile";
 import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
@@ -35,6 +38,16 @@ import FAQPage from "../StaticPages/FAQPage";
 import ContactUsPage from "../StaticPages/ContactUsPage";
 import OurStoryPage from "../StaticPages/OurStoryPage";
 import MissionPage from "../StaticPages/Mission";
+import UseCasePage from '../StaticPages/UseCasePage';
+
+
+// import ProductPage from '../ProductPage';
+// import FeaturesPage from '../FeaturesPage';
+// import PricingPage from '../PricingPage';
+// import FAQPage from './FAQPage';
+// import ContactUsPage from '../ContactUsPage';
+// import OurStoryPage from '../OurStoryPage';
+// import MissionPage from '../MissionPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -133,6 +146,10 @@ function App() {
               <MonthlyInputs />
             </ProtectedRoute>
 
+            <ProtectedRoute exact path="/profile">
+              <Profile/>
+            </ProtectedRoute>
+
             <ProtectedRoute exact path="/my_data">
               <MyData />
             </ProtectedRoute>
@@ -173,6 +190,11 @@ function App() {
               <MissionPage />
             </ProtectedRoute>
 
+            <ProtectedRoute exact path="/use_case">
+              < UseCasePage />
+            </ProtectedRoute>
+
+          
             {/* <ProtectedRoute path="/financial_recommendation" >
             <FinancialRecommendation />
             </ProtectedRoute> */}
