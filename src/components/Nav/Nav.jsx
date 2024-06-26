@@ -77,7 +77,7 @@ export default function Navbar() {
 
   const handleAlertsBell = (e) => {
     console.log('bell clicked!');
-    // history.push('/profile');
+    history.push('/profile');
   }
 
   const handleLogoutButton = (e) => {
