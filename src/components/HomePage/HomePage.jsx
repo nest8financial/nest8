@@ -13,6 +13,7 @@ import farmsImage from '../../Assets/images/farms.png';
 import nonprofitsImage from '../../Assets/images/non-profit.png';
 import entrepreneurImage from '../../Assets/images/entrepreneur.png';
 
+
 function HomePage() {
 
   const history = useHistory();
@@ -26,6 +27,10 @@ function HomePage() {
       payload: 0
     })
   })
+  const handleClick = (route) => {
+    history.push(route);
+  };
+
 
   return (
 
@@ -172,7 +177,7 @@ function HomePage() {
               <Typography variant="h6">Company</Typography>
             </Grid>
             <Grid item>
-              <Button color="primary" onClick={() => handleClick('/our-story')}>Our Story</Button>
+              <Button color="primary" onClick={() => handleClick('/our_story')}>Our Story</Button>
             </Grid>
             <Grid item>
               <Typography variant="h6">|</Typography>

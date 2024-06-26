@@ -1,12 +1,161 @@
 const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
+const axios = require('axios')
+require('dotenv').config()
 const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 const { convertToDatesWeHave, generateDatesWeShouldHave, getMissingMonths } = require('../modules/helper-functions-missing-inputs'); 
+const { parse } = require('dotenv');
+
 /* ------------------------- ROUTES ----------------------------------------*/
 
 /**  ****  rejectUnauthenticated, put this in when login done */
 
+
+
+// API Keys 
+const OPENAI_API_KEY= process.env.OPENAI_API_KEY;
+const openAIurl = 'https://api.openai.com/v1/chat/completions';
+const openAIheaders = { 'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}` };
+
+/**
+ * Helper function for AI calls 
+ */
+const getAPIRequestData = async (user_id, month, year) => {
+    let connection; // initialize DB connection
+
+    try{
+        connection = await pool.connect()
+        const sqlText = // GET request to the server to grab the data we will need to send to the AI API in our prompt 
+        `
+        SELECT monthly_metrics.id, metrics.id AS metric_id,
+        metrics.metric_name, industry.name AS industry_name,
+	        CASE WHEN monthly_metrics.variance_value >= 0 THEN positive_text
+	        		WHEN monthly_metrics.variance_value < 0 THEN negative_text
+	        END AS recommendation_text
+      FROM monthly_metrics
+        JOIN metrics
+          ON metrics.id = monthly_metrics.metrics_id
+        JOIN monthly_inputs
+          ON monthly_metrics.monthly_id = monthly_inputs.id
+        JOIN "user"
+        	ON monthly_inputs.user_id = "user".id
+        JOIN industry
+        	ON industry.id = "user".industry_id
+        WHERE user_id = $1
+          AND month = $2
+          AND year = $3
+        ORDER BY year, month, metrics_id;
+        `
+        const recommendation = await connection.query(sqlText, [user_id, month, year]); 
+
+        console.log('recommendation', recommendation.rows)
+
+        const prompt = 
+        `Look through the following table and provide simplified recommendations based on the recommendations provided, taking into account the corresponding industry and adjusting the recommendation based on if the text is suggesting ways the user can improve or if the user is already meeting industry standards.  
+        Use language that the user would understand, based on what industry they work in. For example, use more straightfoward, simple language or analogies for a farmer. For concepts that cannot be simplified, break them down and explain each part. Provide 2 recommendations for each metric and base these recommendations off of the two recommendations provided within the table.
+        For your response, respond using JSON format. For each metric, respond with only one description that contains all recommendations. The content response should consist of the metric name and the simplified recommendation text as the description. 
+        Content: 
+        "profit_margin": "description",
+        "asset_turnover_ration": "description",
+        "financial_leverage_ratio": "description",
+        "return_on_equity": "description", 
+        "tax_burden": "description",
+        "interest_burden": "description
+
+        Here are the recommendations I would like you to use: 
+        Metric ${recommendation.rows[0].metric_id}: ${recommendation.rows[0].metric_name} ${recommendation.rows[0].recommendation_text}
+        Metric ${recommendation.rows[1].metric_id}: ${recommendation.rows[1].metric_name} ${recommendation.rows[1].recommendation_text}
+        Metric ${recommendation.rows[2].metric_id}: ${recommendation.rows[2].metric_name} ${recommendation.rows[2].recommendation_text}
+        Metric ${recommendation.rows[3].metric_id}: ${recommendation.rows[3].metric_name} ${recommendation.rows[3].recommendation_text}
+        Metric ${recommendation.rows[4].metric_id}: ${recommendation.rows[4].metric_name} ${recommendation.rows[4].recommendation_text}
+        Metric ${recommendation.rows[5].metric_id}: ${recommendation.rows[5].metric_name} ${recommendation.rows[5].recommendation_text}
+
+        Here is the industry to take into acccount for each of these metrics:
+        ${recommendation.rows[0].industry_name}
+        `;
+        const apiRequestData = {
+          model: 'gpt-4o',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a helpful assistant receiving financial recommendations and describing them in simple terms to a small business owner.'
+            },
+            {
+              role: 'user',
+              content: `${prompt}`
+            }
+          ],
+          max_tokens: 600,
+          temperature: 1
+        };
+      connection.release(); 
+
+      console.log('TESTING API Request Data', apiRequestData);
+
+      return apiRequestData; 
+   
+    } catch(openAIapiError) {
+        console.error(openAIapiError.stack)
+        connection.release(); 
+        throw new Error ('Error in getAPIRequestData function', openAIapiError);
+      }
+
+}
+
+const updateRecommendations = async (parsedData, userId, month, year) => {
+    console.log('hello?');
+
+    console.log('profit margin?', parsedData.profit_margin);
+    console.log('month?', month);
+    console.log('user id?', userId);
+
+    let connection;
+
+    try {
+      connection = await pool.connect()
+      const sqlText = 
+      `
+UPDATE monthly_metrics
+SET recommendation_AI_enhanced = CASE metrics_id
+                                WHEN 1 THEN $1
+                                WHEN 2 THEN $2
+                                WHEN 3 THEN $3
+                                WHEN 4 THEN $4
+                                WHEN 5 THEN $5
+                                WHEN 6 THEN $6
+                            END 
+FROM monthly_inputs 
+WHERE monthly_metrics.monthly_id = monthly_inputs.id   
+AND monthly_inputs.user_id = $7
+AND monthly_inputs.month = $8
+AND monthly_inputs.year = $9;
+      `
+      const response = 
+        await connection.query(sqlText, [parsedData.profit_margin,
+                                        parsedData.asset_turnover_ratio,
+                                        parsedData.financial_leverage_ratio,
+                                        parsedData.return_on_equity, 
+                                        parsedData.tax_burden,
+                                        parsedData.interest_burden,
+                                        userId,
+                                        month,
+                                        year                            
+                                        ]);
+
+                                    
+        connection.release();
+        return true;
+      } catch(dbError) {
+        console.error(dbError.stack)
+        throw new Error ('Error adding to monthly_metrics table in', dbError);
+        connection.release();  
+      }
+  }
+
+
+  
 /**
  * GET all MISSING monthly inputs for a user
  */
@@ -49,8 +198,6 @@ router.get('/missing', rejectUnauthenticated, async (req, res) => {
         res.sendStatus(500);
     }
 })
-
-
 
 /**
  * GET all monthly inputs for a user
@@ -234,8 +381,41 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
         console.log('POST of a single month\'s metrics in /api/financial_input/ successful');  
         connection.query('COMMIT;');
         connection.release();
-        // 5. Return created (201) status if successful
-        res.sendStatus(201);
+        
+        const APIRequestData = await getAPIRequestData(userId, month, year) // pulls in the data from the DB to send in our API request to OpenAI
+        
+        console.log('THIS IS OUR API REQUEST DATA', APIRequestData);
+
+        //  4. make call to openAI assistant with data and prompt
+      const AIresponse = await axios({
+        method: 'POST',
+        url: `${openAIurl}`,
+        headers: openAIheaders,
+        data: APIRequestData
+      });
+      
+      console.log('Get recommendations back from openAI *****************')
+      // 5. Get recommendations response back from openAI
+
+      let aiReccomendations = AIresponse.data.choices[0].message.content
+    
+      console.log('aiReccomendations*************', aiReccomendations);
+      aiReccomendations = aiReccomendations.replace(/^```json\n/, '').replace(/\n```$/, '');
+   
+      // Now parse the cleaned JSON string
+      const parsedData = JSON.parse(aiReccomendations);
+      console.log('parsed data is!', parsedData);
+
+      const updateDB = await updateRecommendations(parsedData, userId, month, year) // function to update the database with the response from OpenAI 
+
+        if (updateDB) {
+            // 6. Return created (201) status if successful
+            res.sendStatus(201);
+        } else {
+            throw new Error('Error updating recommendations in DB')
+        }
+
+  
    } catch (error) {
        console.log('Error in POST of single month\'s inputs in /api/financial_inputs/', error);
        connection.query('ROLLBACK;');
@@ -389,6 +569,7 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
        res.sendStatus(500);
    }
 })
+
 
 
  /*------------------------ END ROUTES ---------------------------------------*/
