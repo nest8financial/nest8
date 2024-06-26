@@ -118,7 +118,7 @@ function HomePage() {
               <Button color="primary" onClick={() => handleClick('/contact')}>Contact Us</Button>
             </Grid>
             <Grid item>
-              <Button color="primary" onClick={() => handleClick('/our-story')}>Our Story</Button>
+              <Button color="primary" onClick={() => handleClick('/our_story')}>Our Story</Button>
             </Grid>
             <Grid item>
               <Button color="primary" onClick={() => handleClick('/mission')}>Mission</Button>

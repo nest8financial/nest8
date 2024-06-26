@@ -8,34 +8,33 @@ import {
 
 import { useDispatch, useSelector } from "react-redux";
 
-import Nav from '../Nav/Nav';
-import Footer from '../Footer/Footer';
-import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import LoginPage from '../LoginPage/LoginPage';
-import RegisterPage from '../RegisterPage/RegisterPage';
-import HomePage from '../HomePage/HomePage';
-import { ThemeProvider } from '@mui/material/styles';
-import {Theme} from '../Nav/NavTheme'
-import './App.css';
-import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
-import InputHeader from '../InputHeader/InputHeader';
-import MyData from '../MyData/MyData';
+import Nav from "../Nav/Nav";
+import Footer from "../Footer/Footer";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+import LoginPage from "../LoginPage/LoginPage";
+import RegisterPage from "../RegisterPage/RegisterPage";
+import HomePage from "../HomePage/HomePage";
+import { ThemeProvider } from "@mui/material/styles";
+import { Theme } from "../Nav/NavTheme";
+import "./App.css";
+import RecommendationDetail from "../RecommendationDetail/RecommendationDetail";
+import InputHeader from "../InputHeader/InputHeader";
+import MyData from "../MyData/MyData";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
-import FinancialsPage from "../FinancialsPage/FinancialsPage"
+import FinancialsPage from "../FinancialsPage/FinancialsPage";
 import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyReportsRecomendations";
 import Profile from "../Profile/Profile";
 import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
 import OrderConfirmation from "../OrderConfirmation/OrderConfirmation";
-
-// import ProductPage from '../ProductPage';
-// import FeaturesPage from '../FeaturesPage';
-// import PricingPage from '../PricingPage';
-// import FAQPage from './FAQPage';
-// import ContactUsPage from '../ContactUsPage';
-// import OurStoryPage from '../OurStoryPage';
-// import MissionPage from '../MissionPage';
+// import UseCasePage from "../StaticPages/UseCasePage";
+import FeaturesPage from "../StaticPages/FeaturesPage";
+import PricingPage from "../StaticPages/Pricing";
+import FAQPage from "../StaticPages/FAQPage";
+import ContactUsPage from "../StaticPages/ContactUsPage";
+import OurStoryPage from "../StaticPages/OurStoryPage";
+import MissionPage from "../StaticPages/Mission";
 
 function App() {
   const dispatch = useDispatch();
@@ -47,7 +46,6 @@ function App() {
   }, [dispatch]);
 
   return (
-    
     <ThemeProvider theme={Theme}>
       <Router>
         <div>
@@ -76,7 +74,7 @@ function App() {
             <Route exact path="/login">
               {user.id ? (
                 // If the user is already logged in,
-                // redirect to the /My Reports page 
+                // redirect to the /My Reports page
                 // right now redirect to summary until My Reports is done
                 <Redirect to="/financials" />
               ) : (
@@ -97,15 +95,15 @@ function App() {
             </Route>
 
             <Route exact path="/home">
-                <Redirect to="/home" />          
+              <Redirect to="/home" />
             </Route>
 
             <Route exact path="/review_cart">
-                <ReviewCartPlaceOrder />          
+              <ReviewCartPlaceOrder />
             </Route>
 
             <Route exact path="/order_confirmation">
-                <OrderConfirmation />          
+              <OrderConfirmation />
             </Route>
 
             <ProtectedRoute exact path="/input_header">
@@ -113,16 +111,16 @@ function App() {
             </ProtectedRoute>
 
             <Route exact path="/product_page">
-              <MembershipPlan/>
+              <MembershipPlan />
             </Route>
 
-          <ProtectedRoute
-            // logged in shows InputHeader page, else shows LoginPage
-            exact
-            path="/inputs_add_edit/:month/:year"
-          >
-            <AddEditInputs />
-          </ProtectedRoute>
+            <ProtectedRoute
+              // logged in shows InputHeader page, else shows LoginPage
+              exact
+              path="/inputs_add_edit/:month/:year"
+            >
+              <AddEditInputs />
+            </ProtectedRoute>
 
             {/* Recommendation Detail Component- shows all recommendations for a 
             year/month and allows user to add notes and checkoff action items
@@ -144,14 +142,37 @@ function App() {
             </ProtectedRoute>
 
             <ProtectedRoute exact path="/my_reports_recommendations">
-              < MyReportsRecommendations />
+              <MyReportsRecommendations />
             </ProtectedRoute>
 
             <ProtectedRoute exact path="/my_profile">
               <Profile />
             </ProtectedRoute>
 
-          
+            <ProtectedRoute exact path="/features">
+              <FeaturesPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/pricing">
+              <PricingPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/faq">
+              <FAQPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/contact">
+              <ContactUsPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/our_story">
+              <OurStoryPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/mission">
+              <MissionPage />
+            </ProtectedRoute>
+
             {/* <ProtectedRoute path="/financial_recommendation" >
             <FinancialRecommendation />
             </ProtectedRoute> */}
