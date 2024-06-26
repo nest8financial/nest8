@@ -29,6 +29,7 @@ function ConfirmPopUp({closePopUp, productId}) {
     // set piece of state here so login or account registration 
     //     goes to review cart place order
     console.log('popup click on confirm?')
+    console.log('product here is', productId)
     dispatch({ type: 'SET_NEW_PRODUCT_SELECTED',
                payload: productId })
     history.push('/login');

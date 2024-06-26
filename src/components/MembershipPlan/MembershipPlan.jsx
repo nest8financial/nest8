@@ -14,6 +14,7 @@ function MembershipPlan() {
     const dispatch = useDispatch();
     const [openPopUp, setOpenPopUp] = useState(false);
     const products = useSelector(store => store.products.products);
+    const [productSelected, setProductSelected] = useState(0);
 
     useEffect(() => {   
         dispatch({ type: 'FETCH_PRODUCTS' })
@@ -22,8 +23,8 @@ function MembershipPlan() {
     const handleAddToCart = (productId) => {
         console.log('popping...')
         console.log('productID selected:', productId)
+        setProductSelected(productId);
         setOpenPopUp(true);
-        // alert("Confirm Add to Cart Pop-Up");
     };
 
     const closePopUp = () => {
@@ -56,11 +57,11 @@ function MembershipPlan() {
                             key={product.id}>
                             <Typography variant="h6">{product.name}</Typography>
                             <Typography variant="h5">${product.promo_price}</Typography>
-                            <Typography variant="h"><s>${product.price}</s></Typography>
+                            <Typography variant="h"><s>${product.price}</s>{product.description}</Typography>
                             <Typography variant="body1">30-day free trial</Typography>
                             </Box>
                         <Button sx={{alignText: "center"}} variant="contained" onClick={() => handleAddToCart(product.id)}>Add to cart</Button>
-                        { openPopUp ? <ConfirmPopUp closePopUp={closePopUp} productId={product.id}/> : '' }
+                        { openPopUp ? <ConfirmPopUp closePopUp={closePopUp} productId={productSelected}/> : '' }
                     </Card>
                 ))}
                 </Box>
@@ -77,7 +78,6 @@ function MembershipPlan() {
                     label="All-in-one tracker: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor"
                 />
             </Box>
-
         </Container>
     );
 }

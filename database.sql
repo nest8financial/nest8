@@ -76,6 +76,12 @@ CREATE TABLE "monthly_metrics" (
     "notes" VARCHAR 
 );
 
+INSERT INTO product
+	(id, name, description, price, promo_price)
+	VALUES ( 1, 'One-Time Report', '', 50, 0),
+		   ( 2, 'Monthly', '/month', 25, 0),
+		   ( 3, 'One-Time Report', '/year', 240, 0);
+           
 INSERT INTO industry
     (name, 
     profit_margin, 
