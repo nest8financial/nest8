@@ -15,6 +15,10 @@ import entrepreneurImage from '../../Assets/images/entrepreneur.png';
 function HomePage() {
 
   const history = useHistory();
+  const handleClick = (route) => {
+    history.push(route);
+  };
+
 
   return (
 

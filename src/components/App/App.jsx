@@ -31,7 +31,6 @@ import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyRe
 import Profile from "../Profile/Profile";
 import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
 import OrderConfirmation from "../OrderConfirmation/OrderConfirmation";
-// import UseCasePage from "../StaticPages/UseCasePage";
 import FeaturesPage from "../StaticPages/FeaturesPage";
 import PricingPage from "../StaticPages/Pricing";
 import FAQPage from "../StaticPages/FAQPage";
@@ -39,15 +38,6 @@ import ContactUsPage from "../StaticPages/ContactUsPage";
 import OurStoryPage from "../StaticPages/OurStoryPage";
 import MissionPage from "../StaticPages/Mission";
 import UseCasePage from '../StaticPages/UseCasePage';
-
-
-// import ProductPage from '../ProductPage';
-// import FeaturesPage from '../FeaturesPage';
-// import PricingPage from '../PricingPage';
-// import FAQPage from './FAQPage';
-// import ContactUsPage from '../ContactUsPage';
-// import OurStoryPage from '../OurStoryPage';
-// import MissionPage from '../MissionPage';
 
 function App() {
   const dispatch = useDispatch();
