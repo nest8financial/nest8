@@ -4,12 +4,8 @@ import user from './user.reducer';
 import industries from './industry.reducer';
 import financialInputs from './financial.inputs.reducer.js';
 import financialMetrics from './financial.metrics.reducer.js';
-<<<<<<< HEAD
 import products from './products.reducer.js'
-=======
 import editUser from './edit.user.reducer.js';
->>>>>>> main
-
 
 // rootReducer is the primary reducer for the project
 //       - bundles up all of the other reducers for use
@@ -21,11 +17,9 @@ const rootReducer = combineReducers({
   financialInputs,  // state pertaining to 6 financial user inputs per month
   financialMetrics, // state pertaining to 6 computed financial metrics & variances
   industries,
-<<<<<<< HEAD
-  products
-=======
+  products,
   editUser
->>>>>>> main
+
  
 });
 
