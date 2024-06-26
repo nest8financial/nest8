@@ -1,8 +1,11 @@
 const express = require('express');
 const pool = require('../modules/pool');
 const router = express.Router();
+const axios = require('axios')
+require('dotenv').config()
 const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 const { convertToDatesWeHave, generateDatesWeShouldHave, getMissingMonths } = require('../modules/helper-functions-missing-inputs'); 
+
 /* ------------------------- ROUTES ----------------------------------------*/
 
 /**  ****  rejectUnauthenticated, put this in when login done */
@@ -18,7 +21,7 @@ const openAIheaders = { 'Content-Type': 'application/json',
                         'Authorization': `Bearer ${OPENAI_API_KEY}` };
 
 
-const getRecommendationsForMonth = async (user_id, month, year) => {
+const getAPIRequestData = async (user_id, month, year) => {
     let connection; // initialize DB connection
 
     try{
@@ -53,7 +56,7 @@ const getRecommendationsForMonth = async (user_id, month, year) => {
         Use language that the user would understand, based on what industry they work in. For example, use more straightfoward, simple language or analogies for a farmer. For concepts that cannot be simplified, break them down and explain each part. Please provide 2 recommendations for each metric type and base these recommendations off of the two recommendations provided within the table.
         For your response, respond using JSON format. The content response should consist of the metric name and the simplified recommendation text as the description. 
         Content: 
-        "profit margin": "description",
+        "profit_margin": "description",
         "asset_turnover_ration": "description",
         "financial_leverage_ratio": "description",
         "return_on_equity": "description", 
@@ -86,43 +89,19 @@ const getRecommendationsForMonth = async (user_id, month, year) => {
           max_tokens: 600,
           temperature: 1
         };
-      console.log('apiRequest', apiRequestData);
-      console.log('Make call to openAI *****************')
-    //6. make call to openAI assistant with data and prompt
-      const AIresponse = await axios({
-        method: 'POST',
-        url: `${openAIurl}`,
-        headers: openAIheaders,
-        data: apiRequestData
-      });
-      console.log('Get recommendations back from openAI *****************')
-      // 7. get recommendations response back from openAI
-      console.log(AIresponse.data);
+      connection.release(); 
 
+      console.log('TESTING API Request Data', apiRequestData);
 
-
+      return apiRequestData; 
+   
     } catch(openAIapiError) {
-        console.log('Error in POST API call to openAI', openAIapiError);
-        res.sendStatus(500);
+        console.error(openAIapiError.stack)
+        connection.release(); 
+        throw new Error ('Error in getAPIRequestData function', openAIapiError);
       }
 
-  
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -355,13 +334,25 @@ router.post('/',  async (req, res) => {
         connection.query('COMMIT;');
         connection.release();
         
-        const recommendations = getRecommendationsForMonth(userId, month, year) // 
-        console.log('this is the recommendations from AI', recommendations);
+        const APIRequestData = await getAPIRequestData(userId, month, year) // pulls in the data from the DB to send in our API request to OpenAI
+        
+        console.log('THIS IS OUR API REQUEST DATA', APIRequestData);
 
+        //  4. make call to openAI assistant with data and prompt
+      const AIresponse = await axios({
+        method: 'POST',
+        url: `${openAIurl}`,
+        headers: openAIheaders,
+        data: APIRequestData
+      });
+      
+      console.log('Get recommendations back from openAI *****************')
+      // 5. Get recommendations response back from openAI
 
+      let aiResponse = AIresponse.data.choices[0].message.content
+      console.log('AI Response is', aiResponse);
 
-
-        // 5. Return created (201) status if successful
+        // 6. Return created (201) status if successful
         res.sendStatus(201);
    } catch (error) {
        console.log('Error in POST of single month\'s inputs in /api/financial_inputs/', error);
