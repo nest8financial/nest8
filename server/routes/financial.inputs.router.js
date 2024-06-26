@@ -18,12 +18,12 @@ const openAIheaders = { 'Content-Type': 'application/json',
                         'Authorization': `Bearer ${OPENAI_API_KEY}` };
 
 
-function getRecommendationsForMonth(user_id, month, year){
+const getRecommendationsForMonth = async (user_id, month, year) => {
     let connection; // initialize DB connection
 
     try{
         connection = await pool.connect()
-        const sqlText = 
+        const sqlText = // GET request to the server to grab the data we will need to send to the AI API in our prompt 
         `
         SELECT monthly_metrics.id, metrics.id AS metric_id,
         metrics.metric_name, industry.name AS industry_name,
@@ -46,8 +46,10 @@ function getRecommendationsForMonth(user_id, month, year){
         `
         const recommendation = await connection.query(sqlText, [user_id, month, year]); 
 
+        console.log('recommendation', recommendation.rows)
+
         const prompt = 
-        `Look through the following table and provide a simplified recommendation based on the recommendation provided, taking into account the corresponding industry and adjusting the recommendation based on if the text is suggesting ways the user can improve or if the user is already meeting industry standards.  
+        `Look through the following table and provide simplified recommendations based on the recommendations provided, taking into account the corresponding industry and adjusting the recommendation based on if the text is suggesting ways the user can improve or if the user is already meeting industry standards.  
         Use language that the user would understand, based on what industry they work in. For example, use more straightfoward, simple language or analogies for a farmer. For concepts that cannot be simplified, break them down and explain each part. Please provide 2 recommendations for each metric type and base these recommendations off of the two recommendations provided within the table.
         For your response, respond using JSON format. The content response should consist of the metric name and the simplified recommendation text as the description. 
         Content: 
@@ -57,7 +59,18 @@ function getRecommendationsForMonth(user_id, month, year){
         "return_on_equity": "description", 
         "tax_burden": "description",
         "interest_burden": "description
-        }`;
+
+        Here are the recommendations I would like you to use: 
+        Metric ${recommendation.rows[0].metric_id}: ${recommendation.rows[0].metric_name} ${recommendation.rows[0].recommendation_text}
+        Metric ${recommendation.rows[1].metric_id}: ${recommendation.rows[1].metric_name} ${recommendation.rows[1].recommendation_text}
+        Metric ${recommendation.rows[2].metric_id}: ${recommendation.rows[2].metric_name} ${recommendation.rows[2].recommendation_text}
+        Metric ${recommendation.rows[3].metric_id}: ${recommendation.rows[3].metric_name} ${recommendation.rows[3].recommendation_text}
+        Metric ${recommendation.rows[4].metric_id}: ${recommendation.rows[4].metric_name} ${recommendation.rows[4].recommendation_text}
+        Metric ${recommendation.rows[5].metric_id}: ${recommendation.rows[5].metric_name} ${recommendation.rows[5].recommendation_text}
+
+        Here is the industry to take into acccount for each of these metrics:
+        ${recommendation.rows[0].industry_name}
+        `;
         const apiRequestData = {
           model: 'gpt-4o',
           messages: [
@@ -88,10 +101,10 @@ function getRecommendationsForMonth(user_id, month, year){
 
 
 
-
-
-
-    }
+    } catch(openAIapiError) {
+        console.log('Error in POST API call to openAI', openAIapiError);
+        res.sendStatus(500);
+      }
 
   
 
@@ -341,6 +354,13 @@ router.post('/',  async (req, res) => {
         console.log('POST of a single month\'s metrics in /api/financial_input/ successful');  
         connection.query('COMMIT;');
         connection.release();
+        
+        const recommendations = getRecommendationsForMonth(userId, month, year) // 
+        console.log('this is the recommendations from AI', recommendations);
+
+
+
+
         // 5. Return created (201) status if successful
         res.sendStatus(201);
    } catch (error) {
