@@ -5,6 +5,7 @@ import userSaga from './user.saga';
 import industrySaga from './industry.saga';
 import financialInputsSaga from './financial.inputs.saga';
 import financialMetricsSaga from './financial.metrics.saga.js';
+import userEditSaga from './edit.user.saga.js';
 
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
@@ -21,5 +22,7 @@ export default function* rootSaga() {
     industrySaga(),
     financialInputsSaga(),
     financialMetricsSaga(),
+    userEditSaga()
+    
   ]);
 }
