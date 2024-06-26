@@ -1,21 +1,25 @@
 import React from 'react';
+import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Typography from '@mui/material/Typography';
 import { useSelector } from 'react-redux';
-
-
-
+import ConfirmPopUp from '../../ConfirmPopUp/ConfirmPopUp';
 
 function MembershipPlan() {
-
+    const [openPopUp, setOpenPopUp] = useState(false);
     const products = useSelector(store => store.products.products)
-    
     const handleAddToCart = () => {
-        alert("Confirm Add to Cart Pop-Up");
+        console.log('popping...')
+        setOpenPopUp(true);
+        // alert("Confirm Add to Cart Pop-Up");
     };
+
+    const closePopUp = () => {
+        setOpenPopUp(false);
+    }
 
     return (
         <div>
@@ -96,6 +100,7 @@ function MembershipPlan() {
                     label="All-in-one tracker: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor"
                 />
             </Box>
+            { openPopUp ? <ConfirmPopUp closePopUp={closePopUp}/> : '' }
         </div>
     );
 }

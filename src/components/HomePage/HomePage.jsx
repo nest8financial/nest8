@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Typography, Container, Grid, Link, List, ListItem, ListItemIcon, ListItemText, IconButton } from '@mui/material';
+import { Button, Typography, Container, Grid, Link, List, ListItem, ListItemIcon, ListItemText, IconButton, Box } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -9,20 +9,20 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 function HomePage() {
+
   const history = useHistory();
 
-  const handleClick = () => {
-    history.push();
-  };
-
   return (
-    <div>
-        
+
       <Container style={{ paddingTop: '20px' }}>
         <section id="educate-users">
-          <Typography variant="h4" gutterBottom>
+          -- Image of entrepreneur here --
+          <Typography>How well is your entrepreneurial business doing?</Typography>
+          <Button variant="contained"
+                  sx={{ textTransform: "none" }}
+                  onClick={() => history.push('/use_case')}>
             Learn what Nest 8 can do
-          </Typography>
+          </Button>
           <List>
             <ListItem>
               <ListItemIcon>
@@ -55,18 +55,49 @@ function HomePage() {
               <ListItemText primary="Everything you need in your pocket" />
             </ListItem>
            </List>
-           <Typography variant="h4" gutterBottom>
+           <Button variant="contained"
+                  sx={{ textTransform: "none" }}
+                  onClick={() => history.push('/product_page')}>
            Explore All Features
-          </Typography>
+           </Button>
         </section>
         <section id="free-trial" style={{ marginTop: '40px' }}>
           <Typography variant="h4" gutterBottom>
             How Nest 8 works for your buisness type
           </Typography>
-          
-          <Button variant="contained" color="primary" onClick={() => handleClick('/product')}>
+          --Image of Farmers--
+          <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            <Typography>Farmers
+            </Typography>
+            <Typography>Improve efficiency of your operations, asses your business health, identify growth opportunities. 
+            </Typography>
+          </Box>
+          --Image of Non-Profits--
+          <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            <Typography>Non-Profits</Typography>
+            <Typography>Assess the effectiveness of your fundraising efforts, compare to other non-profits.</Typography>
+          </Box>
+          <Button variant="contained" 
+                  color="primary"
+                  sx={{ textTransform: "none" }}
+                  onClick={() => history.push('/product_page')}>
             Sign up for free 
           </Button>
+        </section>
+        <section>
+          <Typography>Try N8 for free, then decide which plan best suits your business</Typography>
+          <Box sx={{ border: .1, p: 2, width: .3 }}>
+            <Typography>30-day free trial</Typography>
+            <Typography>$0</Typography>
+            <Typography>Access all N8 features</Typography>
+            <Typography>Input your data</Typography>
+            <Typography>24/7 online support</Typography>
+            <Typography>Cancel anytime</Typography>
+          </Box>
+          <Button variant="contained" 
+                  color="primary"
+                  sx={{ textTransform: "none" }}
+                  onClick={() => history.push('/product_page')}>Try Nest8 for free (30 day trial)</Button>
         </section>
         <section id="links" style={{ marginTop: '40px' }}>
         <Typography variant="h4" gutterBottom>
@@ -128,7 +159,6 @@ function HomePage() {
           <Link href="/legal">Legal</Link> | <Link href="/privacy">Privacy Notice</Link> | <Link href="/accessibility">Accessibility</Link>
         </section>
       </Container>
-    </div>
   );
 }
 

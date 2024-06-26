@@ -48,7 +48,11 @@ function ConfirmPopUp({closePopUp}) {
           </IconButton>
         </DialogTitle>
         <DialogContent>
+<<<<<<< HEAD
           <p>Product added to cart.</p>
+=======
+          <p>Product added to cart</p>
+>>>>>>> main
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
