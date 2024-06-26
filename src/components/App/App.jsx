@@ -41,6 +41,7 @@ function App() {
   const dispatch = useDispatch();
 
   const user = useSelector((store) => store.user);
+  const newProductSelected = useSelector(store => store.products.newProductSelected);
 
   useEffect(() => {
     dispatch({ type: "FETCH_USER" });
@@ -55,7 +56,7 @@ function App() {
 
           <Switch>
             {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
-            <Redirect exact from="/" to="/login" />
+            <Redirect exact from="/" to="/home" />
 
             {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:5173/user will show the UserPage if the user is logged in.
@@ -65,22 +66,24 @@ function App() {
               <HomePage />
             </Route>
 
-            {/* <ProtectedRoute
-              // logged in shows InfoPage else shows LoginPage
-              exact
-              path="/info"
-            >
-              <InfoPage />
-            </ProtectedRoute> */}
-
-            <Route exact path="/login">
-              {user.id ? (
-                // If the user is already logged in,
-                // redirect to the /My Reports page 
-                // right now redirect to summary until My Reports is done
-                <Redirect to="/financials" />
+            {/* If the user is already logged in and
+                a new product HAS been selected
+                  - redirect to the review carts screen to finalize their order           
+                Else, if a user is already logged in and a new product
+                HAS NOT been selected
+                  - redirect to the /financials (Reports) page
+                Otherwise, if no user logged in
+                  - show the login page                         */}
+              <Route exact path="/login">
+              { user.id ? ( 
+                newProductSelected && newProductSelected !== 0 ? (
+              <Redirect to="/review_cart" />
+              ) : ( 
+                newProductSelected === 0 || newProductSelected === 'undefined' ? (
+              <Redirect to="/financials" />
               ) : (
-                // Otherwise, show the login page
+                <LoginPage />
+              ))) : (
                 <LoginPage />
               )}
             </Route>

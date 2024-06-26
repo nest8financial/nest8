@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom.min';
+import { useHistory } from 'react-router-dom';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch } from 'react-redux';
 
-function ConfirmPopUp({closePopUp}) {
+function ConfirmPopUp({closePopUp, productId}) {
 
   const history = useHistory();
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -27,6 +29,8 @@ function ConfirmPopUp({closePopUp}) {
     // set piece of state here so login or account registration 
     //     goes to review cart place order
     console.log('popup click on confirm?')
+    dispatch({ type: 'SET_NEW_PRODUCT_SELECTED',
+               payload: productId })
     history.push('/login');
   };
 

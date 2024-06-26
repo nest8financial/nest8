@@ -1,5 +1,7 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useHistory} from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { Button, Typography, Container, Grid, Link, List, ListItem, ListItemIcon, ListItemText, IconButton, Box } from '@mui/material';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
@@ -11,6 +13,16 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 function HomePage() {
 
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  // reset the product selection if user goes to the home page or 
+  //      the logout page
+  useEffect(() => {
+    dispatch({ 
+      type: 'SET_NEW_PRODUCT_SELECTED',
+      payload: 0
+    })
+  })
 
   return (
 

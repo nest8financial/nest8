@@ -12,11 +12,11 @@ import { combineReducers } from 'redux';
  * Gets all available products 
  */
 const products = (state = [], action) => {
-    if (action.type === 'SET_SINGLE_MONTH_INPUTS') {
+    if (action.type === 'SET_PRODUCTS') {
         if (action.payload.length === 0) {
           return [];
         }
-        return action.payload[0];
+        return action.payload;
     } 
     return state;
   }

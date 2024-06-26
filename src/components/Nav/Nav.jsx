@@ -31,7 +31,9 @@ export default function Navbar() {
   const user = useSelector((store) => store.user);
 
   useEffect(() => {
-    dispatch({ type: "GET_MISSING_MONTHLY_INPUTS" });
+    if (user.id) {
+      dispatch({ type: "GET_MISSING_MONTHLY_INPUTS" });
+    }
   }, [user]);
 
   useEffect(() => {

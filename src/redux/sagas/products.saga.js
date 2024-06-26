@@ -14,21 +14,20 @@ function* fetchProducts() {
   }
 }
 
-function* fetchNewProductSelected() {
-    try {
-      const response = yield axios.get("/api/products");
+// function* fetchNewProductSelected() {
+//     try {
+//       const response = yield axios.get("/api/products");
       
-      console.log("product saga fetch:", response.data);
+//       console.log("product saga fetch:", response.data);
   
-      yield put({ type: "SET_PRODUCTS", payload: response.data });
-    } catch (error) {
-      console.log("product get request failed", error);
-    }
-  }
+//       yield put({ type: "SET_NEW_PRODUCT_SELECTED", payload: response.data });
+//     } catch (error) {
+//       console.log("product get request failed", error);
+//     }
+//   }
 
 function* productsSaga() {
   yield takeLatest("FETCH_PRODUCTS", fetchProducts);
-  yield takeLatest("FETCH_NEW_PRODUCT_SELECTED", fetchNewProductSelected);
 }
 
 export default productsSaga;
