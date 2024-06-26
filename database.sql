@@ -60,7 +60,8 @@ CREATE TABLE "monthly_metrics" (
     "metric_value" DECIMAL, 
     "variance_value" DECIMAL, 
     "completed_date" TIMESTAMP, 
-    "notes" VARCHAR 
+    "notes" VARCHAR,
+    "recommendation_ai_enhanced" VARCHAR
 );
 
 INSERT INTO industry
