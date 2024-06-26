@@ -29,6 +29,7 @@ import FinancialRecommendation from "../FinancialRecommendation/FinancialRecomme
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
 import FinancialsPage from "../FinancialsPage/FinancialsPage"
+import Profile from '../Profile/Profile'
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
 // import PricingPage from '../PricingPage';
@@ -125,6 +126,10 @@ function App() {
 
             <ProtectedRoute exact path="/my_inputs">
               <MonthlyInputs />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/profile">
+              <Profile/>
             </ProtectedRoute>
 
             <ProtectedRoute exact path="/my_data">
