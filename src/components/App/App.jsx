@@ -24,10 +24,15 @@ import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
 import FinancialsPage from "../FinancialsPage/FinancialsPage"
+
+
+
 import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyReportsRecomendations";
 import Profile from "../Profile/Profile";
 import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
 import OrderConfirmation from "../OrderConfirmation/OrderConfirmation";
+import UseCasePage from '../StaticPages/UseCasePage';
+
 
 // import ProductPage from '../ProductPage';
 // import FeaturesPage from '../FeaturesPage';
@@ -135,6 +140,10 @@ function App() {
               <MonthlyInputs />
             </ProtectedRoute>
 
+            <ProtectedRoute exact path="/profile">
+              <Profile/>
+            </ProtectedRoute>
+
             <ProtectedRoute exact path="/my_data">
               <MyData />
             </ProtectedRoute>
@@ -149,6 +158,10 @@ function App() {
 
             <ProtectedRoute exact path="/my_profile">
               <Profile />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/use_case">
+              < UseCasePage />
             </ProtectedRoute>
 
           

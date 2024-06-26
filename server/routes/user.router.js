@@ -62,6 +62,46 @@ router.post("/logout", (req, res) => {
     }
     res.redirect("/");
   });
+
 });
+
+router.put("/", rejectUnauthenticated, (req, res) => {
+  const userId = req.user.id 
+  console.log(req.body)
+
+
+  const firstName = req.body.first_name
+  const lastName = req.body.last_name
+  const company = req.body.company
+  const industry = req.body.industry
+  const email =req.body.username
+
+  const userInfo = `
+    UPDATE "user"
+      SET 
+        first_name = $1, 
+        last_name = $2,
+        company = $3,
+        industry_id = $4,
+        username = $5
+      WHERE "id" = $6;`
+   pool.query (userInfo, [firstName, lastName, company, industry, email, userId]) 
+
+ .then((dbResponse) => {
+  console.log('User updated successfully in /api/user', dbResponse)
+  res.sendStatus(200)
+})
+.catch((err) => {
+  console.log("User update failed: ", err);
+  res.sendStatus(500)
+});
+});
+
+router.get('/edituser', rejectUnauthenticated, (req, res) => {
+  // Send back user object from the session (previously queried from the database)
+  console.log('in edit user', req.user)
+  res.send(req.user);
+});
+
 
 module.exports = router;
