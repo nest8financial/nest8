@@ -1,6 +1,7 @@
 import React from "react";
 import {Container, Typography, Card,CardContent,CardMedia,Grid, Box,Button,} from "@mui/material";
 import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyReportsRecomendations";
+import MembershipPlan from "../MembershipPlan/MembershipPlan";
 const reviews = [
   {
     name: "James",
@@ -80,7 +81,7 @@ const UseCasePage = () => {
         </Grid>
       </Grid>
       <Box my={4}>
-        <MyReportsRecommendations />
+        <MembershipPlan />
       </Box>
     </Container>
   );
