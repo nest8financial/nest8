@@ -50,9 +50,7 @@ CREATE TABLE "metrics" (
     "metric_name" VARCHAR,
     "metric_description" VARCHAR,
     "positive_text" VARCHAR,
-    "positive_text_AI_enhanced" VARCHAR,
-    "negative_text" VARCHAR,
-    "negative_text_AI_enhanced" VARCHAR
+    "negative_text" VARCHAR
 );
 
 CREATE TABLE "monthly_metrics" (
@@ -62,7 +60,8 @@ CREATE TABLE "monthly_metrics" (
     "metric_value" DECIMAL, 
     "variance_value" DECIMAL, 
     "completed_date" TIMESTAMP, 
-    "notes" VARCHAR 
+    "notes" VARCHAR,
+    "recommendation_ai_enhanced" VARCHAR
 );
 
 INSERT INTO industry

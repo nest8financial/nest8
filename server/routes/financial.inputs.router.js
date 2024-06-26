@@ -5,14 +5,13 @@ const axios = require('axios')
 require('dotenv').config()
 const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 const { convertToDatesWeHave, generateDatesWeShouldHave, getMissingMonths } = require('../modules/helper-functions-missing-inputs'); 
+const { parse } = require('dotenv');
 
 /* ------------------------- ROUTES ----------------------------------------*/
 
 /**  ****  rejectUnauthenticated, put this in when login done */
 
-/**
- * Helper function for AI calls 
- */
+
 
 // API Keys 
 const OPENAI_API_KEY= process.env.OPENAI_API_KEY;
@@ -20,7 +19,9 @@ const openAIurl = 'https://api.openai.com/v1/chat/completions';
 const openAIheaders = { 'Content-Type': 'application/json',
                         'Authorization': `Bearer ${OPENAI_API_KEY}` };
 
-
+/**
+ * Helper function for AI calls 
+ */
 const getAPIRequestData = async (user_id, month, year) => {
     let connection; // initialize DB connection
 
@@ -53,8 +54,8 @@ const getAPIRequestData = async (user_id, month, year) => {
 
         const prompt = 
         `Look through the following table and provide simplified recommendations based on the recommendations provided, taking into account the corresponding industry and adjusting the recommendation based on if the text is suggesting ways the user can improve or if the user is already meeting industry standards.  
-        Use language that the user would understand, based on what industry they work in. For example, use more straightfoward, simple language or analogies for a farmer. For concepts that cannot be simplified, break them down and explain each part. Please provide 2 recommendations for each metric type and base these recommendations off of the two recommendations provided within the table.
-        For your response, respond using JSON format. The content response should consist of the metric name and the simplified recommendation text as the description. 
+        Use language that the user would understand, based on what industry they work in. For example, use more straightfoward, simple language or analogies for a farmer. For concepts that cannot be simplified, break them down and explain each part. Provide 2 recommendations for each metric and base these recommendations off of the two recommendations provided within the table.
+        For your response, respond using JSON format. For each metric, respond with only one description that contains all recommendations. The content response should consist of the metric name and the simplified recommendation text as the description. 
         Content: 
         "profit_margin": "description",
         "asset_turnover_ration": "description",
@@ -103,9 +104,58 @@ const getAPIRequestData = async (user_id, month, year) => {
 
 }
 
+const updateRecommendations = async (parsedData, userId, month, year) => {
+    console.log('hello?');
+
+    console.log('profit margin?', parsedData.profit_margin);
+    console.log('month?', month);
+    console.log('user id?', userId);
+
+    let connection;
+
+    try {
+      connection = await pool.connect()
+      const sqlText = 
+      `
+UPDATE monthly_metrics
+SET recommendation_AI_enhanced = CASE metrics_id
+                                WHEN 1 THEN $1
+                                WHEN 2 THEN $2
+                                WHEN 3 THEN $3
+                                WHEN 4 THEN $4
+                                WHEN 5 THEN $5
+                                WHEN 6 THEN $6
+                            END 
+FROM monthly_inputs 
+WHERE monthly_metrics.monthly_id = monthly_inputs.id   
+AND monthly_inputs.user_id = $7
+AND monthly_inputs.month = $8
+AND monthly_inputs.year = $9;
+      `
+      const response = 
+        await connection.query(sqlText, [parsedData.profit_margin,
+                                        parsedData.asset_turnover_ratio,
+                                        parsedData.financial_leverage_ratio,
+                                        parsedData.return_on_equity, 
+                                        parsedData.tax_burden,
+                                        parsedData.interest_burden,
+                                        userId,
+                                        month,
+                                        year                            
+                                        ]);
+
+                                    
+        connection.release();
+        return true;
+      } catch(dbError) {
+        console.error(dbError.stack)
+        throw new Error ('Error adding to monthly_metrics table in', dbError);
+        connection.release();  
+      }
+  }
 
 
-
+  
 /**
  * GET all MISSING monthly inputs for a user
  */
@@ -148,8 +198,6 @@ router.get('/missing',  async (req, res) => {
         res.sendStatus(500);
     }
 })
-
-
 
 /**
  * GET all monthly inputs for a user
@@ -349,11 +397,25 @@ router.post('/',  async (req, res) => {
       console.log('Get recommendations back from openAI *****************')
       // 5. Get recommendations response back from openAI
 
-      let aiResponse = AIresponse.data.choices[0].message.content
-      console.log('AI Response is', aiResponse);
+      let aiReccomendations = AIresponse.data.choices[0].message.content
+    
+      console.log('aiReccomendations*************', aiReccomendations);
+      aiReccomendations = aiReccomendations.replace(/^```json\n/, '').replace(/\n```$/, '');
+   
+      // Now parse the cleaned JSON string
+      const parsedData = JSON.parse(aiReccomendations);
+      console.log('parsed data is!', parsedData);
 
-        // 6. Return created (201) status if successful
-        res.sendStatus(201);
+      const updateDB = await updateRecommendations(parsedData, userId, month, year) // function to update the database with the response from OpenAI 
+
+        if (updateDB) {
+            // 6. Return created (201) status if successful
+            res.sendStatus(201);
+        } else {
+            throw new Error('Error updating recommendations in DB')
+        }
+
+  
    } catch (error) {
        console.log('Error in POST of single month\'s inputs in /api/financial_inputs/', error);
        connection.query('ROLLBACK;');
