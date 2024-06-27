@@ -51,9 +51,9 @@ function App() {
   return (
     <ThemeProvider theme={Theme}>
       <Router>
-        <div>
+        <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>  
           <Nav />
-
+          <div style={{ flex: 1 }}>
           <Switch>
             {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
             <Redirect exact from="/" to="/login" />
@@ -193,6 +193,7 @@ function App() {
               <h1>404</h1>
             </Route>
           </Switch>
+          </div>
           <Footer />
         </div>
       </Router>

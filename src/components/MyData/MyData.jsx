@@ -127,6 +127,7 @@ function separateOutMonthAndYear(arrayOfDates) {
             </Typography>
         )}
       </Box>
+      
     </Container>
   );
 }
