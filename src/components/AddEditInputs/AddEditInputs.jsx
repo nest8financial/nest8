@@ -149,35 +149,52 @@ const handleEditSaveButton= (event) => {
    // else, if screen is not in readOnly mode, button pressed is save
    //      - Save button pressed: save or update financial inputs
    } else {
+    const decimalRegex = /^\d*\.?\d{0,2}$/;
+
+    let hasError = false;
+        const updatedErrors = { ...amountErrors };
+
+        Object.keys(amountInputs).forEach(key => {
+            if (!decimalRegex.test(amountInputs[key]) || amountInputs[key] === '') {
+                updatedErrors[key] = true;
+                hasError = true;
+            }
+        });
+         // Validate tax rate input
+         if (!decimalRegex.test(taxRateInput) || taxRateInput === '') {
+            setTaxRateError(true);
+            hasError = true;
+        } else {
+            setTaxRateError(false);
+        }
+
+        // Update errors state
+        setAmountErrors(updatedErrors);
+
+        // Only proceed if there are no errors
+        if (!hasError) {
+            const payload = {
+                month: month,
+                year: year,
+                netIncome: amountInputs.netIncome,
+                sales: amountInputs.sales,
+                assets: amountInputs.assets,
+                equity: amountInputs.equity,
+                taxRate: taxRateInput,
+                earningsBeforeTax: amountInputs.earningsBeforeTax
+            };
+
        // if new input month, add financial inputs for year/month
        if (newInputMonth) {
            dispatch({
                type: 'ADD_SINGLE_MONTH_INPUTS',
-               payload: {
-                   month: month,
-                   year: year,
-                   netIncome: amountInputs.netIncome,
-                   sales: amountInputs.sales,
-                   assets: amountInputs.assets,
-                   equity: amountInputs.equity,
-                   taxRate: "0",  
-                   earningsBeforeTax: amountInputs.earningsBeforeTax
-               }
+               payload
            })
        // else existing input month, update financial inputs for year/month
        } else {
            dispatch({
                type: 'UPDATE_SINGLE_MONTH_INPUTS',
-               payload: {
-                   month: month,
-                   year: year,
-                   netIncome: amountInputs.netIncome,
-                   sales: amountInputs.sales,
-                   assets: amountInputs.assets,
-                   equity: amountInputs.equity,
-                   taxRate: "0",
-                   earningsBeforeTax: amountInputs.earningsBeforeTax
-               }
+               payload
            })
        }
        // clear inputs after add or update
@@ -188,9 +205,18 @@ const handleEditSaveButton= (event) => {
            equity: '',
            earningsBeforeTax: '' });
        setTaxRateInput('');
+       setAmountErrors({
+        netIncome: false,
+        sales: false,
+        assets: false,
+        equity: false,
+        earningsBeforeTax: false
+    });
+       setTaxRateError(false)
        // kick back to input header screen
        history.push('/input_header');
    }
+}
 }
 
 // const handleEditClick = (event) => {
