@@ -7,17 +7,14 @@ const { rejectUnauthenticated } = require('../modules/authentication-middleware'
 const { convertToDatesWeHave, generateDatesWeShouldHave, getMissingMonths } = require('../modules/helper-functions-missing-inputs'); 
 const { parse } = require('dotenv');
 
-/* ------------------------- ROUTES ----------------------------------------*/
-
-/**  ****  rejectUnauthenticated, put this in when login done */
-
-
-
 // API Keys 
 const OPENAI_API_KEY= process.env.OPENAI_API_KEY;
 const openAIurl = 'https://api.openai.com/v1/chat/completions';
 const openAIheaders = { 'Content-Type': 'application/json',
                         'Authorization': `Bearer ${OPENAI_API_KEY}` };
+
+
+/*---------- OpenAI helper functions -------___------------------------------ */
 
 /**
  * Helper function for to GET required data from our DB for OpenAI API call 
@@ -155,7 +152,9 @@ const updateRecommendations = async (parsedData, userId, month, year) => {
         connection.release();  
       }
   }
- 
+
+/* ------------------------- ROUTES ----------------------------------------*/
+
 /**
  * GET all MISSING monthly inputs for a user
  */
