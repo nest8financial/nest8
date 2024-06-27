@@ -13,7 +13,7 @@ import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Select, MenuItem, IconButton, Button } from "@mui/material";
+import { Select, MenuItem, IconButton, Button, Container } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 
 function Profile() {
@@ -86,7 +86,9 @@ setIndustry(user.industry);
   };
 
   return (
+    <Container style={{ paddingTop: '100px'}}>
     <Card
+      elevation={10}
       component="form"
       sx={{
         '& > :not(style)': { m: 3 },
@@ -179,6 +181,7 @@ setIndustry(user.industry);
         </IconButton>
       </Box>
     </Card>
+    </Container>
   );
 }
 

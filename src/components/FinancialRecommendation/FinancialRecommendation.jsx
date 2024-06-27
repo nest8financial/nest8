@@ -10,7 +10,8 @@ import { Paper,
          Box,
          Accordion,
          AccordionDetails,
-         AccordionSummary }  from '@mui/material';
+         AccordionSummary, 
+         Container }  from '@mui/material';
          import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
          import { getMonthName } from '../../utilities/utilities.js'
          import { styled } from '@mui/system';
@@ -49,7 +50,7 @@ console.log('year',year);
  
 
     return(
-        <>
+        <Container>
         <br></br>
         <Divider sx={{ my: 2 }} textAlign="left" >RECOMMENDATIONS</Divider>
         <br></br>
@@ -123,8 +124,7 @@ console.log('year',year);
                 <br></br>
             </Paper>
         <br></br>
-        </>
-    
+        </Container>
 
 );
 

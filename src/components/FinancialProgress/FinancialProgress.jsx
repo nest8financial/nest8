@@ -6,7 +6,8 @@ import { Box,
          ToggleButton, 
          Typography,
          Paper,
-         Divider } from "@mui/material";
+         Divider,
+        Container } from "@mui/material";
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, 
                            LinearScale, 
@@ -187,81 +188,83 @@ function FinancialProgress({company}) {
   }
 
   return (
-    <Box>
-      <Divider sx={{ my: 2 }} textAlign="left" >FINANCIAL PROGRESS </Divider>{/* Add margin top and bottom */}
-      <br></br>
-      <Paper elevation={10}>
-        <br></br><br></br>
-        <Typography variant="h4" align="center">
-          {(graphData.metric_name && graphData.metric_name)} for {company} </Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            {/* Date range picker: From date  */}
-            <Box align='center'
-                 sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-              <Box sx={{ ml: 2 }} textAlign="left">
-                  <DatePicker label="From Month / Year"
-                              value={fromDateSelected}
-                              onChange={(value) => {handleDateRangeChange(value, 'from')}}
-                              views={['month', 'year']}
-                              maxDate={dayjs()}>            
-                  </DatePicker>
+    <Container>
+      <Box>
+        <Divider sx={{ my: 2 }} textAlign="left" >FINANCIAL PROGRESS </Divider>{/* Add margin top and bottom */}
+        <br></br>
+        <Paper elevation={10}>
+          <br></br><br></br>
+          <Typography variant="h4" align="center">
+            {(graphData.metric_name && graphData.metric_name)} for {company} </Typography>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              {/* Date range picker: From date  */}
+              <Box align='center'
+                  sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                <Box sx={{ ml: 2 }} textAlign="left">
+                    <DatePicker label="From Month / Year"
+                                value={fromDateSelected}
+                                onChange={(value) => {handleDateRangeChange(value, 'from')}}
+                                views={['month', 'year']}
+                                maxDate={dayjs()}>            
+                    </DatePicker>
+                </Box>
+                {/* Date range picker: To date */}
+                <Box sx={{ ml: 2 }} textAlign="left">
+                    <DatePicker label="To Month / Year"
+                                value={toDateSelected}
+                                onChange={(value) => {handleDateRangeChange(value, 'from')}}
+                                views={['month', 'year']}
+                                maxDate={dayjs()}>            
+                    </DatePicker>
+                </Box>
               </Box>
-              {/* Date range picker: To date */}
-              <Box sx={{ ml: 2 }} textAlign="left">
-                  <DatePicker label="To Month / Year"
-                              value={toDateSelected}
-                              onChange={(value) => {handleDateRangeChange(value, 'from')}}
-                              views={['month', 'year']}
-                              maxDate={dayjs()}>            
-                  </DatePicker>
-              </Box>
-            </Box>
-        </LocalizationProvider>
-          <br></br>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center"}}>
-          <Box
-            sx={{
-              width: 10,
-              height: 10,
-              backgroundColor: 'rgba(111, 189, 191, 1)',
-              marginRight: 1, // Add margin for spacing between box and text
-            }}
-          />
-          <Box sx={{ display: 'inline' }}>Industry Standard</Box>
-        </Box>
-          <Box sx={{ display: 'flex', justifyContent: "center"}}>
-            {graphData ? (<Line key={graphData.metric_id}
-                      data={data} 
-                      options={options} />) : null}
+          </LocalizationProvider>
+            <br></br>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: "center"}}>
+            <Box
+              sx={{
+                width: 10,
+                height: 10,
+                backgroundColor: 'rgba(111, 189, 191, 1)',
+                marginRight: 1, // Add margin for spacing between box and text
+              }}
+            />
+            <Box sx={{ display: 'inline' }}>Industry Standard</Box>
           </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4, flexWrap: 'wrap', gap: 1, }}>
-          <ToggleButtonGroup value={metricSelected}
-                            size="small" // Set the size of the buttons
-                            exclusive
-                            onChange={handleMetricChange}
-                            aria-label="financial metric selection">
-            <ToggleButton value={1} aria-label="Profit Margin">
-              Profit Margin
-            </ToggleButton>
-            <ToggleButton value={2} aria-label="Asset Turnover Ratio">
-              Asset Turnover Ratio
-            </ToggleButton>
-            <ToggleButton value={3} aria-label="Financial Leverage Ratio">
-              Financial Leverage Ratio
-            </ToggleButton>
-            <ToggleButton value={4} aria-label="Return on Equity (ROE)">
-              Return on Equity (ROE)
-            </ToggleButton>
-            <ToggleButton value={5} aria-label="Tax Burden">
-              Tax Burden
-            </ToggleButton>
-            <ToggleButton value={6} aria-label="Interest Burden">
-              Interest Burden
-            </ToggleButton>
-          </ToggleButtonGroup>
-        </Box>
-      </Paper>
-    </Box>
+            <Box sx={{ display: 'flex', justifyContent: "center"}}>
+              {graphData ? (<Line key={graphData.metric_id}
+                        data={data} 
+                        options={options} />) : null}
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 4, flexWrap: 'wrap', gap: 1, }}>
+            <ToggleButtonGroup value={metricSelected}
+                              size="small" // Set the size of the buttons
+                              exclusive
+                              onChange={handleMetricChange}
+                              aria-label="financial metric selection">
+              <ToggleButton value={1} aria-label="Profit Margin">
+                Profit Margin
+              </ToggleButton>
+              <ToggleButton value={2} aria-label="Asset Turnover Ratio">
+                Asset Turnover Ratio
+              </ToggleButton>
+              <ToggleButton value={3} aria-label="Financial Leverage Ratio">
+                Financial Leverage Ratio
+              </ToggleButton>
+              <ToggleButton value={4} aria-label="Return on Equity (ROE)">
+                Return on Equity (ROE)
+              </ToggleButton>
+              <ToggleButton value={5} aria-label="Tax Burden">
+                Tax Burden
+              </ToggleButton>
+              <ToggleButton value={6} aria-label="Interest Burden">
+                Interest Burden
+              </ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+        </Paper>
+      </Box>
+    </Container>
   )
 
 }

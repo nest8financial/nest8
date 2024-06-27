@@ -22,7 +22,8 @@ const addInput = (date) => {
 
 return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <Container>
+      <Typography variant='h1' style={{ paddingTop: '100px', alignItems: 'center', fontSize: '32px', fontWeight: 'inherit'}}>Input Financial Data</Typography>
+      <Container style={{ paddingTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
           <DateCalendar 
           value={date} onChange={(newValue) => setDate(newValue)} 
           views={['month', 'year']}

@@ -45,11 +45,10 @@ function ReviewCartPlaceOrder({productNumber}) {
   }
 
   return (
-    <Container>
-      {newProductSelected}
+    <Container style={{ paddingTop: '100px'}}>
       <Paper elevation={10} sx={{ p: 3, mt: 2, display: 'flex', flexDirection: 'column' }}>
         <Typography variant="h4">Review Cart and Place Order</Typography>
-        <FormGroup>
+        <FormGroup sx={{ p: 1, mt: 1, display: 'flex', flexDirection: 'column' }}>
           {products.map(product => (
             <FormControlLabel
               key={product.id}
@@ -72,11 +71,11 @@ function ReviewCartPlaceOrder({productNumber}) {
             />
           ))}
         </FormGroup>
-        <Typography>
-          Your subscription will renew automatically upon the expiry of the 30-day trial. You can cancel anytime effective from the next cycle.
+        <Typography sx={{mt: 2}}>
+          Your subscription will renew automatically upon the expiration of the 30-day trial. You can cancel anytime effective from the next cycle.
         </Typography>
         <Button
-          sx={{ width: '30%' }}
+          sx={{ width: 'auto', mt: 6, alignSelf: 'center',}}
           variant="contained"
           onClick={handlePlaceOrder}
         >
