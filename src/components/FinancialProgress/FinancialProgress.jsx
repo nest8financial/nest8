@@ -72,7 +72,7 @@ function FinancialProgress({company}) {
 
   const handleDateRangeChange = (value, mode) => {
     const newSelectedDate = value;
-    if (mode = 'from') {
+    if (mode === 'from') {
       if (newSelectedDate <= toDateSelected) {
         setFromDateSelected(newSelectedDate);
         setErrorMsg('');
