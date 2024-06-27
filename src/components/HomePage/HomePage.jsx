@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory} from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { Button, Typography, Container, Grid, Link, List, ListItem, ListItemIcon, ListItemText, IconButton, Box, Card, CardContent, Paper } from '@mui/material';
@@ -13,90 +13,89 @@ import farmsImage from '../../Assets/images/farms.png';
 import nonprofitsImage from '../../Assets/images/non-profit.png';
 import entrepreneurImage from '../../Assets/images/entrepreneur.png';
 
-
 function HomePage() {
-
   const history = useHistory();
   const dispatch = useDispatch();
 
-  // reset the product selection if user goes to the home page or 
-  //      the logout page
   useEffect(() => {
-    dispatch({ 
+    dispatch({
       type: 'SET_NEW_PRODUCT_SELECTED',
       payload: 0
-    })
-  })
+    });
+  }, [dispatch]);
+
   const handleClick = (route) => {
     history.push(route);
   };
 
-
   return (
-
-      <Container style={{ paddingTop: '20px' }}>
-      <Paper elevation= {10} style={{ padding: '20px', marginBottom: '40px' }}>
+    <Container style={{ paddingTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
+      <Box style={{ flexGrow: 1 }}></Box>
+      <Paper elevation={10} style={{ padding: '20px', marginBottom: '40px', textAlign: 'center', width: '100%', maxWidth: '800px' }}>
         <section id="educate-users">
-        <img src={entrepreneurImage} 
-              alt="Entrepreneur" 
-              style={{ 
-                width: '250px', 
-                height: 'auto',
-                border: '2px solid #000',
-                borderRadius: '8px' }}
-                 />
-          <Typography variant="h5" textAlign='center'>How well is your entrepreneurial business doing?</Typography>
-          <Button variant="contained"
-                  sx={{ textTransform: "none"}}
-                  onClick={() => handleClick('/use_case')}>
+          <img src={entrepreneurImage}
+            alt="Entrepreneur"
+            style={{
+              width: '250px',
+              height: 'auto',
+              border: '2px solid #000',
+              borderRadius: '8px',
+              display: 'block',
+              margin: '0 auto'
+            }}
+          />
+          <Typography variant="h6" style={{ fontWeight: '500'}}
+          >How well is your entrepreneurial business doing?
+          </Typography>
+          <Button variant="contained" sx={{ textTransform: "none", margin: '10px auto' }} onClick={() => handleClick('/use_case')}>
             Learn what Nest 8 can do
           </Button>
-          <List>
-            <ListItem>
-              <ListItemIcon>
-                <CheckBoxIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText primary="All-in-one tracker" />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <CheckBoxIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText primary="Smart data and insights" />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <CheckBoxIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText primary="Empowers your buisness decisions" />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <CheckBoxIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText primary="Entrepreneurs best companion" />
-            </ListItem>
-            <ListItem>
-              <ListItemIcon>
-                <CheckBoxIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText primary="Everything you need in your pocket" />
-            </ListItem>
-           </List>
-           <Button variant="contained"
-           
-                  sx={{ textTransform: "none" }}
-                  onClick={() => handleClick('/product_page')}>
-           Explore All Features
-           </Button>
+          <Box sx={{display: 'flex', justifyContent: 'center', textAlign: 'center' }}>
+            <List>
+              <ListItem>
+                <ListItemIcon>
+                  <CheckBoxIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText primary="All-in-one tracker" />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <CheckBoxIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText primary="Smart data and insights" />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <CheckBoxIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText primary="Empowers your business decisions" />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <CheckBoxIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText primary="Entrepreneur's best companion" />
+              </ListItem>
+              <ListItem>
+                <ListItemIcon>
+                  <CheckBoxIcon color="primary" />
+                </ListItemIcon>
+                <ListItemText primary="Everything you need in your pocket" />
+              </ListItem>
+            </List>
+          </Box>
+          <Button variant="contained" sx={{ textTransform: "none", margin: '10px auto' }} onClick={() => handleClick('/product_page')}>
+            Explore All Features
+          </Button>
+
         </section>
-        </Paper>
-        <Paper elevation={10} style={{ padding: '20px', marginBottom: '40px' }}>
+      </Paper>
+      <Paper elevation={10} style={{ padding: '20px', marginBottom: '40px', textAlign: 'center', width: '100%', maxWidth: '800px' }}>
         <section id="free-trial" style={{ marginTop: '40px' }}>
           <Typography variant="h4" textAlign='center' gutterBottom>
             How Nest 8 works for your business type
           </Typography>
-          <Box sx={{ display: 'flex', gap: '20px', flexDirection: { xs: 'column', md: 'row' } }}>
+          <Box sx={{ display: 'flex', gap: '20px', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'center' }}>
             <Card sx={{ maxWidth: 300 }}>
               <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <img src={farmsImage} alt="Farms" style={{ width: '100px', height: 'auto' }} />
@@ -118,38 +117,40 @@ function HomePage() {
               </Box>
             </Card>
           </Box>
-          <Button variant="contained" color="primary" onClick={() => handleClick('/product_page')}>
+          <Button variant="contained" color="primary" sx={{ marginTop: '20px' }} onClick={() => handleClick('/product_page')}>
             Sign up for free
           </Button>
         </section>
       </Paper>
-      <Paper elevation={10} style={{ padding: '20px', marginBottom: '40px' }}>
+      <Paper elevation={10} style={{ padding: '20px', marginBottom: '40px', textAlign: 'center', width: '100%', maxWidth: '800px' }}>
         <section>
-          <Typography>Try N8 for free, then decide which plan best suits your business</Typography>
-          <Box sx={{ border: 0.1, p: 2, width: 0.3 }}>
-            <Typography textAlign='center'>30-day free trial</Typography>
-            <Typography textAlign='center'>$0</Typography>
-            <Typography textAlign='center'>Access all N8 features</Typography>
-            <Typography textAlign='center'>Input your data</Typography>
-            <Typography textAlign='center'>24/7 online support</Typography>
-            <Typography textAlign='center'>Cancel anytime</Typography>
+          <Typography variant="h6" style={{ fontWeight: '500'}}>
+            Try N8 for free, then decide which plan best suits your business
+            </Typography>
+          <Box sx={{ border: 0.1, p: 2, width: 'fit-content', margin: '0 auto' }}>
+            <Typography>30-day free trial</Typography>
+            <Typography>$0</Typography>
+            <Typography>Access all N8 features</Typography>
+            <Typography>Input your data</Typography>
+            <Typography>24/7 online support</Typography>
+            <Typography>Cancel anytime</Typography>
           </Box>
           <Button
             variant="contained"
             color="primary"
-            sx={{ textTransform: "none" }}
+            sx={{ marginTop: '20px' }}
             onClick={() => handleClick('/product_page')}
           >
             Try Nest8 for free (30 day trial)
           </Button>
         </section>
       </Paper>
-      <Paper elevation={10} style={{ padding: '20px', marginBottom: '40px' }}>
+      <Paper elevation={10} style={{ padding: '20px', marginBottom: '40px', textAlign: 'center', width: '100%', maxWidth: '800px' }}>
         <section id="links" style={{ marginTop: '40px' }}>
-          <Typography variant="h4" textAlign='center' gutterBottom>
-            Quick Links 
+          <Typography variant="h4" gutterBottom>
+            Quick Links
           </Typography>
-          <Grid container spacing={1}>
+          <Grid container spacing={1} justifyContent="center">
             <Grid item xs={12}>
               <Typography variant="h6"textAlign='center' >Nest8 Software</Typography>
             </Grid>
@@ -187,10 +188,7 @@ function HomePage() {
               <Button color="primary" onClick={() => handleClick('/mission')}>Mission</Button>
             </Grid>
           </Grid>
-          <Typography variant="h4" textAlign='center' gutterBottom style={{ marginTop: '40px' }}>
-            
-          </Typography>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} justifyContent="center" style={{ marginTop: '20px' }}>
             <Grid item>
               <IconButton color="primary" href="https://facebook.com">
                 <FacebookIcon />
@@ -217,13 +215,10 @@ function HomePage() {
               </IconButton>
             </Grid>
           </Grid>
-          <Typography variant="body2" textAlign='center' style={{ marginTop: '20px' }}>
-            &copy; {new Date().getFullYear()} Nest 8. All rights reserved. Nest8 is a trademark of Nest8 LLC
-          </Typography>
-          <Link href="/legal">Legal</Link> | <Link href="/privacy">Privacy Notice</Link> | <Link href="/accessibility">Accessibility</Link>
         </section>
       </Paper>
-      </Container>
+      <Box style={{ flexGrow: 1 }}></Box>
+    </Container>
   );
 }
 
