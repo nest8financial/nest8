@@ -20,7 +20,7 @@ const openAIheaders = { 'Content-Type': 'application/json',
                         'Authorization': `Bearer ${OPENAI_API_KEY}` };
 
 /**
- * Helper function for AI calls 
+ * Helper function for to GET required data from our DB for OpenAI API call 
  */
 const getAPIRequestData = async (user_id, month, year) => {
     let connection; // initialize DB connection
@@ -52,7 +52,7 @@ const getAPIRequestData = async (user_id, month, year) => {
 
         console.log('recommendation', recommendation.rows)
 
-        const prompt = 
+        const prompt =  // prompt and data to send to the OpenAI API 
         `Look through the following table and provide simplified recommendations based on the recommendations provided, taking into account the corresponding industry and adjusting the recommendation based on if the text is suggesting ways the user can improve or if the user is already meeting industry standards.  
         Use language that the user would understand, based on what industry they work in. For example, use more straightfoward, simple language or analogies for a farmer. For concepts that cannot be simplified, break them down and explain each part. Provide 2 recommendations for each metric and base these recommendations off of the two recommendations provided within the table.
         For your response, respond using JSON format. For each metric, respond with only one description that contains all recommendations. The content response should consist of the metric name and the simplified recommendation text as the description. 
@@ -75,7 +75,7 @@ const getAPIRequestData = async (user_id, month, year) => {
         Here is the industry to take into acccount for each of these metrics:
         ${recommendation.rows[0].industry_name}
         `;
-        const apiRequestData = {
+        const apiRequestData = { // complete request to send to OpenAI
           model: 'gpt-4o',
           messages: [
             {
@@ -104,33 +104,35 @@ const getAPIRequestData = async (user_id, month, year) => {
 
 }
 
-const updateRecommendations = async (parsedData, userId, month, year) => {
-    console.log('hello?');
+/**
+ * Helper function to update DB with OpenAI recommendations
+ */
 
+const updateRecommendations = async (parsedData, userId, month, year) => {
     console.log('profit margin?', parsedData.profit_margin);
     console.log('month?', month);
     console.log('user id?', userId);
 
-    let connection;
+    let connection; // initialize DB connection
 
     try {
       connection = await pool.connect()
-      const sqlText = 
+      const sqlText = // PUT request to update DB with response from OpenAI API
       `
-UPDATE monthly_metrics
-SET recommendation_AI_enhanced = CASE metrics_id
-                                WHEN 1 THEN $1
-                                WHEN 2 THEN $2
-                                WHEN 3 THEN $3
-                                WHEN 4 THEN $4
-                                WHEN 5 THEN $5
-                                WHEN 6 THEN $6
-                            END 
-FROM monthly_inputs 
-WHERE monthly_metrics.monthly_id = monthly_inputs.id   
-AND monthly_inputs.user_id = $7
-AND monthly_inputs.month = $8
-AND monthly_inputs.year = $9;
+        UPDATE monthly_metrics
+        SET recommendation_AI_enhanced = CASE metrics_id
+                                        WHEN 1 THEN $1
+                                        WHEN 2 THEN $2
+                                        WHEN 3 THEN $3
+                                        WHEN 4 THEN $4
+                                        WHEN 5 THEN $5
+                                        WHEN 6 THEN $6
+                                    END 
+        FROM monthly_inputs 
+        WHERE monthly_metrics.monthly_id = monthly_inputs.id   
+        AND monthly_inputs.user_id = $7
+        AND monthly_inputs.month = $8
+        AND monthly_inputs.year = $9;
       `
       const response = 
         await connection.query(sqlText, [parsedData.profit_margin,
@@ -149,13 +151,11 @@ AND monthly_inputs.year = $9;
         return true;
       } catch(dbError) {
         console.error(dbError.stack)
-        throw new Error ('Error adding to monthly_metrics table in', dbError);
+        throw new Error ('Error adding to monthly_metrics table', dbError);
         connection.release();  
       }
   }
-
-
-  
+ 
 /**
  * GET all MISSING monthly inputs for a user
  */
@@ -269,6 +269,7 @@ router.get('/:month&:year',  async (req, res) => {
  *             - The computed variances:
  *                  (industry metric - computed monthly metric) or
  *                  (number 3 metric - number 2 metric)
+ *             -The Open AI recommendation response 
  *         5. Return created (201) status if successful
  */
 router.post('/',  async (req, res) => {
@@ -400,7 +401,7 @@ router.post('/',  async (req, res) => {
       let aiReccomendations = AIresponse.data.choices[0].message.content
     
       console.log('aiReccomendations*************', aiReccomendations);
-      aiReccomendations = aiReccomendations.replace(/^```json\n/, '').replace(/\n```$/, '');
+      aiReccomendations = aiReccomendations.replace(/^```json\n/, '').replace(/\n```$/, ''); // reformat response 
    
       // Now parse the cleaned JSON string
       const parsedData = JSON.parse(aiReccomendations);
