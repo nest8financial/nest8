@@ -380,7 +380,6 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
                                           indInterestBurden ]);   
         console.log('POST of a single month\'s metrics in /api/financial_input/ successful');  
         connection.query('COMMIT;');
-        connection.release();
         
         const APIRequestData = await getAPIRequestData(userId, month, year) // pulls in the data from the DB to send in our API request to OpenAI
         
@@ -410,8 +409,10 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
 
         if (updateDB) {
             // 6. Return created (201) status if successful
+            connection.release();
             res.sendStatus(201);
         } else {
+            connection.release();
             throw new Error('Error updating recommendations in DB')
         }
 
