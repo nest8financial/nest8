@@ -415,7 +415,6 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
             connection.release();
             throw new Error('Error updating recommendations in DB')
         }
-
   
    } catch (error) {
        console.log('Error in POST of single month\'s inputs in /api/financial_inputs/', error);
@@ -562,7 +561,6 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
                                           indInterestBurden ]);    
         console.log('PUT of a single month\'s metrics in /api/financial_input/ successful:',returnedId.rows[0].id );
         connection.query('COMMIT;');
-        connection.release();
 
         const APIRequestData = await getAPIRequestData(userId, month, year) // pulls in the data from the DB to send in our API request to OpenAI
         
@@ -592,13 +590,12 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
 
         if (updateDB) {
             // 6. Return created (201) status if successful
+            connection.release();
             res.sendStatus(201);
         } else {
             throw new Error('Error updating recommendations in DB')
         }
 
-        // 7. Return created (200) status if successful
-        res.sendStatus(200);
    } catch (error) {
        console.log('Error in PUT of single month\'s inputs in /api/financial_inputs/', error);
        connection.query('ROLLBACK;');
