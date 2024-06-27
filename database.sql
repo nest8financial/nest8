@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS "product" CASCADE;
 CREATE TABLE "product" (
     "id" SERIAL PRIMARY KEY,
     "name" VARCHAR,
-    "description" VARCHAR,
+    "description" VARCHAR
     "price" DECIMAL,
     "promo_price" DECIMAL
 );

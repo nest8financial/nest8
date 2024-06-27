@@ -141,7 +141,7 @@ setIndustry(user.industry);
           <FormControl variant="standard" fullWidth sx={{ mt: 2 }}>
             <Select
               labelId="dynamic-select-label"
-              value={industry}
+              value={user.industry_id || ''}
               onChange={handleIndustryChange}
             //   displayEmpty
               disabled={readOnly}
