@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Typography, Container, Card, CardContent, Grid, Box, Paper, Divider } from '@mui/material';
+import { Container, Box, Divider } from '@mui/material';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
+import { DatePicker } from '@mui/x-date-pickers/DateCalendar';
 import { useState } from "react";
 import { experimentalStyled as styled } from '@mui/material/styles';
 import FinancialProgress from "../FinancialProgress/FinancialProgress";
@@ -19,14 +19,7 @@ function FinancialsPage() {
 
     const [dateSelected, setDateSelected] = useState(dayjs()); 
     const userData = useSelector(store => store.user);
-    // const Item = styled(Paper)(({ theme }) => ({
-    //   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    //   ...theme.typography.body2,
-    //   padding: theme.spacing(2),
-    //   textAlign: 'center',
-    //   color: theme.palette.text.secondary,
-    // }));
-    
+
 
     useEffect(() => {
     }, [])
