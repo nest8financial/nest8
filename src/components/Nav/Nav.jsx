@@ -1,5 +1,5 @@
 import React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useHistory} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import AppBar from '@mui/material/AppBar';
@@ -16,18 +16,34 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import styled from 'styled-components';
+
+const ImageButton = styled('img')({
+  width: 150,
+  height: 50,
+});
+
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [notifications, setNotifications] = React.useState(3); // Example number of notifications
+
+  const [notifications, setNotifications] = useState(0); 
   const history = useHistory();
   const dispatch = useDispatch();
-
   const user = useSelector((store) => store.user);
+  const missingInputs =
+        useSelector((store) => store.financialInputs.missingMonthlyInputs); 
+  console.log('missinginputs', missingInputs);
 
-  // useEffect(() => {
-  //   dispatch({ type: "FETCH_USER" });
-  // }, [user]);
+  useEffect(() => {
+    if (user.id && user.date_joined) {
+      dispatch({ type: "GET_MISSING_MONTHLY_INPUTS" });
+    }
+  }, [user]);
+
+  useEffect(() => {
+    setNotifications(missingInputs.length);
+  },[missingInputs])
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -66,7 +82,7 @@ export default function Navbar() {
 
   const handleAlertsBell = (e) => {
     console.log('bell clicked!');
-    history.push('/profile');
+    history.push('/my_data');
   }
 
   const handleLogoutButton = (e) => {
@@ -84,7 +100,8 @@ export default function Navbar() {
   }
 
   const handleNest8Icon = (e) => {
-    console.log('nest 8 clicked!  home page??')
+    console.log('nest 8 clicked!  home page??');
+    history.push('/home');
   }
 
 
@@ -92,24 +109,18 @@ export default function Navbar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" 
-                      component="div" 
-                      sx={{ flexGrow: 1 }}>
-            Nest8
-          </Typography>
-          
+          <IconButton onClick={handleNest8Icon}>
+            <ImageButton src="/nest8.png"
+                         alt="Nest 8 icon"/>
+          </IconButton>
           <Box component="div" sx={{ flexGrow: 1 }}>
-            {user.id && (
-            <Button color="inherit"
-            onClick={(e) => handleInputButton(e)}>Inputs</Button>
-            )}
-            {user.id && (
-            <Button color="inherit"
-            onClick={(e) => handleReportButton(e)}>Reports</Button>
-            )}
-            {user.id && (
-            <Button color="inherit"
-            onClick={(e) => handleDataButton(e)}>Data</Button>
+            { (user.id && user.date_joined) && (
+              <>
+            <Button color="inherit"onClick={(e) => handleInputButton(e)}>Inputs</Button>
+            <Button color="inherit" onClick={(e) => handleReportButton(e)}>Reports</Button>
+            <Button color="inherit"onClick={(e) => handleDataButton(e)}>Data</Button>
+
+            </>
             )}
           </Box>
 
@@ -120,7 +131,7 @@ export default function Navbar() {
           )}
           <IconButton size="large"
                       color="inherit"
-                      onClick={() => {(e) => {handleAlertsBell(e)}}}>
+                      onClick={handleAlertsBell}>
             <Badge badgeContent={notifications} color="error">
               <NotificationsIcon />
             </Badge>

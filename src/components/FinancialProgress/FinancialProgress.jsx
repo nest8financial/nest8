@@ -38,7 +38,7 @@ function FinancialProgress({company}) {
   //                                              toYear: today.getFullYear(),
   //                                              fromYear: today.getFullYear() - 1 });
   // Set initial date range for 13 month span ending on today's month
-  const [fromDateSelected, setFromDateSelected] = useState(dayjs()); 
+  const [fromDateSelected, setFromDateSelected] = useState(dayjs().subtract(1, 'year')); 
   const [toDateSelected, setToDateSelected] = useState(dayjs()); 
   const [errorMessage, setErrorMsg] = useState('');
                                              
@@ -72,7 +72,7 @@ function FinancialProgress({company}) {
 
   const handleDateRangeChange = (value, mode) => {
     const newSelectedDate = value;
-    if (mode = 'from') {
+    if (mode === 'from') {
       if (newSelectedDate <= toDateSelected) {
         setFromDateSelected(newSelectedDate);
         setErrorMsg('');

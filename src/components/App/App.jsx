@@ -5,58 +5,57 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-
 import { useDispatch, useSelector } from "react-redux";
-
-import Nav from '../Nav/Nav';
-import Footer from '../Footer/Footer';
-import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import UserPage from '../UserPage/UserPage';
-import InfoPage from '../InfoPage/InfoPage';
-import LandingPage from '../LandingPage/LandingPage';
-import LoginPage from '../LoginPage/LoginPage';
-import RegisterPage from '../RegisterPage/RegisterPage';
-import HomePage from '../HomePage/HomePage';
-import { ThemeProvider } from '@mui/material/styles';
-import {Theme} from '../Nav/NavTheme'
-import './App.css';
-import RecommendationDetail from '../RecommendationDetail/RecommendationDetail';
-import InputHeader from '../InputHeader/InputHeader';
-import MyData from '../MyData/MyData';
-import FinancialSummary from "../FinancialSummary/FinancialSummary";
+import { ThemeProvider } from "@mui/material/styles";
+import { Theme } from "../Nav/NavTheme";
+import { Container } from "@mui/material";
+/* components -------------------------------------------*/
+import Nav from "../Nav/Nav";
+import Footer from "../Footer/Footer";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+import LoginPage from "../LoginPage/LoginPage";
+import RegisterPage from "../RegisterPage/RegisterPage";
+import HomePage from "../HomePage/HomePage";
+import "./App.css";
+import RecommendationDetail from "../RecommendationDetail/RecommendationDetail";
+import InputHeader from "../InputHeader/InputHeader";
+import MyData from "../MyData/MyData";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
-import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
 import FinancialsPage from "../FinancialsPage/FinancialsPage"
-import Profile from '../Profile/Profile'
-// import ProductPage from '../ProductPage';
-// import FeaturesPage from '../FeaturesPage';
-// import PricingPage from '../PricingPage';
-// import FAQPage from './FAQPage';
-// import ContactUsPage from '../ContactUsPage';
-// import OurStoryPage from '../OurStoryPage';
-// import MissionPage from '../MissionPage';
+import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyReportsRecomendations";
+import Profile from "../Profile/Profile";
+import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
+import OrderConfirmation from "../OrderConfirmation/OrderConfirmation";
+import FeaturesPage from "../StaticPages/FeaturesPage";
+import PricingPage from "../StaticPages/Pricing";
+import FAQPage from "../StaticPages/FAQPage";
+import ContactUsPage from "../StaticPages/ContactUsPage";
+import OurStoryPage from "../StaticPages/OurStoryPage";
+import MissionPage from "../StaticPages/Mission";
+import UseCasePage from '../StaticPages/UseCasePage';
+
 
 function App() {
   const dispatch = useDispatch();
 
   const user = useSelector((store) => store.user);
+  const newProductSelected = useSelector(store => store.products.newProductSelected);
 
   useEffect(() => {
     dispatch({ type: "FETCH_USER" });
   }, [dispatch]);
 
   return (
-    
     <ThemeProvider theme={Theme}>
       <Router>
         <div>
           <Nav />
-
+          <Container maxWidth="lg" sx={{  width: '80%', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'  }}>
           <Switch>
             {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
-            <Redirect exact from="/" to="/login" />
+            <Redirect exact from="/" to="/home" />
 
             {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:5173/user will show the UserPage if the user is logged in.
@@ -66,22 +65,24 @@ function App() {
               <HomePage />
             </Route>
 
-            {/* <ProtectedRoute
-              // logged in shows InfoPage else shows LoginPage
-              exact
-              path="/info"
-            >
-              <InfoPage />
-            </ProtectedRoute> */}
-
-            <Route exact path="/login">
-              {user.id ? (
-                // If the user is already logged in,
-                // redirect to the /My Reports page 
-                // right now redirect to summary until My Reports is done
-                <Redirect to="/financials" />
+            {/* If the user is already logged in and
+                a new product HAS been selected
+                  - redirect to the review carts screen to finalize their order           
+                Else, if a user is already logged in and a new product
+                HAS NOT been selected
+                  - redirect to the /financials (Reports) page
+                Otherwise, if no user logged in
+                  - show the login page                         */}
+              <Route exact path="/login">
+              { user.id ? ( 
+                newProductSelected && newProductSelected !== 0 ? (
+              <Redirect to="/review_cart" />
+              ) : ( 
+                newProductSelected === 0 || newProductSelected === 'undefined' ? (
+              <Redirect to="/financials" />
               ) : (
-                // Otherwise, show the login page
+                <LoginPage />
+              ))) : (
                 <LoginPage />
               )}
             </Route>
@@ -98,24 +99,32 @@ function App() {
             </Route>
 
             <Route exact path="/home">
-                <Redirect to="/home" />          
+              <Redirect to="/home" />
+            </Route>
+
+            <Route exact path="/review_cart">
+              <ReviewCartPlaceOrder />
+            </Route>
+
+            <Route exact path="/order_confirmation">
+              <OrderConfirmation />
             </Route>
 
             <ProtectedRoute exact path="/input_header">
               <InputHeader />
             </ProtectedRoute>
 
-            <Route exact path="/my_plan">
-              <MembershipPlan/>
+            <Route exact path="/product_page">
+              <MembershipPlan />
             </Route>
 
-          <ProtectedRoute
-            // logged in shows InputHeader page, else shows LoginPage
-            exact
-            path="/inputs_add_edit/:month/:year"
-          >
-            <AddEditInputs />
-          </ProtectedRoute>
+            <ProtectedRoute
+              // logged in shows InputHeader page, else shows LoginPage
+              exact
+              path="/inputs_add_edit/:month/:year"
+            >
+              <AddEditInputs />
+            </ProtectedRoute>
 
             {/* Recommendation Detail Component- shows all recommendations for a 
             year/month and allows user to add notes and checkoff action items
@@ -140,9 +149,41 @@ function App() {
               <FinancialsPage />
             </ProtectedRoute>
 
-            {/* <ProtectedRoute exact path="/my_summary">
-              <FinancialSummary />
-            </ProtectedRoute> */}
+            <ProtectedRoute exact path="/my_reports_recommendations">
+              <MyReportsRecommendations />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/my_profile">
+              <Profile />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/features">
+              <FeaturesPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/pricing">
+              <PricingPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/faq">
+              <FAQPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/contact">
+              <ContactUsPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/our_story">
+              <OurStoryPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/mission">
+              <MissionPage />
+            </ProtectedRoute>
+
+            <ProtectedRoute exact path="/use_case">
+              < UseCasePage />
+            </ProtectedRoute>
 
           
             {/* <ProtectedRoute path="/financial_recommendation" >
@@ -153,6 +194,7 @@ function App() {
               <h1>404</h1>
             </Route>
           </Switch>
+          </Container>
           <Footer />
         </div>
       </Router>

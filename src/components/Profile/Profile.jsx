@@ -20,6 +20,7 @@ function Profile() {
   const industries = useSelector((store) => store.industries);
   const user = useSelector((store) => store.editUser);
   const dispatch = useDispatch();
+  const[industry, setIndustry] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
 
   useEffect(() => {
@@ -30,6 +31,11 @@ function Profile() {
         type: 'FETCH_INDUSTRIES'
     })
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log('PLS work',user.industry)
+setIndustry(user.industry);
+  },[user]);
 
   const handleFirstNameChange = (event) => {
     dispatch({
@@ -135,9 +141,9 @@ function Profile() {
           <FormControl variant="standard" fullWidth sx={{ mt: 2 }}>
             <Select
               labelId="dynamic-select-label"
-              value={user.industry_id || ''}
+              value={industry}
               onChange={handleIndustryChange}
-              displayEmpty
+            //   displayEmpty
               disabled={readOnly}
             >
               <MenuItem value="" disabled>
