@@ -101,7 +101,7 @@ export default function Navbar() {
 
 
   return (
-    <Box sx={{ flexGrow: 1 }}>that date:{user.date_joined}userid: {user.id}
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" 

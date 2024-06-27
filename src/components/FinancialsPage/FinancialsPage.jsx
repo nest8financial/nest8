@@ -41,7 +41,8 @@ function FinancialsPage() {
                 <DatePicker label="Select Month and Year"
                             value={dateSelected}
                             onChange={(newValue) => setDateSelected(newValue)} 
-                            views={['month', 'year']}>            
+                            views={['month', 'year']}
+                            maxDate={dayjs()}>            
                 </DatePicker>
             </Box>
         </LocalizationProvider>
