@@ -160,7 +160,7 @@ const handleEditSaveButton= (event) => {
                    sales: amountInputs.sales,
                    assets: amountInputs.assets,
                    equity: amountInputs.equity,
-                   taxRate: taxRateInput,  
+                   taxRate: "0",  
                    earningsBeforeTax: amountInputs.earningsBeforeTax
                }
            })
@@ -175,7 +175,7 @@ const handleEditSaveButton= (event) => {
                    sales: amountInputs.sales,
                    assets: amountInputs.assets,
                    equity: amountInputs.equity,
-                   taxRate: taxRateInput,
+                   taxRate: "0",
                    earningsBeforeTax: amountInputs.earningsBeforeTax
                }
            })
@@ -270,7 +270,7 @@ return (
                helperText={amountErrors.equity ? "Please enter a valid decimal value with up to two decimal places" : 
                    "Your Equity is blah blah blah..."}>
            </TextField>
-           <TextField
+           {/* <TextField
                required 
                label={readOnlyMode ? "Tax Rate" : "Tax Rate (required)"}
                name="taxRate"
@@ -284,7 +284,7 @@ return (
                error={taxRateError}
                helperText={taxRateError ? "Please enter a percentage with up to two decimal places" : 
                    "Your Tax Rate is the blah blah blah..."}>
-           </TextField>
+           </TextField> */}
            <TextField
                required 
                label={readOnlyMode ? "Earnings Before Tax (EBT)" : "Earnings Before Tax (EBT) (required)"}
