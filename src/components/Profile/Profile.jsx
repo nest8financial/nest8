@@ -26,6 +26,9 @@ function Profile() {
     dispatch({
       type: 'FETCH_EDIT_USER'
     });
+    dispatch ({
+        type: 'FETCH_INDUSTRIES'
+    })
   }, [dispatch]);
 
   const handleFirstNameChange = (event) => {
@@ -132,7 +135,7 @@ function Profile() {
           <FormControl variant="standard" fullWidth sx={{ mt: 2 }}>
             <Select
               labelId="dynamic-select-label"
-              value={user.industry || ''}
+              value={user.industry_id || ''}
               onChange={handleIndustryChange}
               displayEmpty
               disabled={readOnly}

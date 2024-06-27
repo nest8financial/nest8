@@ -16,6 +16,12 @@ export const Theme = createTheme( {
         light: '#4c7171',
         dark: '#254c4c',
         contrastText: '#576469',
+      },
+      text: {
+        primary: 'rgba(51,68,94,0.87)',
+        secondary: 'rgba(43,84,92,0.54)',
+        disabled: 'rgba(38,43,49,0.38)',
+        hint: 'rgba(50,63,94,0.38)',
       }
 }
   }
