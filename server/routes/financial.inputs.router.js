@@ -470,6 +470,8 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
                tax_rate = $8,
                earnings_before_tax = $9
            WHERE user_id = $1
+           AND month = $10
+           AND year = $11
            RETURNING id;
        `;
        const returnedId = 
@@ -481,7 +483,9 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
                                              assets,
                                              equity,
                                              taxRate,
-                                             earningsBeforeTax ]);
+                                             earningsBeforeTax,
+                                             month,
+                                             year ]);
         console.log('PUT of a single month\'s inputs in /api/financial_input/ successful, new id is:',returnedId.rows[0].id );
         const monthlyInputId = returnedId.rows[0].id;                       
         // 2. Compute the monthly financial metrics   
