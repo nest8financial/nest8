@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { getMonthName } from '../../../utilities/utilities.js';
 import { styled } from '@mui/material/styles';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Container, Typography} from '@mui/material';
 
 function MyReportsRecommendations() {
 
@@ -26,10 +26,11 @@ function MyReportsRecommendations() {
   }
 
   return (
-    <main>
-      <h1>My Reports and Recommendations</h1>
+    <Container style={{ paddingTop: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
+
+      <Typography variant='h1' fontSize={32}>My Reports and Recommendations</Typography>
     
-      <section>
+      <Box style={{ paddingTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
         {months.map(month => {
           return (
             <Box>
@@ -39,8 +40,9 @@ function MyReportsRecommendations() {
             </Box>
           );
         })}
-      </section>
-    </main>
+      </Box>
+
+    </Container>
   );
 }
 

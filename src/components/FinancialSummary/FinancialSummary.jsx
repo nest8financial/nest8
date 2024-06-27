@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Grid, Box, Paper, Typography, Divider } from '@mui/material';
+import { Grid, Box, Paper, Typography, Divider, Container } from '@mui/material';
 import dayjs from 'dayjs';
 import { useState } from "react";
 import { experimentalStyled as styled } from '@mui/material/styles';
@@ -8,6 +8,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import WarningIcon from '@mui/icons-material/Warning';
 import { red, green } from '@mui/material/colors';
 import { getMonthName } from "../../utilities/utilities";
+
 
 
 
@@ -38,7 +39,7 @@ function FinancialSummary({month, year, company}){
 
 
     return(
-      <>
+      <Container >
       <br></br>
       <Divider sx={{ my: 2 }} textAlign="left" >SUMMARY</Divider>
       <br></br>
@@ -86,7 +87,7 @@ function FinancialSummary({month, year, company}){
          )}
          <br></br><br></br>
          </Paper>
-      </>
+      </Container>
     )
 }
 

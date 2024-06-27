@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch } from 'react-redux';
 
@@ -36,7 +36,7 @@ function ConfirmPopUp({closePopUp, productId}) {
   };
 
   return (
-    <div>
+    <Container>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           <IconButton
@@ -60,7 +60,7 @@ function ConfirmPopUp({closePopUp, productId}) {
           <Button onClick={handleConfirm}>Confirm</Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Container>
   );
 };
 

@@ -2,7 +2,7 @@ import { useParams} from "react-router-dom";
 import { getMonthName } from "../../utilities/utilities.js";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import RecommendationActionItem from "../RecommendationActionItem/RecommendationActionItem.jsx";
 
 /**
@@ -32,7 +32,8 @@ function RecommendationDetail() {
     }
 
     return (
-        <Container>Recommendations for {getMonthName(month)} {year} 
+        <Container>
+            <Typography style={{ paddingTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center'}} variant='h1' fontSize={32}> Recommendations for {getMonthName(month)} {year} </Typography>
             {singleMonthMetrics.map(metric => (
                 <RecommendationActionItem key={metric.id}
                                           metric={metric}
