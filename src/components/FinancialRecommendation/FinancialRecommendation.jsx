@@ -7,7 +7,8 @@ import { Paper,
          CardActions, 
          Typography, 
          Button,
-         Box }  from '@mui/material';
+         Box,
+        Container }  from '@mui/material';
 import { getMonthName } from '../../utilities/utilities.js'
 
 function FinancialRecommendation({month, year, company}){
@@ -33,7 +34,7 @@ console.log('year',year);
  
 
     return(
-        <>
+        <Container>
         <br></br>
         <Divider sx={{ my: 2 }} textAlign="left" >RECOMMENDATIONS</Divider>
         <br></br>
@@ -86,8 +87,7 @@ console.log('year',year);
             
         </Paper>
         <br></br>
-        </>
-    
+        </Container>
 
 );
 

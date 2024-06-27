@@ -32,7 +32,7 @@ function MembershipPlan() {
     }
 
     return (
-        <Container>
+        <Container style={{ paddingTop: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1, p: 2 }}>
                 <Box sx={{ display: 'flex',
                             flexDirection: 'row', 

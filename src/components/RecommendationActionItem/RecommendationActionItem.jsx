@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useEffect , useState } from "react";
-import { Checkbox, TextField, Box } from "@mui/material";
+import { Checkbox, TextField, Box, Container, Typography } from "@mui/material";
 
 function RecommendationActionItem({metric, month, year}) {
 
@@ -53,11 +53,12 @@ function RecommendationActionItem({metric, month, year}) {
     }
 
     return (
+        <Container>
         <Box>
-            <Box>{metric.metric_name}
+            <Box><Typography style={{ paddingTop: '40px'}}>{metric.metric_name}
             {metric.variance_value >= 0 ? 
                 metric.recommendation_positive_text :
-                metric.recommendation_negative_text }
+                metric.recommendation_negative_text }</Typography>
             </Box>
             <Checkbox label="Completed"
                 size="large"
@@ -69,10 +70,14 @@ function RecommendationActionItem({metric, month, year}) {
             <TextField
                 label="Notes"
                 variant="outlined"
+                multiline
+                rows={2}
+                style={{ width: '100%'}}
                 value={notesInput === null ? '' : notesInput}
                 onChange={handleNotesChange}/>
             </Box>
         </Box>
+        </Container>
     )
 }
 

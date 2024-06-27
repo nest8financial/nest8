@@ -25,10 +25,10 @@ const reviews = [
 
 const UseCasePage = () => {
   return (
-    <Container>
+    <Container style={{ paddingTop: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
-          <Card style={{ marginBottom: "16px", marginTop: "38px" }}>
+          <Card style={{ marginBottom: "16px", marginTop: "38px", textAlign: 'center'}}>
             <CardContent>
               <Typography variant="h4" gutterBottom>
                 How to Use the Application
@@ -60,7 +60,7 @@ const UseCasePage = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Typography variant="h4" gutterBottom style={{ marginTop: "32px" }}>
+          <Typography variant="h4" gutterBottom style={{ marginTop: "32px", textAlign: 'center' }}>
             Customer Reviews
           </Typography>
           {reviews.map((review, index) => (

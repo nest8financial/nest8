@@ -24,7 +24,7 @@ function FinancialsPage() {
 
 
     return(
-      <Container>
+      <Container style={{ paddingTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
         <br></br><br></br>
         <Divider sx={{ my: 2 }} textAlign="left" >SELECT DATE for SUMMARY & RECOMMENDATIONS</Divider>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
