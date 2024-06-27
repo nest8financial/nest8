@@ -23,6 +23,9 @@ import { useSelector, useDispatch } from 'react-redux';
 *                         false if this is an existing month/year)
 *          readOnlyMode (true if this is an existing month/year for user,
 *                        false if this in an existing month/year)
+*      ***** NOTE TAX RATE NOT CURRENTLY USED BUT CODE KEPT IN FOR FUTURE
+*                 FUNCTIONALITY: Tax Rate Input, Validation removed,
+*                                   setting tax rate to 0 in database
 */
 function AddEditInputs() {
 
@@ -118,7 +121,7 @@ const handleAmountChange = (event) => {
    }
  }
 
-/**
+/**     CURRENTLY NOT USED AS TAX RATE IS NOT USED 
 * Handles the tax rate percentage change
 *      - validate tax rate to make sure it is a valid percentage
 *      - if no problems with input, set the tax rate and clear any errors
@@ -160,13 +163,14 @@ const handleEditSaveButton= (event) => {
                 hasError = true;
             }
         });
-         // Validate tax rate input
-         if (!decimalRegex.test(taxRateInput) || taxRateInput === '') {
-            setTaxRateError(true);
-            hasError = true;
-        } else {
-            setTaxRateError(false);
-        }
+        //*** REMOVED VALIDATION FOR TAX RATE AS TAX RATE NOT CURRENTLY USED */
+        //  // Validate tax rate input
+        //  if (!decimalRegex.test(taxRateInput) || taxRateInput === '') {
+        //     setTaxRateError(true);
+        //     hasError = true;
+        // } else {
+        //     setTaxRateError(false);
+        // }
 
         // Update errors state
         setAmountErrors(updatedErrors);
@@ -180,7 +184,7 @@ const handleEditSaveButton= (event) => {
                 sales: amountInputs.sales,
                 assets: amountInputs.assets,
                 equity: amountInputs.equity,
-                taxRate: taxRateInput,
+                taxRate: '0',
                 earningsBeforeTax: amountInputs.earningsBeforeTax
             };
 
@@ -219,6 +223,7 @@ const handleEditSaveButton= (event) => {
 }
 }
 
+// **** CURRENTLY NOT USED AS TAX RATE IS NOT USED
 // const handleEditClick = (event) => {
 //     console.log('edit mode')
 //     event.preventDefault();
