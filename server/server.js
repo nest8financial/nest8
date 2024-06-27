@@ -12,6 +12,7 @@ const userRouter = require('./routes/user.router');
 const industryRouter = require('./routes/industry.router');
 const financialInputsRouter = require('./routes/financial.inputs.router.js');
 const financialMetricsRouter = require('./routes/financial.metrics.router.js');
+const productsRouter = require('./routes/products.router.js');
 
 // Express Middleware
 app.use(express.json());
@@ -30,6 +31,7 @@ app.use('/api/user', userRouter);
 app.use('/api/industry', industryRouter);
 app.use('/api/financial_inputs', financialInputsRouter);
 app.use('/api/financial_metrics', financialMetricsRouter);
+app.use('/api/products', productsRouter);
 
 // Listen Server & Port
 app.listen(PORT, () => {

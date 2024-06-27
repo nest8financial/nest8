@@ -1,18 +1,15 @@
 import React from 'react';
 import './Footer.css';
-import { Typography } from '@mui/material';
-
-// This is one of our simplest components
-// It doesn't have local state, so it can be a function component.
-// It doesn't dispatch any redux actions or display any part of redux state
-// or even care what the redux state is, so it doesn't need 'connect()'
+import { Typography, Container } from '@mui/material';
 
 function Footer() {
   return (
     <footer>
-      <Typography sx={{fontSize: "small", textAlign: "left"}}>&copy; Nest 8 all rights reserved</Typography>
+      <Container className="container">
+        <Typography sx={{ fontSize: 'small', textAlign: 'center' }}>&copy; Nest 8 all rights reserved</Typography>
+      </Container>
     </footer>
-    )
+  );
 }
 
 export default Footer;

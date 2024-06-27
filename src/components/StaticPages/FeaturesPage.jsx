@@ -10,4 +10,4 @@ function FeaturesPage() {
   );
 }
 
-export default AboutPage;
+export default FeaturesPage;
