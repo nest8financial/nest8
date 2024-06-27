@@ -29,7 +29,7 @@ function HomePage() {
   };
 
   return (
-    <Container style={{ paddingTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
+    <Container style={{ paddingTop: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
       <Box style={{ flexGrow: 1 }}></Box>
       <Paper elevation={10} style={{ padding: '20px', marginBottom: '40px', textAlign: 'center', width: '100%', maxWidth: '800px' }}>
         <section id="educate-users">
