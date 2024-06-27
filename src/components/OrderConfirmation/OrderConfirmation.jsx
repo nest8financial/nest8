@@ -18,20 +18,19 @@ function OrderConfirmation() {
     
 
     return (
-        <Container>{productNumber}  aefadf {JSON.stringify(products)}
+        <Container style={{ paddingTop: '100px'}}>
             <Paper elevation={10} sx={{ p: 3, display: 'flex', flexDirection: 'column'}}>
-                <Typography variant="h4">Review Cart and Place Order</Typography>
+                <Typography variant="h4" sx={{ mb: 2 }}>Review Cart and Place Order</Typography>
                 { productNumber === 1 ||
                 productNumber === 2 ||
                 productNumber == 3 ?
                     (
-                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2}}>
                         <Box sx={{ display: 'flex'}}>
                             <CheckBoxIcon color="primary"/>
                             <Typography>{products && products[productNumber-1].name}: ${products && products[productNumber-1].promo_price} <s>${products && products[productNumber-1].price}</s></Typography>
                         </Box>
-                        <Typography variant="h5">Thank you for your order!</Typography>
-                        <br></br>
+                        <Typography variant="h5" >Thank you for your order!</Typography>
                         <Typography>Your receipt has been set your your email. 
                         </Typography> 
                     </Box>
@@ -39,7 +38,7 @@ function OrderConfirmation() {
                         'Invalid Product selected, please return to selection page' 
                     )
                 }  
-                <Button variant="contained"
+                <Button variant="contained"  sx={{ width: 'auto', alignSelf: 'center', mt: 2 }} 
                         onClick={() => history.push('/input_header')}>Start Using Nest 8!
                 </Button>
             </Paper>

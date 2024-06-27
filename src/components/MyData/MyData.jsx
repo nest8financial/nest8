@@ -54,6 +54,7 @@ function separateOutMonthAndYear(arrayOfDates) {
 
   return (
     <Container>
+      <Typography variant="h1" fontSize={32} textAlign={'center'} mt={8} style={{fontWeight: 'inherit'}}>My Data</Typography>
       <Box>
         <Button
           onClick={() => history.push("/my_reports_recommendations")}

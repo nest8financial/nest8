@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { getMonthName } from '../../utilities/utilities';
 import { styled } from '@mui/material/styles';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Container, Typography } from '@mui/material';
 
 function MonthlyInputs() {
 
@@ -29,10 +29,10 @@ function MonthlyInputs() {
         history.push(`/inputs_add_edit/${monthID}/${yearID}`);  //reduces dependencies and makes the function more decoupled
       }
   return (
-    <main>
-      <h1>Monthly Financial Inputs</h1>
+    <Container style={{ paddingTop: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
+      <Typography variant='h1' fontSize={32}>Monthly Financial Inputs</Typography>
     
-      <section>
+      <Box style={{ paddingTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
         {months.map(month => {
           return (
             <Box>
@@ -42,8 +42,8 @@ function MonthlyInputs() {
             </Box>
           );
         })}
-      </section>
-    </main>
+      </Box>
+    </Container>
   );
 }
 
