@@ -16,6 +16,13 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import styled from 'styled-components';
+
+const ImageButton = styled('img')({
+  width: 150,
+  height: 50,
+});
+
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -24,10 +31,8 @@ export default function Navbar() {
   const [notifications, setNotifications] = 
     useState(0); 
   console.log('missinginputs', missingInputs);
-  
   const history = useHistory();
   const dispatch = useDispatch();
-
   const user = useSelector((store) => store.user);
 
   useEffect(() => {
@@ -101,15 +106,13 @@ export default function Navbar() {
 
 
   return (
-    <Box sx={{ flexGrow: 1 }}>that date:{user.date_joined}userid: {user.id}
+    <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" 
-                      component="div" 
-                      sx={{ flexGrow: 1 }}>
-            Nest8
-          </Typography>
-          
+          <IconButton onClick={handleNest8Icon}>
+            <ImageButton src="/nest8.png"
+                         alt="Nest 8 icon"/>
+          </IconButton>
           <Box component="div" sx={{ flexGrow: 1 }}>
             { (user.id && user.date_joined) && (
             <Button color="inherit"

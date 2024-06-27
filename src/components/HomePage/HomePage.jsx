@@ -87,11 +87,12 @@ function HomePage() {
           <Button variant="contained" sx={{ textTransform: "none", margin: '10px auto' }} onClick={() => handleClick('/product_page')}>
             Explore All Features
           </Button>
+
         </section>
       </Paper>
       <Paper elevation={10} style={{ padding: '20px', marginBottom: '40px', textAlign: 'center', width: '100%', maxWidth: '800px' }}>
         <section id="free-trial" style={{ marginTop: '40px' }}>
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h4" textAlign='center' gutterBottom>
             How Nest 8 works for your business type
           </Typography>
           <Box sx={{ display: 'flex', gap: '20px', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'center' }}>
@@ -99,7 +100,7 @@ function HomePage() {
               <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <img src={farmsImage} alt="Farms" style={{ width: '100px', height: 'auto' }} />
                 <CardContent>
-                  <Typography variant="body1" gutterBottom>
+                  <Typography variant="body1" textAlign='center' gutterBottom>
                     Farmers: Improve efficiency of your operations, assess your business health, identify growth opportunities.
                   </Typography>
                 </CardContent>
@@ -109,7 +110,7 @@ function HomePage() {
               <Box sx={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <img src={nonprofitsImage} alt="Non-profits" style={{ width: '100px', height: 'auto' }} />
                 <CardContent>
-                  <Typography variant="body1" gutterBottom>
+                  <Typography variant="body1" textAlign='center'gutterBottom>
                     Non-profits: Assess how effective your fundraising efforts are compared to other non-profits.
                   </Typography>
                 </CardContent>
@@ -151,37 +152,37 @@ function HomePage() {
           </Typography>
           <Grid container spacing={1} justifyContent="center">
             <Grid item xs={12}>
-              <Typography variant="h6">Nest8 Software</Typography>
+              <Typography variant="h6"textAlign='center' >Nest8 Software</Typography>
             </Grid>
             <Grid item>
               <Button color="primary" onClick={() => handleClick('/features')}>Features</Button>
             </Grid>
             <Grid item>
-              <Typography variant="h6">|</Typography>
+              <Typography variant="h6" textAlign='center'>|</Typography>
             </Grid>
             <Grid item>
               <Button color="primary" onClick={() => handleClick('/pricing')}>Pricing</Button>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h6">Support</Typography>
+              <Typography variant="h6"textAlign='center' >Support</Typography>
             </Grid>
             <Grid item>
               <Button color="primary" onClick={() => handleClick('/faq')}>FAQ</Button>
             </Grid>
             <Grid item>
-              <Typography variant="h6">|</Typography>
+              <Typography variant="h6" textAlign='center'>|</Typography>
             </Grid>
             <Grid item>
               <Button color="primary" onClick={() => handleClick('/contact')}>Contact Us</Button>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h6">Company</Typography>
+              <Typography variant="h6" textAlign='center'>Company</Typography>
             </Grid>
             <Grid item>
               <Button color="primary" onClick={() => handleClick('/our_story')}>Our Story</Button>
             </Grid>
             <Grid item>
-              <Typography variant="h6">|</Typography>
+              <Typography variant="h6" textAlign='center'>|</Typography>
             </Grid>
             <Grid item>
               <Button color="primary" onClick={() => handleClick('/mission')}>Mission</Button>
