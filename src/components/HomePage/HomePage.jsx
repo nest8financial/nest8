@@ -1,5 +1,7 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory} from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 import { Button, Typography, Container, Grid, Link, List, ListItem, ListItemIcon, ListItemText, IconButton, Box, Card, CardContent, Paper } from '@mui/material';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import InstagramIcon from '@mui/icons-material/Instagram';
@@ -15,6 +17,16 @@ import entrepreneurImage from '../../Assets/images/entrepreneur.png';
 function HomePage() {
 
   const history = useHistory();
+  const dispatch = useDispatch();
+
+  // reset the product selection if user goes to the home page or 
+  //      the logout page
+  useEffect(() => {
+    dispatch({ 
+      type: 'SET_NEW_PRODUCT_SELECTED',
+      payload: 0
+    })
+  })
   const handleClick = (route) => {
     history.push(route);
   };
@@ -36,7 +48,7 @@ function HomePage() {
           <Typography>How well is your entrepreneurial business doing?</Typography>
           <Button variant="contained"
                   sx={{ textTransform: "none" }}
-                  onClick={() => history.push('/use_case')}>
+                  onClick={() => handleClick('/use_case')}>
             Learn what Nest 8 can do
           </Button>
           <List>
@@ -73,7 +85,7 @@ function HomePage() {
            </List>
            <Button variant="contained"
                   sx={{ textTransform: "none" }}
-                  onClick={() => history.push('/product_page')}>
+                  onClick={() => handleClick('/product_page')}>
            Explore All Features
            </Button>
         </section>
@@ -105,7 +117,7 @@ function HomePage() {
               </Box>
             </Card>
           </Box>
-          <Button variant="contained" color="primary" onClick={() => handleClick('/product')}>
+          <Button variant="contained" color="primary" onClick={() => handleClick('/product_page')}>
             Sign up for free
           </Button>
         </section>
@@ -125,7 +137,7 @@ function HomePage() {
             variant="contained"
             color="primary"
             sx={{ textTransform: "none" }}
-            onClick={() => history.push('/product_page')}
+            onClick={() => handleClick('/product_page')}
           >
             Try Nest8 for free (30 day trial)
           </Button>

@@ -160,11 +160,11 @@ const updateRecommendations = async (parsedData, userId, month, year) => {
  * GET all MISSING monthly inputs for a user
  */
 
-router.get('/missing',  async (req, res) => {
+router.get('/missing', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
     try {
-
+        console.log(req.user);
         const userId = req.user.id;
         const sqlTextGetInputs = `
         SELECT 
@@ -202,7 +202,7 @@ router.get('/missing',  async (req, res) => {
 /**
  * GET all monthly inputs for a user
  */
-router.get('/',  async (req, res) => {
+router.get('/', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
     try {
@@ -228,7 +228,7 @@ router.get('/',  async (req, res) => {
 /**
  * GET a single month's inputs for a user
  */
-router.get('/:month&:year',  async (req, res) => {
+router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
     let connection;
     console.log('requser',req.user);
     connection = await pool.connect();
@@ -272,7 +272,7 @@ router.get('/:month&:year',  async (req, res) => {
  *             -The Open AI recommendation response 
  *         5. Return created (201) status if successful
  */
-router.post('/',  async (req, res) => {
+router.post('/', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
    try {
@@ -440,7 +440,7 @@ router.post('/',  async (req, res) => {
  *                  (number 3 metric - number 2 metric)
  *         5. Return 200 status if successful
  */
-router.put('/',  async (req, res) => {
+router.put('/', rejectUnauthenticated, async (req, res) => {
 
     let connection;
     connection = await pool.connect();

@@ -74,7 +74,7 @@ console.log('year',year);
                                 </Typography>
                             </CardContent>
                             <CardActions sx={{mt: -3, mb: -1 }}>
-                                <Button fullWidth="true"
+                                <Button fullWidth={true}
                                         size="small"
                                         sx={{ justifyContent: 'left', pl: 2 }} 
                                         >DETAILS</Button>

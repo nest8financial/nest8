@@ -8,6 +8,16 @@ DROP TABLE IF EXISTS "monthly_inputs" CASCADE;
 DROP TABLE IF EXISTS "metrics" CASCADE;
 DROP TABLE IF EXISTS "monthly_metrics" CASCADE;
 DROP TABLE IF EXISTS "industry" CASCADE;
+DROP TABLE IF EXISTS "product" CASCADE;
+
+
+CREATE TABLE "product" (
+    "id" SERIAL PRIMARY KEY,
+    "name" VARCHAR,
+    "description" VARCHAR,
+    "price" DECIMAL,
+    "promo_price" DECIMAL
+);
 
 CREATE TABLE "industry" (
     "id" SERIAL PRIMARY KEY,
@@ -28,7 +38,8 @@ CREATE TABLE "user" (
     "last_name" VARCHAR NOT NULL, 
     "company" VARCHAR NOT NULL, 
     "industry_id" int REFERENCES "industry" ON DELETE CASCADE,
-    "date_joined" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    "product_id" int REFERENCES "product" ON DELETE CASCADE,
+    "date_joined" TIMESTAMP
 );
 
 CREATE TABLE "monthly_inputs" (
@@ -43,6 +54,8 @@ CREATE TABLE "monthly_inputs" (
     "tax_rate"DECIMAL,
     "earnings_before_tax" DECIMAL
 );
+
+
 
 
 CREATE TABLE "metrics" (
@@ -64,6 +77,12 @@ CREATE TABLE "monthly_metrics" (
     "recommendation_ai_enhanced" VARCHAR
 );
 
+INSERT INTO product
+	(id, name, description, price, promo_price)
+	VALUES ( 1, 'One-Time Report', '', 50, 0),
+		   ( 2, 'Monthly', '/month', 25, 0),
+		   ( 3, 'One-Time Report', '/year', 240, 0);
+           
 INSERT INTO industry
     (name, 
     profit_margin, 
