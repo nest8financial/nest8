@@ -2,10 +2,12 @@
 import { TextField,
     FormHelperText, 
     FormLabel,
+    FormControl,
     Container,
     InputAdornment,
     Box, 
-    Button } from '@mui/material';
+    Button,
+Stack } from '@mui/material';
 import { getMonthName } from '../../utilities/utilities';
 import { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
@@ -239,129 +241,130 @@ const handleEditSaveButton= (event) => {
 //     }}
 return (
     <Container>
-      <Box component="form">
-        <FormLabel component="legend">
-          Input Your Financial Data for {getMonthName(month)} {year}:
-        </FormLabel>
-        <TextField
-          required
-          label={readOnlyMode ? "Net Income" : "Net Income (required)"}
-          name="netIncome"
-          type="number"
-          inputProps={{ step: "0.01" }}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-            readOnly: readOnlyMode,
-          }}
-          value={amountInputs.netIncome}
-          onChange={handleAmountChange}
-          variant={readOnlyMode ? 'standard' : 'outlined'}
-          error={amountErrors.netIncome}
-          helperText={
-            amountErrors.netIncome
-              ? "Please enter a valid decimal value with up to two decimal places"
-              : "Your Net Income is blah blah blah..."
-          }
-        />
-        <TextField
-          required
-          label={readOnlyMode ? "Sales" : "Sales (required)"}
-          name="sales"
-          type="number"
-          inputProps={{ step: "0.01" }}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-            readOnly: readOnlyMode,
-          }}
-          value={amountInputs.sales}
-          onChange={handleAmountChange}
-          variant={readOnlyMode ? 'standard' : 'outlined'}
-          error={amountErrors.sales}
-          helperText={
-            amountErrors.sales
-              ? "Please enter a valid decimal value with up to two decimal places"
-              : "Your Sales is blah blah blah..."
-          }
-        />
-        <TextField
-          required
-          label={readOnlyMode ? "Assets" : "Assets (required)"}
-          name="assets"
-          type="number"
-          inputProps={{ step: "0.01" }}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-            readOnly: readOnlyMode,
-          }}
-          value={amountInputs.assets}
-          onChange={handleAmountChange}
-          variant={readOnlyMode ? 'standard' : 'outlined'}
-          error={amountErrors.assets}
-          helperText={
-            amountErrors.assets
-              ? "Please enter a valid decimal value with up to two decimal places"
-              : "Your Assets are blah blah blah..."
-          }
-        />
-        <TextField
-          required
-          label={readOnlyMode ? "Equity" : "Equity (required)"}
-          name="equity"
-          type="number"
-          inputProps={{ step: "0.01" }}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-            readOnly: readOnlyMode,
-          }}
-          value={amountInputs.equity}
-          onChange={handleAmountChange}
-          variant={readOnlyMode ? 'standard' : 'outlined'}
-          error={amountErrors.equity}
-          helperText={
-            amountErrors.equity
-              ? "Please enter a valid decimal value with up to two decimal places"
-              : "Your Equity is blah blah blah..."
-          }
-        />
-        <TextField
-          required
-          label={
-            readOnlyMode
-              ? "Earnings Before Tax (EBT)"
-              : "Earnings Before Tax (EBT) (required)"
-          }
-          name="earningsBeforeTax"
-          type="number"
-          inputProps={{ step: "0.01" }}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-            readOnly: readOnlyMode,
-          }}
-          value={amountInputs.earningsBeforeTax}
-          onChange={handleAmountChange}
-          variant={readOnlyMode ? 'standard' : 'outlined'}
-          error={amountErrors.earningsBeforeTax}
-          helperText={
-            amountErrors.earningsBeforeTax
-              ? "Please enter a valid decimal value with up to two decimal places"
-              : "Your Earnings Before Tax is blah blah blah..."
-          }
-        />
-        <FormHelperText id="my-helper-text">
-          Input your basic financial data for this month
-        </FormHelperText>
-        <Button
-          type="button"
-          variant="contained"
-          color="primary"
-          sx={{ mt: 3, mb: 2 }}
-          onClick={(e) => handleEditSaveButton(e)}
-        >
-          {readOnlyMode ? 'Edit' : 'Save'}
-        </Button>
+      <Box component="form" sx={{ maxWidth: 600, mx: 'auto', mt: 5 }}>
+        <FormControl component="fieldset" fullWidth>
+          <FormLabel component="legend" sx={{ textAlign: 'left', mb: 2, fontSize: '1.50rem', fontWeight: 'bold' }}>
+            Input Your Financial Data for {getMonthName(month)} {year}:
+          </FormLabel>
+          <Stack spacing={2}>
+            <TextField
+              required
+              label={readOnlyMode ? "Net Income" : "Net Income (required)"}
+              name="netIncome"
+              type="number"
+              inputProps={{ step: "0.01" }}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                readOnly: readOnlyMode,
+              }}
+              value={amountInputs.netIncome}
+              onChange={handleAmountChange}
+              variant={readOnlyMode ? 'standard' : 'outlined'}
+              error={amountErrors.netIncome}
+              helperText={
+                amountErrors.netIncome
+                  ? "Please enter a valid decimal value with up to two decimal places"
+                  : "Your Net Income is blah blah blah..."
+              }
+            />
+            <TextField
+              required
+              label={readOnlyMode ? "Sales" : "Sales (required)"}
+              name="sales"
+              type="number"
+              inputProps={{ step: "0.01" }}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                readOnly: readOnlyMode,
+              }}
+              value={amountInputs.sales}
+              onChange={handleAmountChange}
+              variant={readOnlyMode ? 'standard' : 'outlined'}
+              error={amountErrors.sales}
+              helperText={
+                amountErrors.sales
+                  ? "Please enter a valid decimal value with up to two decimal places"
+                  : "Your Sales is blah blah blah..."
+              }
+            />
+            <TextField
+              required
+              label={readOnlyMode ? "Assets" : "Assets (required)"}
+              name="assets"
+              type="number"
+              inputProps={{ step: "0.01" }}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                readOnly: readOnlyMode,
+              }}
+              value={amountInputs.assets}
+              onChange={handleAmountChange}
+              variant={readOnlyMode ? 'standard' : 'outlined'}
+              error={amountErrors.assets}
+              helperText={
+                amountErrors.assets
+                  ? "Please enter a valid decimal value with up to two decimal places"
+                  : "Your Assets are blah blah blah..."
+              }
+            />
+            <TextField
+              required
+              label={readOnlyMode ? "Equity" : "Equity (required)"}
+              name="equity"
+              type="number"
+              inputProps={{ step: "0.01" }}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                readOnly: readOnlyMode,
+              }}
+              value={amountInputs.equity}
+              onChange={handleAmountChange}
+              variant={readOnlyMode ? 'standard' : 'outlined'}
+              error={amountErrors.equity}
+              helperText={
+                amountErrors.equity
+                  ? "Please enter a valid decimal value with up to two decimal places"
+                  : "Your Equity is blah blah blah..."
+              }
+            />
+            <TextField
+              required
+              label={readOnlyMode ? "Earnings Before Tax (EBT)" : "Earnings Before Tax (EBT) (required)"}
+              name="earningsBeforeTax"
+              type="number"
+              inputProps={{ step: "0.01" }}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                readOnly: readOnlyMode,
+              }}
+              value={amountInputs.earningsBeforeTax}
+              onChange={handleAmountChange}
+              variant={readOnlyMode ? 'standard' : 'outlined'}
+              error={amountErrors.earningsBeforeTax}
+              helperText={
+                amountErrors.earningsBeforeTax
+                  ? "Please enter a valid decimal value with up to two decimal places"
+                  : "Your Earnings Before Tax is blah blah blah..."
+              }
+            />
+          </Stack>
+
+          <Button
+            type="button"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 3, mb: 2, alignSelf: 'flex-end' }}
+            onClick={(e) => handleEditSaveButton(e)}
+          >
+            {readOnlyMode ? 'Edit' : 'Save'}
+          </Button>
+        </FormControl>
       </Box>
     </Container>
   );
+  
+  
+  
   
 }
 

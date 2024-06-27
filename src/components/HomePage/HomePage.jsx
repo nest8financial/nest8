@@ -188,7 +188,13 @@ function HomePage() {
               <Button color="primary" onClick={() => handleClick('/mission')}>Mission</Button>
             </Grid>
           </Grid>
-          <Grid container spacing={2} justifyContent="center" style={{ marginTop: '20px' }}>
+
+
+          <Grid item style={{ marginTop: '70px', marginBottom: '1px'}}>
+              <Typography variant="h6" textAlign='center'>@ 2024 N8. All rights reserved. 'N8' is a trademark of N8 LLC</Typography>
+            </Grid>
+         
+          <Grid container spacing={2} justifyContent="center" >
             <Grid item>
               <IconButton color="primary" href="https://facebook.com">
                 <FacebookIcon />
@@ -213,6 +219,25 @@ function HomePage() {
               <IconButton color="primary" href="https://linkedin.com">
                 <LinkedInIcon />
               </IconButton>
+            </Grid>
+          </Grid>
+              
+          
+          <Grid container spacing={2} justifyContent="center">
+            <Grid item>
+              <Button color="primary" onClick={() => handleClick('/legal')}>Legal</Button>
+            </Grid>
+            <Grid item>
+              <Typography variant="h6" textAlign='center'>|</Typography>
+            </Grid>
+            <Grid item>
+              <Button color="primary" onClick={() => handleClick('/privacy')}>Privacy Notice</Button>
+            </Grid>
+            <Grid item>
+              <Typography variant="h6" textAlign='center'>|</Typography>
+            </Grid>
+            <Grid item>
+              <Button color="primary" onClick={() => handleClick('/accessibility')}>Accessibility</Button>
             </Grid>
           </Grid>
         </section>
