@@ -48,7 +48,7 @@ function HomePage() {
           <Typography>How well is your entrepreneurial business doing?</Typography>
           <Button variant="contained"
                   sx={{ textTransform: "none" }}
-                  onClick={() => history.push('/use_case')}>
+                  onClick={() => handleClick('/use_case')}>
             Learn what Nest 8 can do
           </Button>
           <List>
@@ -85,7 +85,7 @@ function HomePage() {
            </List>
            <Button variant="contained"
                   sx={{ textTransform: "none" }}
-                  onClick={() => history.push('/product_page')}>
+                  onClick={() => handleClick('/product_page')}>
            Explore All Features
            </Button>
         </section>
@@ -117,7 +117,7 @@ function HomePage() {
               </Box>
             </Card>
           </Box>
-          <Button variant="contained" color="primary" onClick={() => handleClick('/product')}>
+          <Button variant="contained" color="primary" onClick={() => handleClick('/product_page')}>
             Sign up for free
           </Button>
         </section>
@@ -137,7 +137,7 @@ function HomePage() {
             variant="contained"
             color="primary"
             sx={{ textTransform: "none" }}
-            onClick={() => history.push('/product_page')}
+            onClick={() => handleClick('/product_page')}
           >
             Try Nest8 for free (30 day trial)
           </Button>

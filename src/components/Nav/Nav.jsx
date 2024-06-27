@@ -31,7 +31,7 @@ export default function Navbar() {
   const user = useSelector((store) => store.user);
 
   useEffect(() => {
-    if (user.id) {
+    if (user.id && user.date_joined) {
       dispatch({ type: "GET_MISSING_MONTHLY_INPUTS" });
     }
   }, [user]);
@@ -77,7 +77,7 @@ export default function Navbar() {
 
   const handleAlertsBell = (e) => {
     console.log('bell clicked!');
-    history.push('/profile');
+    history.push('/my_data');
   }
 
   const handleLogoutButton = (e) => {
@@ -95,12 +95,13 @@ export default function Navbar() {
   }
 
   const handleNest8Icon = (e) => {
-    console.log('nest 8 clicked!  home page??')
+    console.log('nest 8 clicked!  home page??');
+    history.push('/home');
   }
 
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1 }}>that date:{user.date_joined}userid: {user.id}
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" 
@@ -110,15 +111,15 @@ export default function Navbar() {
           </Typography>
           
           <Box component="div" sx={{ flexGrow: 1 }}>
-            {user.id && (
+            { (user.id && user.date_joined) && (
             <Button color="inherit"
             onClick={(e) => handleInputButton(e)}>Inputs</Button>
             )}
-            {user.id && (
+            {(user.id && user.date_joined) && (
             <Button color="inherit"
             onClick={(e) => handleReportButton(e)}>Reports</Button>
             )}
-            {user.id && (
+            {(user.id && user.date_joined) && (
             <Button color="inherit"
             onClick={(e) => handleDataButton(e)}>Data</Button>
             )}
@@ -131,7 +132,7 @@ export default function Navbar() {
           )}
           <IconButton size="large"
                       color="inherit"
-                      onClick={() => {(e) => {handleAlertsBell(e)}}}>
+                      onClick={handleAlertsBell}>
             <Badge badgeContent={notifications} color="error">
               <NotificationsIcon />
             </Badge>

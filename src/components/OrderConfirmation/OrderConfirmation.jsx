@@ -1,4 +1,4 @@
-import { Container, Paper, Typography, Button} from "@mui/material";
+import { Container, Paper, Typography, Button, Box} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
@@ -15,6 +15,7 @@ function OrderConfirmation() {
     useEffect(() => {
         dispatch({ type: 'FETCH_PRODUCTS' })
     },[])
+    
 
     return (
         <Container>{productNumber}  aefadf {JSON.stringify(products)}
@@ -24,9 +25,11 @@ function OrderConfirmation() {
                 productNumber === 2 ||
                 productNumber == 3 ?
                     (
-                    <Box sx={{ display: flex }}>
-                        <CheckBoxIcon color="primary"/>
-                        <Typography>{products[productNumber].name}: ${products[productNumber].promo_price} <s>${products[productNumber].price}</s></Typography>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                        <Box sx={{ display: 'flex'}}>
+                            <CheckBoxIcon color="primary"/>
+                            <Typography>{products && products[productNumber-1].name}: ${products && products[productNumber-1].promo_price} <s>${products && products[productNumber-1].price}</s></Typography>
+                        </Box>
                         <Typography variant="h5">Thank you for your order!</Typography>
                         <br></br>
                         <Typography>Your receipt has been set your your email. 

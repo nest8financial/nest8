@@ -39,6 +39,8 @@ function ReviewCartPlaceOrder({productNumber}) {
     console.log('pushing to order confirmation, selected:', selectedCheckbox);
     dispatch({ type: 'SET_NEW_PRODUCT_SELECTED',
                payload: selectedCheckbox })  
+    dispatch({ type: 'UPDATE_PRODUCT_SELECTED',
+               payload: { productId: selectedCheckbox } })
     history.push('/order_confirmation'); 
   }
 
