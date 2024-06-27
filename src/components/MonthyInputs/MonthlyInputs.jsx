@@ -35,7 +35,7 @@ function MonthlyInputs() {
       <Box style={{ paddingTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
         {months.map(month => {
           return (
-            <Box>
+            <Box key={month.id}>
               <UnderlinedButton key={month.id} onClick={() => handleMonthClick(month.month, month.year)}>
                   {getMonthName(month.month)} {month.year}
               </UnderlinedButton>
