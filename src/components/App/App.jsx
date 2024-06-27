@@ -5,17 +5,17 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-
 import { useDispatch, useSelector } from "react-redux";
-
+import { ThemeProvider } from "@mui/material/styles";
+import { Theme } from "../Nav/NavTheme";
+import { Container } from "@mui/material";
+/* components -------------------------------------------*/
 import Nav from "../Nav/Nav";
 import Footer from "../Footer/Footer";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 import LoginPage from "../LoginPage/LoginPage";
 import RegisterPage from "../RegisterPage/RegisterPage";
 import HomePage from "../HomePage/HomePage";
-import { ThemeProvider } from "@mui/material/styles";
-import { Theme } from "../Nav/NavTheme";
 import "./App.css";
 import RecommendationDetail from "../RecommendationDetail/RecommendationDetail";
 import InputHeader from "../InputHeader/InputHeader";
@@ -24,9 +24,6 @@ import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
 import FinancialsPage from "../FinancialsPage/FinancialsPage"
-
-
-
 import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyReportsRecomendations";
 import Profile from "../Profile/Profile";
 import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
@@ -38,6 +35,7 @@ import ContactUsPage from "../StaticPages/ContactUsPage";
 import OurStoryPage from "../StaticPages/OurStoryPage";
 import MissionPage from "../StaticPages/Mission";
 import UseCasePage from '../StaticPages/UseCasePage';
+
 
 function App() {
   const dispatch = useDispatch();
@@ -54,7 +52,7 @@ function App() {
       <Router>
         <div>
           <Nav />
-
+          <Container maxWidth="lg" sx={{  width: '80%', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'  }}>
           <Switch>
             {/* Visiting localhost:5173 will redirect to localhost:5173/home */}
             <Redirect exact from="/" to="/home" />
@@ -196,6 +194,7 @@ function App() {
               <h1>404</h1>
             </Route>
           </Switch>
+          </Container>
           <Footer />
         </div>
       </Router>

@@ -27,6 +27,7 @@ return (
           value={date} onChange={(newValue) => setDate(newValue)} 
           views={['month', 'year']}
           openTo='month'
+          maxDate={dayjs()}
           />
         <Typography textAlign='center' variant='h2' fontSize={32}>{date.format('MMM YYYY')}</Typography>
         <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
