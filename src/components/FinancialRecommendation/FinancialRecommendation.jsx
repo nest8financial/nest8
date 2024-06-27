@@ -28,9 +28,7 @@ console.log('year',year);
         });
         console.log("month",month);
     }
-
        }, [dispatch, month, year])
-     
         console.log("Recommendations updated:", recommendations);
  
 
