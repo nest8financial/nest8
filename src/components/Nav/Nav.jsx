@@ -26,14 +26,14 @@ const ImageButton = styled('img')({
 
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const missingInputs = 
-  useSelector((store) => store.financialInputs.missingMonthlyInputs); 
-  const [notifications, setNotifications] = 
-    useState(0); 
-  console.log('missinginputs', missingInputs);
+
+  const [notifications, setNotifications] = useState(0); 
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
+  const missingInputs =
+        useSelector((store) => store.financialInputs.missingMonthlyInputs); 
+  console.log('missinginputs', missingInputs);
 
   useEffect(() => {
     if (user.id && user.date_joined) {
@@ -115,16 +115,12 @@ export default function Navbar() {
           </IconButton>
           <Box component="div" sx={{ flexGrow: 1 }}>
             { (user.id && user.date_joined) && (
-            <Button color="inherit"
-            onClick={(e) => handleInputButton(e)}>Inputs</Button>
-            )}
-            {(user.id && user.date_joined) && (
-            <Button color="inherit"
-            onClick={(e) => handleReportButton(e)}>Reports</Button>
-            )}
-            {(user.id && user.date_joined) && (
-            <Button color="inherit"
-            onClick={(e) => handleDataButton(e)}>Data</Button>
+              <>
+            <Button color="inherit"onClick={(e) => handleInputButton(e)}>Inputs</Button>
+            <Button color="inherit" onClick={(e) => handleReportButton(e)}>Reports</Button>
+            <Button color="inherit"onClick={(e) => handleDataButton(e)}>Data</Button>
+
+            </>
             )}
           </Box>
 
