@@ -42,9 +42,21 @@ const missingMonthlyInputs = (state = [], action) => {
   return state;
 }
 
+/**
+ * The most recent month for a user in the monthly inputs file
+ */
+const latestMonth = (state = 0, action) => {
+  
+  if (action.type === 'SET_LATEST_MONTH') {
+      return action.payload;
+  } 
+  return state;
+}
+
 
 export default combineReducers({
   singleMonthInputs,
   monthlyInputs,
-  missingMonthlyInputs
+  missingMonthlyInputs,
+  latestMonth
 });
