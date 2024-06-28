@@ -158,7 +158,11 @@ function FinancialProgress({company}) {
       title: {
         display: true,
         // pull the graph title based on the metric selected
-        text: (graphData.metric_description && graphData.metric_description)
+        text: (graphData.metric_description && graphData.metric_description),
+        font: {
+          style: 'italic',
+          weight: 'normal',
+      }
       }, 
       // disable tooltips for the industry standards
       tooltip: {

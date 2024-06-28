@@ -605,6 +605,33 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
 })
 
 
+/**
+ * GET the most recent (latest) month that exists in monthly_inputs for a user
+ */
+router.get('/latest_month', rejectUnauthenticated, async (req, res) => {
+  let connection;
+  console.log('requser',req.user);
+  connection = await pool.connect();
+  try {
+      const userId = req.user.id;
+      const sqlTextGetLatestMonth = `
+         SELECT year, month
+          FROM monthly_inputs
+          WHERE user_id = $1
+          ORDER BY year DESC, month DESC
+          LIMIT 1;
+          `;
+          const dbResponse = await connection.query(sqlTextGetLatestMonth, [userId]);
+          console.log('Get of single month\'s inputs in /api/financial_inputs/:month&:year succesful:', dbResponse.rows )
+          connection.release();
+          res.send(dbResponse.rows[0]);
+  } catch (error) {
+      console.log('Error in get of single month\'s inputs in /api/financial_inputs/:month&:year', error);
+      connection.release();
+      res.sendStatus(500);
+  }
+})
+
 
  /*------------------------ END ROUTES ---------------------------------------*/
 
