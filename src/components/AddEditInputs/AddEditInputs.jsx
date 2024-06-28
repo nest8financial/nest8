@@ -80,6 +80,14 @@ useEffect(() => {
        console.log('objkeys', Object.keys(singleMonthInputs))
        setNewInputMonth(true);
        setReadOnlyMode(false);
+       setAmountInputs({
+          netIncome: '',
+          sales: '',
+          assets: '',
+          equity: '',
+          earningsBeforeTax: ''
+       })
+   setTaxRateInput('0');
    // else if this is an existing year/month for financial inputs:
    //      - newInputMode is false
    //      - readOnlyMode is true

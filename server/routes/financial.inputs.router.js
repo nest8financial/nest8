@@ -275,14 +275,14 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
    try {
-       const month = req.body.month;
-       const year = req.body.year;
-       const netIncome = req.body.netIncome;
-       const sales = req.body.sales;
-       const assets = req.body.assets;
-       const equity = req.body.equity;
-       const taxRate = req.body.taxRate;
-       const earningsBeforeTax = req.body.earningsBeforeTax;
+       const month = Number(req.body.month);
+       const year =  Number(req.body.year);
+       const netIncome =  Number(req.body.netIncome);
+       const sales =  Number(req.body.sales);
+       const assets =  Number(req.body.assets);
+       const equity =  Number(req.body.equity);
+       const taxRate =  Number(req.body.taxRate);
+       const earningsBeforeTax =  Number(req.body.earningsBeforeTax);
        userId = req.user.id;
        // If inserts fail for either monthly_inputs or monthly_metrics,
        //   rollback all SQL changes
@@ -317,13 +317,39 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
         console.log('POST of a single month\'s inputs in /api/financial_input/ successful, new id is:',returnedIdResponse.rows[0].id );
         const monthlyInputId = returnedIdResponse.rows[0].id;                       
         // 2. Compute the monthly financial metrics   
-        const profitMargin = netIncome / sales;
-        const assetTurnoverRatio = sales / assets;  //average assets????
-        const financialLeverageRatio = assets / equity;
-        const returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
-        const taxBurden = netIncome / earningsBeforeTax;
-        const interestBurden = earningsBeforeTax / sales;
-
+        //      - If key inputs are zero, resulting metrics are set to null
+        //          as metrics are unable to be computed
+        console.log('inputs:', sales, assets, equity, taxRate, earningsBeforeTax,'%%%%%%%%%')
+        let profitMargin, assetTurnoverRatio, financialLeverageRatio,
+             taxBurden, interestBurden, returnOnEquity;
+             if (sales === 0) {
+              profitMargin = null;
+              interestBurden = null;
+          } else {
+              profitMargin = netIncome / sales;
+              interestBurden = earningsBeforeTax / sales;
+          }
+          if (assets === 0) {
+              assetTurnoverRatio = null;
+          } else {
+              assetTurnoverRatio = sales / assets;
+          }
+          if (equity === 0) {
+              financialLeverageRatio = null;
+          } else {
+              financialLeverageRatio = assets / equity;
+          }
+          if (profitMargin !== null && assetTurnoverRatio !== null && financialLeverageRatio !== null) {
+              returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
+          } else {
+              returnOnEquity = null;
+          }
+          if (earningsBeforeTax === 0) {
+              taxBurden = null;
+          } else {
+              taxBurden = netIncome / earningsBeforeTax;
+          }
+          console.log('stuff:::::::', assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, '%%%%%%%%%%%')
         // 3. Retreive the industry standard metrics for the current user
         const sqlTextGetIndustry = `
         SELECT profit_margin AS ind_profit_margin,
@@ -356,13 +382,19 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
         const sqlTextInsertMonthlyMetrics = `
                 INSERT INTO monthly_metrics
                     (monthly_id, metrics_id, metric_value, variance_value)
-                    VALUES 
-                    ($1, 1, $2, ($8::DECIMAL - $2::DECIMAL)),      
-                    ($1, 2, $3, ($9::DECIMAL - $3::DECIMAL)),      
-                    ($1, 3, $4, ($4::DECIMAL - $10::DECIMAL)),     
-                    ($1, 4, $5, ($11::DECIMAL - $5::DECIMAL)),     
-                    ($1, 5, $6, ($6::DECIMAL - $12::DECIMAL)),    
-                    ($1, 6, $7, ($7::DECIMAL - $13::DECIMAL));    
+                    VALUES      
+                    ($1::INTEGER, 1, $2::DECIMAL,
+                       CASE WHEN $2 IS NOT NULL THEN ($8::DECIMAL - $2::DECIMAL) ELSE NULL END),      
+                    ($1::INTEGER, 2, $3::DECIMAL,
+                       CASE WHEN $3 IS NOT NULL THEN ($9::DECIMAL - $3::DECIMAL) ELSE NULL END),      
+                    ($1::INTEGER, 3, $4::DECIMAL, 
+                       CASE WHEN $4 IS NOT NULL THEN ($4::DECIMAL - $10::DECIMAL) ELSE NULL END),     
+                    ($1::INTEGER, 4, $5::DECIMAL, 
+                       CASE WHEN $5 IS NOT NULL THEN ($11::DECIMAL - $5::DECIMAL) ELSE NULL END),     
+                    ($1::INTEGER, 5, $6::DECIMAL, 
+                       CASE WHEN $6 IS NOT NULL THEN ($6::DECIMAL - $12::DECIMAL) ELSE NULL END),    
+                    ($1::INTEGER, 6, $7::DECIMAL, 
+                       CASE WHEN $7 IS NOT NULL THEN ($7::DECIMAL - $13::DECIMAL) ELSE NULL END);  
         `;
         await connection.query(sqlTextInsertMonthlyMetrics,
                                         [ monthlyInputId,
@@ -443,14 +475,14 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
    try {
-       const month = req.body.month;
-       const year = req.body.year;
-       const netIncome = req.body.netIncome;
-       const sales = req.body.sales;
-       const assets = req.body.assets;
-       const equity = req.body.equity;
-       const taxRate = req.body.taxRate;
-       const earningsBeforeTax = req.body.earningsBeforeTax;
+      const month = Number(req.body.month);
+      const year =  Number(req.body.year);
+      const netIncome =  Number(req.body.netIncome);
+      const sales =  Number(req.body.sales);
+      const assets =  Number(req.body.assets);
+      const equity =  Number(req.body.equity);
+      const taxRate =  Number(req.body.taxRate);
+      const earningsBeforeTax =  Number(req.body.earningsBeforeTax);
        const userId = req.user.id;
        // If inserts fail for either monthly_inputs or monthly_metrics,
        //   rollback all SQL changes
@@ -487,13 +519,35 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
         console.log('PUT of a single month\'s inputs in /api/financial_input/ successful, new id is:',returnedId.rows[0].id );
         const monthlyInputId = returnedId.rows[0].id;                       
         // 2. Compute the monthly financial metrics   
-        const profitMargin = netIncome / sales;
-        const assetTurnoverRatio = sales / assets;  //average assets????
-        const financialLeverageRatio = assets / equity;
-        const returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
-        const taxBurden = netIncome / earningsBeforeTax;
-        const interestBurden = earningsBeforeTax / sales;
-
+        let profitMargin, assetTurnoverRatio, financialLeverageRatio,
+        taxBurden, interestBurden, returnOnEquity;
+        if (sales === 0) {
+         profitMargin = null;
+         interestBurden = null;
+        } else {
+            profitMargin = netIncome / sales;
+            interestBurden = earningsBeforeTax / sales;
+        }
+        if (assets === 0) {
+            assetTurnoverRatio = null;
+        } else {
+            assetTurnoverRatio = sales / assets;
+        }
+        if (equity === 0) {
+            financialLeverageRatio = null;
+        } else {
+            financialLeverageRatio = assets / equity;
+        }
+        if (profitMargin !== null && assetTurnoverRatio !== null && financialLeverageRatio !== null) {
+            returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
+        } else {
+            returnOnEquity = null;
+        }
+        if (earningsBeforeTax === 0) {
+            taxBurden = null;
+        } else {
+            taxBurden = netIncome / earningsBeforeTax;
+        }
         // 3. Retreive the industry standard metrics for the current user
         const sqlTextGetIndustry = `
         SELECT profit_margin AS ind_profit_margin,
@@ -535,13 +589,13 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
                                       WHEN 6 THEN $7::DECIMAL
                                    END,
                     variance_value = CASE metrics_id
-                                        WHEN 1 THEN ($8::DECIMAL - $2::DECIMAL)
-                                        WHEN 2 THEN ($9::DECIMAL - $3::DECIMAL)
-                                        WHEN 3 THEN ($4::DECIMAL - $10::DECIMAL)
-                                        WHEN 4 THEN ($11::DECIMAL - $5::DECIMAL)
-                                        WHEN 5 THEN ($6::DECIMAL - $12::DECIMAL)
-                                        WHEN 6 THEN ($7::DECIMAL - $13::DECIMAL)
-                                     END
+                          WHEN 1 THEN (CASE WHEN $2 IS NOT NULL THEN ($8::DECIMAL - $2::DECIMAL) ELSE NULL END)
+                          WHEN 2 THEN (CASE WHEN $3 IS NOT NULL THEN ($9::DECIMAL - $3::DECIMAL) ELSE NULL END)
+                          WHEN 3 THEN (CASE WHEN $4 IS NOT NULL THEN ($4::DECIMAL - $10::DECIMAL) ELSE NULL END)
+                          WHEN 4 THEN (CASE WHEN $5 IS NOT NULL THEN ($11::DECIMAL - $5::DECIMAL) ELSE NULL END)
+                          WHEN 5 THEN (CASE WHEN $6 IS NOT NULL THEN ($12::DECIMAL - $6::DECIMAL) ELSE NULL END)
+                          WHEN 6 THEN (CASE WHEN $7 IS NOT NULL THEN ($13::DECIMAL - $7::DECIMAL) ELSE NULL END)
+                       END
                 WHERE monthly_id = $1
                   AND metrics_id IN (1, 2, 3, 4, 5, 6);
             `; 
