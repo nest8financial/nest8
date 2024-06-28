@@ -60,7 +60,7 @@ function separateOutMonthAndYear(arrayOfDates) {
       <Typography variant="h1" fontSize={32} textAlign={'center'} mt={8} style={{fontWeight: 'inherit'}}>My Data</Typography>
       <Box>
         <Button
-          onClick={() => history.push("/my_reports_recommendations")}
+          onClick={() => history.push("/my_recommendations_action_items")}
           variant="contained"
           sx={{ mt: 6, mb: 2, mr: 2 }}
         >
