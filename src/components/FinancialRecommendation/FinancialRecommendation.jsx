@@ -12,9 +12,12 @@ import { Paper,
          AccordionDetails,
          AccordionSummary, 
          Container }  from '@mui/material';
-         import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-         import { getMonthName } from '../../utilities/utilities.js'
-         import { styled } from '@mui/system';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import WarningIcon from '@mui/icons-material/Warning';
+import { red, green } from '@mui/material/colors';          
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { getMonthName } from '../../utilities/utilities.js'
+import { styled } from '@mui/system';
 
 function FinancialRecommendation({month, year, company}){
 
@@ -83,7 +86,12 @@ console.log('year',year);
                                         backgroundColor: (recommendation.variance_value >= 0 ?
                                             'rgba(226,242,242,100)' : 'rgba(246,195,191,100)')
                                     }}>
-                                    <Typography variant="h6">{recommendation.metric_name}</Typography>
+                                        <Box sx={{ display: 'flex' }}>
+                                            {recommendation.variance_value >= 0 ? 
+                                                <CheckCircleIcon sx={{ color: green[500], fontSize: '15px', mt: 1, mx: 1}}/> : 
+                                                <WarningIcon sx={{ color: red[700], fontSize: '15px', mt: 1, mr: 1 }} />}  
+                                            <Typography variant="h6">  {recommendation.metric_name}</Typography>
+                                        </Box>
                                     <Accordion>
                                         <CustomAccordionSummary expandIcon={<ExpandMoreIcon />}
                                                                 aria-controls="panel1-content"

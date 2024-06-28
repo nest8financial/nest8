@@ -213,7 +213,7 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
         // create a array with metrics names and descriptions metrics_description
         //      , metrics.metrics_description
         const sqlSelectMetrics = `
-            SELECT metrics.id, metrics.metric_name
+            SELECT metrics.id, metrics.metric_name, metric_description
                 FROM metrics
                 ORDER by metrics.id;
             `;
@@ -252,6 +252,7 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
                monthly_inputs.year,
                monthly_inputs.month,
                metrics.id AS metric_id, 
+               metrics.metric_description AS metric_description,
                monthly_metrics.variance_value,
                metrics.metric_name
             FROM monthly_metrics
@@ -323,34 +324,42 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
         // Create the graph_data object to send back
         const graph_data =  [ { metric_id: 1,
                                 metric_name: metricsArray[0].metric_name,
+                                metric_description: metricsArray[0].metric_description,
                                 shortMonthNameArray,
                                 userVariances : userVarProfitMargin,
                                 industryVariances : industryVarProfitMargin },
                               { metric_id: 2,
                                 metric_name: metricsArray[1].metric_name,
+                                metric_description: metricsArray[1].metric_description,
                                 shortMonthNameArray,
                                 userVariances : userVarAssetTurnoverRatio,
                                 industryVariances : industryVarAssetTurnoverRatio },
                               { metric_id: 3,
                                 metric_name: metricsArray[2].metric_name,
+                                metric_description: metricsArray[2].metric_description,
                                 shortMonthNameArray,
                                 userVariances : userVarFinancialLeverageRatio,
                                 industryVariances : industryVarFinancialLeverageRatio },
                               { metric_id: 4,
                                 metric_name: metricsArray[3].metric_name,
+                                metric_description: metricsArray[3].metric_description,
                                 shortMonthNameArray,
                                 userVariances : userVarReturnOnEquity,
                                 industryVariances : industryVarReturnOnEquity },
                               { metric_id: 5,
                                 metric_name: metricsArray[4].metric_name,
+                                metric_description: metricsArray[4].metric_description,
                                 shortMonthNameArray,
                                 userVariances : userVarTaxBurden,
                                 industryVariances : industryVarTaxBurden },
                               { metric_id: 6,
                                 metric_name: metricsArray[5].metric_name,
+                                metric_description: metricsArray[5].metric_description,
                                 shortMonthNameArray,
                                 userVariances : userVarInterestBurden,
                                 industryVariances : industryVarInterestBurden } ]
+                                console.log('HEY',graph_data[0].metric_description, 'XXXXXXXXXX')
+                                console.log(graph_data[0])
             console.log('Get of monthly graph data in /api/financial_metrics/graph_data succesful:', graph_data[metricId - 1] );
 
             connection.release();
