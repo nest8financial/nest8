@@ -18,6 +18,7 @@ import { red, green } from '@mui/material/colors';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getMonthName } from '../../utilities/utilities.js'
 import { styled } from '@mui/system';
+import { useHistory } from "react-router-dom";
 
 function FinancialRecommendation({month, year, company}){
 
@@ -25,6 +26,7 @@ console.log('month',month);
 console.log('year',year);
     const recommendations =  useSelector(store => store.financialMetrics.singleMonthMetrics);
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const CustomAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
         flexDirection: 'column',
@@ -51,6 +53,10 @@ console.log('year',year);
        }, [dispatch, month, year])
         console.log("Recommendations updated:", recommendations);
  
+    const handleActionItemsClick = () => {
+        console.log('Clicked on action items view');
+        history.push(`/rec_detail/${month}/${year}`);
+    }
 
     return(
         <Container>
@@ -62,6 +68,9 @@ console.log('year',year);
                 <Typography variant="h5" align="center" sx={{ m: 2 }}>Recommendations for</Typography>
                 <Typography variant="h4" align="center">{company}</Typography>
                 <Typography variant="h5" align="center" sx={{ m: 2 }}>{getMonthName(month)} {year}</Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>      
+                    <Button onClick={handleActionItemsClick}>See Action Items</Button>
+                </Box>
                 {recommendations.length === 0 ? (
                     <Box>
                         <Typography sx={{ color: 'red', fontStyle: 'italic', textAlign: 'center', p: 2 }} variant="body1">
