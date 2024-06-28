@@ -12,15 +12,25 @@ import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import { DatePicker } from '@mui/x-date-pickers'
 
 
-
 function FinancialsPage() {
 
+    const dispatch = useDispatch();
     const [dateSelected, setDateSelected] = useState(dayjs()); 
     const userData = useSelector(store => store.user);
-
+    const latestDate = useSelector(store => store.financialInputs.latestMonth);
 
     useEffect(() => {
+        dispatch({ type: 'GET_LATEST_MONTH' })
     }, [])
+
+    useEffect(() => {
+        console.log('date::::', dateSelected.format('MM'));
+        // convert to a date format that dayjs understands
+        const formattedMonth = String(latestDate.month).padStart(2, '0');
+        const dateString = `${latestDate.year}-${formattedMonth}-01`;
+        const lastestDateFormatted = dayjs(dateString);
+        setDateSelected(lastestDateFormatted);
+    },[latestDate])
 
 
     return(
