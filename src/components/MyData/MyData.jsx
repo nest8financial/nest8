@@ -53,7 +53,10 @@ function separateOutMonthAndYear(arrayOfDates) {
 }, []);
 
   return (
-    <Container>
+    <Container sx={{ display: 'flex', 
+                     flexDirection: 'column',
+                     alignItems: 'center'
+    }}>
       <Typography variant="h1" fontSize={32} textAlign={'center'} mt={8} style={{fontWeight: 'inherit'}}>My Data</Typography>
       <Box>
         <Button
@@ -61,7 +64,7 @@ function separateOutMonthAndYear(arrayOfDates) {
           variant="contained"
           sx={{ mt: 6, mb: 2, mr: 2 }}
         >
-          My Reports
+          My Recommendations and Action Items
         </Button>
       </Box>
       <Box>
@@ -82,7 +85,7 @@ function separateOutMonthAndYear(arrayOfDates) {
           My Saved Inputs
         </Button>
       </Box>
-      <Box>
+      
         <Typography sx={{ mt: 2 }} variant="h2" fontSize={32}>
           Alerts
         </Typography>
@@ -127,7 +130,7 @@ function separateOutMonthAndYear(arrayOfDates) {
                 No current alerts. All monthly inputs are up to date. 
             </Typography>
         )}
-      </Box>
+      
     </Container>
   );
 }
