@@ -64,7 +64,7 @@ function RecommendationActionItem({ metric, month, year, company }) {
             payload: {
                 month: month,
                 year: year,
-                metricId: metric.id,
+                metricId: metric.metrics_id,
             },
         });
         setCompletedToggleInput(!completedToggleInput);

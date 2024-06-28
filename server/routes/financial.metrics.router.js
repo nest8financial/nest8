@@ -377,13 +377,15 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
  */
 router.patch('/toggle_completed/:metric_id', rejectUnauthenticated, async (req, res) => {
     let connection;
+    console.log('#################################################################in toggle,')
     connection = await pool.connect();
     try {
         const month = Number(req.body.month);
         const year = Number(req.body.year);
-        const metricId = req.params.metric_id;
+        const metricId = Number(req.params.metric_id);
         const userId = req.user.id;
-        console.log('year, month', year, month);
+
+        console.log('year, month', year, month, userId, metricId);
         const sqlTextGetSingleMonth = `
             UPDATE monthly_metrics 
                 SET completed_date = 
