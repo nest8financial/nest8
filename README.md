@@ -56,8 +56,8 @@ Before you get started, make sure you have the following software installed on y
 6. In the terminal of VS Code run `npm install` to install all dependencies
 7.  Create a `.env` file at the root of the project and paste these lines into the file:
 
-    SERVER_SESSION_SECRET=`{place string here}`
-    OPENAI_API_KEY=`{place API key here}`
+   -- SERVER_SESSION_SECRET=`{place string here}`
+   -- OPENAI_API_KEY=`{place API key here}`
 
     Add a string like `25POUbVtx6RKVNWszd9ERB9Bb6` to the Server Sessions Secret to keep your application secure. Here's a site that can help you: [Password Generator Plus](https://passwordsgenerator.net). If you don't do this step, create a secret with less than eight characters, or leave it as `superDuperSecret`, you will get a warning.
 
