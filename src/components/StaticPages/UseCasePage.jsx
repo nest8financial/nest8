@@ -1,6 +1,6 @@
 import React from "react";
 import {Container, Typography, Card,CardContent,CardMedia,Grid, Box,Button,} from "@mui/material";
-import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyReportsRecomendations";
+import MyReportsRecommendations from "../MyRecomendationsAndActions/MyReports/MyRecomendationsAndActions";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
 const reviews = [
   {

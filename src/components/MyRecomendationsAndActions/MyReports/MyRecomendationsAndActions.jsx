@@ -28,7 +28,7 @@ function MyReportsRecommendations() {
   return (
     <Container style={{ paddingTop: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
 
-      <Typography variant='h1' fontSize={32}>My Reports and Recommendations</Typography>
+      <Typography variant='h1' fontSize={32}>My Recommendations and Action Items</Typography>
     
       <Box style={{ paddingTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
         {months.map(month => {
