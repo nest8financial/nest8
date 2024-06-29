@@ -273,7 +273,7 @@ return (
                 helperText={
                   amountErrors.netIncome
                     ? "Please enter a valid decimal value with up to two decimal places"
-                    : "Your Net Income is how much profit your business made during a specific period. If the number is positive, your business is making money. If it's negative, your business is losing money."
+                    : "Net Income is the amount of money you have left after subtracting all expenses from your total earnings. It's the profit that is left after you subtract all costs, taxes, etc."
                 }
               />
             </Paper>
@@ -354,7 +354,7 @@ return (
                 helperText={
                   amountErrors.equity
                     ? "Please enter a valid decimal value with up to two decimal places"
-                    : "Your Equity is the value of what you own in your business after subtracting what you owe."
+                    : "Equity is the value of what you own in the business after subtracting all your debts and liabilities. If your business sold everything it owned and paid off all its debts, the remaining money would be your equity."
                 }
               />
             </Paper>
@@ -376,7 +376,7 @@ return (
                 helperText={
                   amountErrors.earningsBeforeTax
                     ? "Please enter a valid decimal value with up to two decimal places"
-                    : "Your Earnings Before Tax is the amount of money your business has made before subtracting any taxes."
+                    : "Your Earnings Before Tax is the amount of money your business has left after subtracting all its operating expenses, interest, and other costs, but before paying taxes."
                 }
               />
             </Paper>

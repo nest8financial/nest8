@@ -56,13 +56,16 @@ const getAPIRequestData = async (user_id, month, year) => {
         `Look through the following table and provide simplified recommendations based on the recommendations provided, taking into account the corresponding industry and adjusting the recommendation based on if the text is suggesting ways the user can improve or if the user is already meeting industry standards.  
         Use language that the user would understand, based on what industry they work in. For example, use more straightfoward, simple language or analogies for a farmer. For concepts that cannot be simplified, break them down and explain each part. Provide 2 recommendations for each metric and base these recommendations off of the two recommendations provided within the table.
         For your response, respond using JSON format. For each metric, respond with only one description that contains all recommendations. The content response should consist of the metric name and the simplified recommendation text as the description. 
-        Content: 
-        "profit_margin": "description",
-        "asset_turnover_ration": "description",
-        "financial_leverage_ratio": "description",
-        "return_on_equity": "description", 
-        "tax_burden": "description",
-        "interest_burden": "description
+        Format the inside message.content into 6 separate objects, each with one key value pair in the pattern metric, description.  
+        The final structure of the objects should look like this 
+        inside message.content: 
+
+        [{"profit_margin": "description"},
+        {"asset_turnover_ration": "description"},
+        {"financial_leverage_ratio": "description"},
+        {"return_on_equity": "description"}, 
+        {"tax_burden": "description"},
+        {"interest_burden": "description}]
 
         Here are the recommendations I would like you to use: 
         Metric ${recommendation.rows[0].metric_id}: ${recommendation.rows[0].metric_name} ${recommendation.rows[0].recommendation_text}
