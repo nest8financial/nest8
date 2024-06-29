@@ -59,9 +59,9 @@ Before you get started, make sure you have the following software installed on y
    -- SERVER_SESSION_SECRET=`{place string here}`
    -- OPENAI_API_KEY=`{place API key here}`
 
-    Add a string like `25POUbVtx6RKVNWszd9ERB9Bb6` to the Server Sessions Secret to keep your application secure. Here's a site that can help you: [Password Generator Plus](https://passwordsgenerator.net). If you don't do this step, create a secret with less than eight characters, or leave it as `superDuperSecret`, you will get a warning.
+    Add a string like `25POUbVtx6RKVNWszd9ERB9Bb6` to the Server Sessions Secret to keep your application secure. Here's a site that can help you: [Password Generator Plus](https://passwordsgenerator.net). If you don't do this step, create a secret with less than eight characters, or leave it blank, you will get a warning.
 
-    You will need to create your own Open AI API key to place after the equal sign. 
+    You will need to create your own Open AI account to generate an OpenAI API key. 
 
 8. Create a database named `nest_8` in PostgresSQL
 9. The queries in the database.sql file are set up to create all the necessary tables that you need, as well as a dummy data table to test the app. Copy and paste those queries in the SQL query of the database. If this is going to production, leave out the dummy data.
