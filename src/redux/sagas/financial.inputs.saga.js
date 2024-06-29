@@ -57,6 +57,23 @@ function* getMissingMonthlyInputs(action) {
   }
 }
 
+/**
+ * Get all the monthly inputs with INCOMPLETE RECOMMENDATION ACTIONS for a user
+ */
+function* getIncompleteRecsMonthlyInputs(action) {
+  console.log('action.payload for the incomplete monthly recs is', action.payload);
+  try {
+    const response = yield axios({
+        method: 'GET',
+        url: `/api/financial_inputs/incomplete_recs/`})
+        
+    yield put({
+        type: 'SET_INCOMPLETE_RECS_MONTHLY_INPUTS',
+        payload: response.data})
+  } catch (error) {
+    console.log('Error while getting missing monthly inputs:', error);
+  }
+}
 
 
 /**
@@ -116,6 +133,7 @@ function* financialInputsSaga() {
   yield takeLatest('ADD_SINGLE_MONTH_INPUTS', addSingleMonthInputs);
   yield takeLatest('UPDATE_SINGLE_MONTH_INPUTS', updateSingleMonthInputs);
   yield takeLatest('GET_MISSING_MONTHLY_INPUTS', getMissingMonthlyInputs);
+  yield takeLatest('GET_INCOMPLETE_RECS_MONTHLY_INPUTS', getIncompleteRecsMonthlyInputs);
   yield takeLatest('GET_LATEST_MONTH', getLatestMonth);
 }
 

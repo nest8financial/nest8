@@ -15,9 +15,14 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { getMonthName } from "../../utilities/utilities";
 
 function MyData() {
+
+  // pulls the missing monthly inputs for a user from the financialInputs store
   const missingInputs = useSelector(
     (store) => store.financialInputs.missingMonthlyInputs
-  ); // pulls the monthly inputs for a user from the financialInputs store
+  ); 
+  // pulls the monthly inputs with missing recommendations
+  const uncompletedRecommendationsToDisplay = 
+    useSelector(store => store.financialInputs.incompleteRecsMonthlyInputs);
 
   console.log("these are the missing monthly inputs", missingInputs);
 
@@ -38,18 +43,25 @@ function separateOutMonthAndYear(arrayOfDates) {
 
   let missingInputsToDisplay = separateOutMonthAndYear(missingInputs);
 
-  const handleLinkClick = (e, year, month) => {
+  const handleMissingLinkClick = (e, year, month) => {
     e.preventDefault();
     console.log('month and year, about to history.push:', month, year,':')
     history.push(`/inputs_add_edit/${month}/${year}/`);
+  };
+
+  const handleUncompletedRecsLinkClick = (e, year, month) => {
+    e.preventDefault();
+    console.log('month and year, about to history.push:', month, year,':')
+    history.push(`/rec_detail/${month}/${year}/`);
   };
 
   const dispatch = useDispatch();
   const history = useHistory();
 
   useEffect(() => {
-    dispatch({ type: "GET_MISSING_MONTHLY_INPUTS" }); // updates the store upon page load with all missing inputs to render alerts
-    separateOutMonthAndYear(missingInputs)
+     // updates the store upon page load with all missing inputs to render alerts
+    dispatch({ type: "GET_MISSING_MONTHLY_INPUTS" });
+    dispatch({ type: "GET_INCOMPLETE_RECS_MONTHLY_INPUTS" });
 }, []);
 
   return (
@@ -105,7 +117,49 @@ function separateOutMonthAndYear(arrayOfDates) {
                         secondary={
                         <Link
                             href="#"
-                            onClick={(e) => handleLinkClick(e, date[0], date[2])}
+                            onClick={(e) => handleMissingLinkClick(e, date[0], date[2])}
+                            sx={{
+                              cursor: 'pointer',
+                              '&:hover': {
+                                textDecoration: 'underline',
+                              },
+                            }}
+                          >
+                            <Typography component="span" variant="body2" color="error">
+                                You are missing monthly inputs for {date[1]} {date[0]}
+                            </Typography>
+                          </Link>
+                        }
+                      />
+                    </Box>
+                  </Paper>
+                </ListItem>
+              ))}
+            </List>
+          </>
+        ) : (
+            <Typography variant="body1" sx={{ mt: 2, color: 'green' }}>
+                No current missing month alerts. All monthly inputs are up to date. 
+            </Typography>
+        )}
+
+        {uncompletedRecommendationsToDisplay.length > 0 ? (
+          <>
+            <List>
+              {uncompletedRecommendationsToDisplay.map((date) => (
+                <ListItem key={`${date[0]}-${date[1]}`}>
+                  <Paper elevation={4} sx={{width: '600px', height: '100px', mb: 2, p: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '16px'}}>
+                    <Box>
+                      <ListItemText
+                        primary={
+                          <Typography component="span" variant="subtitle1" fontWeight="bold">
+                            {date[1]} {date[0]}
+                          </Typography>
+                        }
+                        secondary={
+                        <Link
+                            href="#"
+                            onClick={(e) => handleUncompletedRecsLinkClick(e, date[0], date[2])}
                             sx={{
                               cursor: 'pointer',
                               '&:hover': {
@@ -127,7 +181,7 @@ function separateOutMonthAndYear(arrayOfDates) {
           </>
         ) : (
             <Typography variant="body1" sx={{ mt: 2, color: 'green' }}>
-                No current alerts. All monthly inputs are up to date. 
+                No current months with uncompleted recommendations.
             </Typography>
         )}
       
