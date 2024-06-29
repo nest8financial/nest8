@@ -43,6 +43,17 @@ const missingMonthlyInputs = (state = [], action) => {
 }
 
 /**
+ * Gets all of the MISSING monthly inputs for a user
+ */
+const incompleteRecsMonthlyInputs = (state = [], action) => {
+  
+  if (action.type === 'SET_INCOMPLETE_RECS_MONTHLY_INPUTS') {
+      return action.payload;
+  } 
+  return state;
+}
+
+/**
  * The most recent month for a user in the monthly inputs file
  */
 const latestMonth = (state = 0, action) => {
@@ -58,5 +69,6 @@ export default combineReducers({
   singleMonthInputs,
   monthlyInputs,
   missingMonthlyInputs,
+  incompleteRecsMonthlyInputs,
   latestMonth
 });

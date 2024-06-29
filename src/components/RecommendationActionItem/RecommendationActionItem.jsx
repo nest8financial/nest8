@@ -38,17 +38,19 @@ function RecommendationActionItem({ metric, month, year, company }) {
         ? negativeParts[1].replace("<User>", company)
         : "";
 
-    const CustomAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
-        flexDirection: "column",
-        alignItems: "center",
-        "& .MuiAccordionSummary-content": {
-            order: 1,
-        },
-        "& .MuiAccordionSummary-expandIconWrapper": {
-            order: 2,
-            marginTop: theme.spacing(1),
-        },
-    }));
+    // const CustomAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+    //     flexDirection: "column",
+    //     variant: "body1",
+    //     fontWeight: "normal",
+    //     alignItems: "center",
+    //     "& .MuiAccordionSummary-content": {
+    //         order: 1,
+    //     },
+    //     "& .MuiAccordionSummary-expandIconWrapper": {
+    //         order: 2,
+    //         marginTop: theme.spacing(1),
+    //     },
+    // }));
 
     useEffect(() => {
         if (metric.completed_date === null) {
@@ -64,7 +66,7 @@ function RecommendationActionItem({ metric, month, year, company }) {
             payload: {
                 month: month,
                 year: year,
-                metricId: metric.id,
+                metricId: metric.metrics_id,
             },
         });
         setCompletedToggleInput(!completedToggleInput);
@@ -100,7 +102,9 @@ function RecommendationActionItem({ metric, month, year, company }) {
 
     return (
         <Container>
-            <Paper elevation={10} sx={{ pt: 2, display: "flex", flexDirection: "column" }}>
+            {metric.variance_value === null ? '' :
+            (
+            <Paper elevation={10} sx={{ pt: 2, m: 2, display: "flex", flexDirection: "column" }}>
                 <Box>
                     <Box sx={{ pt: 1,
                                display: "flex",
@@ -132,40 +136,42 @@ function RecommendationActionItem({ metric, month, year, company }) {
                             ? metric.recommendation_positive_text
                             : metric.recommendation_negative_text}
                     </Typography> */}
-                    <Accordion>
-                        <CustomAccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1-content"
-                            id="panel1-header"
-                        >
-                            <Box sx={{ display: "flex", flexDirection: "column", textAlign: "center", mb: -3 }}>
-                                <Typography variant="body1">
-                                    {metric.variance_value >= 0 ? (
-                                        <>
-                                            {positiveText0}
-                                            <br />
-                                            <br />
-                                            {positiveText1}
-                                        </>
-                                    ) : (
-                                        <>
-                                            {negativeText0}
-                                            <br />
-                                            <br />
-                                            {negativeText1}
-                                        </>
-                                    )}
-                                </Typography>
-                                <Typography
-                                    variant="body1"
-                                    sx={{ fontWeight: "bold", fontSize: "0.875rem", pt: 1.5 }}
-                                >
-                                    MORE INFO
-                                </Typography>
-                            </Box>
-                        </CustomAccordionSummary>
-                        <AccordionDetails>{metric.recommendation_ai_enhanced}</AccordionDetails>
+                    <Typography variant="body1"
+                                fontWeight="normal"
+                                sx={{p: 2}}>
+                        {metric.variance_value >= 0 ? (
+                            <>
+                                {positiveText0}
+                                <br />
+                                <br />
+                                {positiveText1}
+                            </>
+                        ) : (
+                            <>
+                                {negativeText0}
+                                <br />
+                                <br />
+                                {negativeText1}
+                            </>
+                        )}
+                    </Typography>
+                    {metric.recommendation_ai_enhanced &&
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1-content"
+                                id="panel1-header" >
+                                <Box sx={{ display: "flex", flexDirection: "column", textAlign: "center", mb: 0}}>
+                                    <Typography
+                                        variant="body1"
+                                        sx={{ fontWeight: "bold", textAlign: "center", fontSize: "0.875rem", pt: 0, mb: -10}}>
+                                        MORE INFO
+                                    </Typography>
+                                </Box>
+                            </AccordionSummary>                      
+                        <AccordionDetails variant="body1" sx={{fontWeight: 'normal'}}>{metric.recommendation_ai_enhanced}</AccordionDetails>
                     </Accordion>
+                    }
                 </Box>
                 <Box>
                     <TextField
@@ -179,6 +185,7 @@ function RecommendationActionItem({ metric, month, year, company }) {
                     />
                 </Box>
             </Paper>
+            )}
         </Container>
     );
 }

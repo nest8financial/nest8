@@ -4,7 +4,10 @@ const router = express.Router();
 const axios = require('axios')
 require('dotenv').config()
 const { rejectUnauthenticated } = require('../modules/authentication-middleware');
-const { convertToDatesWeHave, generateDatesWeShouldHave, getMissingMonths } = require('../modules/helper-functions-missing-inputs'); 
+const { convertToDatesWeHave,
+        generateDatesWeShouldHave, 
+        getMissingMonths,
+        getMonthName } = require('../modules/helper-functions-missing-inputs'); 
 const { parse } = require('dotenv');
 
 // API Keys 
@@ -27,23 +30,23 @@ const getAPIRequestData = async (user_id, month, year) => {
         const sqlText = // GET request to the server to grab the data we will need to send to the AI API in our prompt 
         `
         SELECT monthly_metrics.id, metrics.id AS metric_id,
-        metrics.metric_name, industry.name AS industry_name,
-	        CASE WHEN monthly_metrics.variance_value >= 0 THEN positive_text
-	        		WHEN monthly_metrics.variance_value < 0 THEN negative_text
-	        END AS recommendation_text
-      FROM monthly_metrics
-        JOIN metrics
-          ON metrics.id = monthly_metrics.metrics_id
-        JOIN monthly_inputs
-          ON monthly_metrics.monthly_id = monthly_inputs.id
-        JOIN "user"
-        	ON monthly_inputs.user_id = "user".id
-        JOIN industry
-        	ON industry.id = "user".industry_id
-        WHERE user_id = $1
-          AND month = $2
-          AND year = $3
-        ORDER BY year, month, metrics_id;
+            metrics.metric_name, industry.name AS industry_name,
+                CASE WHEN monthly_metrics.variance_value >= 0 THEN positive_text
+                        WHEN monthly_metrics.variance_value < 0 THEN negative_text
+                END AS recommendation_text
+        FROM monthly_metrics
+            JOIN metrics
+            ON metrics.id = monthly_metrics.metrics_id
+            JOIN monthly_inputs
+            ON monthly_metrics.monthly_id = monthly_inputs.id
+            JOIN "user"
+                ON monthly_inputs.user_id = "user".id
+            JOIN industry
+                ON industry.id = "user".industry_id
+            WHERE user_id = $1
+            AND month = $2
+            AND year = $3
+            ORDER BY year, month, metrics_id;
         `
         const recommendation = await connection.query(sqlText, [user_id, month, year]); 
 
@@ -157,14 +160,44 @@ const updateRecommendations = async (parsedData, userId, month, year) => {
 
 /**
  * GET all MISSING monthly inputs for a user
+ *     - List of dates is then converted to an array of dates
+ *      that currently exist for a user
+ *     - Pull also the earlist date in file and the date joined,
+ *         then generate a second array of dates:
+ *     - This second list shows the users joined date or 
+ *       the earliest input date in order to look for
+ *         missing input data
  */
 
 router.get('/missing', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
+
+    
     try {
         console.log(req.user);
         const userId = req.user.id;
+
+        // Get the earliest date available for a user
+        const sqlTextGetEarliestDate = `
+            SELECT DISTINCT year, month 
+                FROM monthly_inputs
+                JOIN monthly_metrics
+                    ON monthly_metrics.monthly_id = monthly_inputs.id
+                WHERE monthly_inputs.user_id = $1
+                ORDER BY year, month
+                LIMIT 1;
+        `;
+        const dbResponse2 = await connection.query(sqlTextGetEarliestDate, [userId]);
+        let earliestDate = dbResponse2.rows[0];
+        console.log('earliest date', earliestDate);
+          // Pad with leading zero if necessary
+         if (earliestDate.month.length === 1) {
+             earliestDate.month = '0' + earliestDate.month;
+         }
+         console.log('earliest month padded:', earliestDate.month);
+
+        // Get all Input dates (month/year) for a user and joined date for user
         const sqlTextGetInputs = `
         SELECT 
             "monthly_inputs"."month", 
@@ -176,21 +209,40 @@ router.get('/missing', rejectUnauthenticated, async (req, res) => {
                 ON "user"."id" = "monthly_inputs"."user_id"
                 WHERE user_id = $1
                 ORDER BY year, month;
-                `;
-            const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
-            let arrayOfDatesWeHave = convertToDatesWeHave(dbResponse.rows) // uses helper function to loop through the input dates in the database and creates an array of dates we have 
-           
-            const joinDate = dbResponse.rows[0].date_joined
+        `;
+        const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
+
+        // uses helper function to loop through the input dates in the database and creates an array of dates we have 
+        let arrayOfDatesWeHave = convertToDatesWeHave(dbResponse.rows) 
+        const joinDate = dbResponse.rows[0].date_joined;
+
+        // format earliestDate and JoinedDate to Date objects
+        //     in order to compare them
+        const dateObjEarliestDate = 
+            new Date(earliestDate.year, earliestDate.month - 1, 1);
+        const DateObjJoinedDate = new Date(joinDate);
+
+        // use the oldest date (either the earliest entry in the inputs file
+        //      or the joined date) to calculate the missing months
+        let formattedDate;
+        if (dateObjEarliestDate < DateObjJoinedDate) {
+            formattedDate = [earliestDate.year, earliestDate.month];
+        } else {
             const formattedMonth = joinDate.getMonth() + 1
             const formattedYear = joinDate.getFullYear()
-            const formattedJoinDate = [formattedYear, formattedMonth] // formats join date to [Number('YYYY'), Number('MM')] format
-         
-            let arrayOfDatesWeShouldHave = generateDatesWeShouldHave(formattedJoinDate) // uses helper function to generate an array of arrays with dates from the join date to current date
-      
-            let missingMonthsResponse = getMissingMonths(arrayOfDatesWeShouldHave, arrayOfDatesWeHave)
-            console.log('these are the missing months', missingMonthsResponse);
-            connection.release();
-            res.send(missingMonthsResponse);
+            formattedDate = [formattedYear, formattedMonth]
+        }
+
+        // formats join date to [Number('YYYY'), Number('MM')] format
+
+        
+        // uses helper function to generate an array of arrays with dates from the join date to current date
+        let arrayOfDatesWeShouldHave = generateDatesWeShouldHave(formattedDate) 
+    
+        let missingMonthsResponse = getMissingMonths(arrayOfDatesWeShouldHave, arrayOfDatesWeHave)
+        console.log('these are the missing months', missingMonthsResponse);
+        connection.release();
+        res.send(missingMonthsResponse);
     } catch (error) {
         console.log('Error in get of missing monthly inputs in /api/financial_inputs/missing', error);
         connection.release();
@@ -198,6 +250,40 @@ router.get('/missing', rejectUnauthenticated, async (req, res) => {
     }
 })
 
+/**
+ * GET all month/years with incomplete recommendations for a user
+ */
+router.get('/incomplete_recs', rejectUnauthenticated, async (req, res) => {
+    let connection;
+    connection = await pool.connect();
+    try {
+        const userId = req.user.id;
+        const sqlTextGetInputs = `
+            SELECT DISTINCT  month, year
+                FROM monthly_inputs
+                JOIN monthly_metrics
+                    ON monthly_metrics.monthly_id = monthly_inputs.id
+                WHERE monthly_inputs.user_id = $1
+                    AND monthly_metrics.completed_date IS NULL
+                ORDER BY year, month;
+            `;
+            const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
+            console.log('Get of monthly inputs in /api/financial_inputs/incomplete_recs succesful:', dbResponse.rows )
+            let incompleteRecs = [];
+            dbResponse.rows.forEach( incompleteDate => {
+                incompleteRecs.push([ incompleteDate.year,
+                                      getMonthName(incompleteDate.month),
+                                      incompleteDate.month ]);
+            })
+            console.log('incomplete recs array', incompleteRecs);
+            connection.release();
+            res.send(incompleteRecs);
+    } catch (error) {
+        console.log('Error in get of months with incomplete recommendations in /api/financial_inputs/incomplete_recs', error);
+        connection.release();
+        res.sendStatus(500);
+    }
+})
 /**
  * GET all monthly inputs for a user
  */
@@ -275,14 +361,14 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
    try {
-       const month = req.body.month;
-       const year = req.body.year;
-       const netIncome = req.body.netIncome;
-       const sales = req.body.sales;
-       const assets = req.body.assets;
-       const equity = req.body.equity;
-       const taxRate = req.body.taxRate;
-       const earningsBeforeTax = req.body.earningsBeforeTax;
+       const month = Number(req.body.month);
+       const year =  Number(req.body.year);
+       const netIncome =  Number(req.body.netIncome);
+       const sales =  Number(req.body.sales);
+       const assets =  Number(req.body.assets);
+       const equity =  Number(req.body.equity);
+       const taxRate =  Number(req.body.taxRate);
+       const earningsBeforeTax =  Number(req.body.earningsBeforeTax);
        userId = req.user.id;
        // If inserts fail for either monthly_inputs or monthly_metrics,
        //   rollback all SQL changes
@@ -317,13 +403,39 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
         console.log('POST of a single month\'s inputs in /api/financial_input/ successful, new id is:',returnedIdResponse.rows[0].id );
         const monthlyInputId = returnedIdResponse.rows[0].id;                       
         // 2. Compute the monthly financial metrics   
-        const profitMargin = netIncome / sales;
-        const assetTurnoverRatio = sales / assets;  //average assets????
-        const financialLeverageRatio = assets / equity;
-        const returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
-        const taxBurden = netIncome / earningsBeforeTax;
-        const interestBurden = earningsBeforeTax / sales;
-
+        //      - If key inputs are zero, resulting metrics are set to null
+        //          as metrics are unable to be computed
+        console.log('inputs:', sales, assets, equity, taxRate, earningsBeforeTax,'%%%%%%%%%')
+        let profitMargin, assetTurnoverRatio, financialLeverageRatio,
+             taxBurden, interestBurden, returnOnEquity;
+             if (sales === 0) {
+              profitMargin = null;
+              interestBurden = null;
+          } else {
+              profitMargin = netIncome / sales;
+              interestBurden = earningsBeforeTax / sales;
+          }
+          if (assets === 0) {
+              assetTurnoverRatio = null;
+          } else {
+              assetTurnoverRatio = sales / assets;
+          }
+          if (equity === 0) {
+              financialLeverageRatio = null;
+          } else {
+              financialLeverageRatio = assets / equity;
+          }
+          if (profitMargin !== null && assetTurnoverRatio !== null && financialLeverageRatio !== null) {
+              returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
+          } else {
+              returnOnEquity = null;
+          }
+          if (earningsBeforeTax === 0) {
+              taxBurden = null;
+          } else {
+              taxBurden = netIncome / earningsBeforeTax;
+          }
+          console.log('stuff:::::::', assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, '%%%%%%%%%%%')
         // 3. Retreive the industry standard metrics for the current user
         const sqlTextGetIndustry = `
         SELECT profit_margin AS ind_profit_margin,
@@ -356,13 +468,19 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
         const sqlTextInsertMonthlyMetrics = `
                 INSERT INTO monthly_metrics
                     (monthly_id, metrics_id, metric_value, variance_value)
-                    VALUES 
-                    ($1, 1, $2, ($8::DECIMAL - $2::DECIMAL)),      
-                    ($1, 2, $3, ($9::DECIMAL - $3::DECIMAL)),      
-                    ($1, 3, $4, ($4::DECIMAL - $10::DECIMAL)),     
-                    ($1, 4, $5, ($11::DECIMAL - $5::DECIMAL)),     
-                    ($1, 5, $6, ($6::DECIMAL - $12::DECIMAL)),    
-                    ($1, 6, $7, ($7::DECIMAL - $13::DECIMAL));    
+                    VALUES      
+                    ($1::INTEGER, 1, $2::DECIMAL,
+                       CASE WHEN $2 IS NOT NULL THEN ($8::DECIMAL - $2::DECIMAL) ELSE NULL END),      
+                    ($1::INTEGER, 2, $3::DECIMAL,
+                       CASE WHEN $3 IS NOT NULL THEN ($9::DECIMAL - $3::DECIMAL) ELSE NULL END),      
+                    ($1::INTEGER, 3, $4::DECIMAL, 
+                       CASE WHEN $4 IS NOT NULL THEN ($4::DECIMAL - $10::DECIMAL) ELSE NULL END),     
+                    ($1::INTEGER, 4, $5::DECIMAL, 
+                       CASE WHEN $5 IS NOT NULL THEN ($11::DECIMAL - $5::DECIMAL) ELSE NULL END),     
+                    ($1::INTEGER, 5, $6::DECIMAL, 
+                       CASE WHEN $6 IS NOT NULL THEN ($6::DECIMAL - $12::DECIMAL) ELSE NULL END),    
+                    ($1::INTEGER, 6, $7::DECIMAL, 
+                       CASE WHEN $7 IS NOT NULL THEN ($7::DECIMAL - $13::DECIMAL) ELSE NULL END);  
         `;
         await connection.query(sqlTextInsertMonthlyMetrics,
                                         [ monthlyInputId,
@@ -443,14 +561,14 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
    try {
-       const month = req.body.month;
-       const year = req.body.year;
-       const netIncome = req.body.netIncome;
-       const sales = req.body.sales;
-       const assets = req.body.assets;
-       const equity = req.body.equity;
-       const taxRate = req.body.taxRate;
-       const earningsBeforeTax = req.body.earningsBeforeTax;
+      const month = Number(req.body.month);
+      const year =  Number(req.body.year);
+      const netIncome =  Number(req.body.netIncome);
+      const sales =  Number(req.body.sales);
+      const assets =  Number(req.body.assets);
+      const equity =  Number(req.body.equity);
+      const taxRate =  Number(req.body.taxRate);
+      const earningsBeforeTax =  Number(req.body.earningsBeforeTax);
        const userId = req.user.id;
        // If inserts fail for either monthly_inputs or monthly_metrics,
        //   rollback all SQL changes
@@ -487,13 +605,35 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
         console.log('PUT of a single month\'s inputs in /api/financial_input/ successful, new id is:',returnedId.rows[0].id );
         const monthlyInputId = returnedId.rows[0].id;                       
         // 2. Compute the monthly financial metrics   
-        const profitMargin = netIncome / sales;
-        const assetTurnoverRatio = sales / assets;  //average assets????
-        const financialLeverageRatio = assets / equity;
-        const returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
-        const taxBurden = netIncome / earningsBeforeTax;
-        const interestBurden = earningsBeforeTax / sales;
-
+        let profitMargin, assetTurnoverRatio, financialLeverageRatio,
+        taxBurden, interestBurden, returnOnEquity;
+        if (sales === 0) {
+         profitMargin = null;
+         interestBurden = null;
+        } else {
+            profitMargin = netIncome / sales;
+            interestBurden = earningsBeforeTax / sales;
+        }
+        if (assets === 0) {
+            assetTurnoverRatio = null;
+        } else {
+            assetTurnoverRatio = sales / assets;
+        }
+        if (equity === 0) {
+            financialLeverageRatio = null;
+        } else {
+            financialLeverageRatio = assets / equity;
+        }
+        if (profitMargin !== null && assetTurnoverRatio !== null && financialLeverageRatio !== null) {
+            returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
+        } else {
+            returnOnEquity = null;
+        }
+        if (earningsBeforeTax === 0) {
+            taxBurden = null;
+        } else {
+            taxBurden = netIncome / earningsBeforeTax;
+        }
         // 3. Retreive the industry standard metrics for the current user
         const sqlTextGetIndustry = `
         SELECT profit_margin AS ind_profit_margin,
@@ -535,13 +675,13 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
                                       WHEN 6 THEN $7::DECIMAL
                                    END,
                     variance_value = CASE metrics_id
-                                        WHEN 1 THEN ($8::DECIMAL - $2::DECIMAL)
-                                        WHEN 2 THEN ($9::DECIMAL - $3::DECIMAL)
-                                        WHEN 3 THEN ($4::DECIMAL - $10::DECIMAL)
-                                        WHEN 4 THEN ($11::DECIMAL - $5::DECIMAL)
-                                        WHEN 5 THEN ($6::DECIMAL - $12::DECIMAL)
-                                        WHEN 6 THEN ($7::DECIMAL - $13::DECIMAL)
-                                     END
+                          WHEN 1 THEN (CASE WHEN $2 IS NOT NULL THEN ($8::DECIMAL - $2::DECIMAL) ELSE NULL END)
+                          WHEN 2 THEN (CASE WHEN $3 IS NOT NULL THEN ($9::DECIMAL - $3::DECIMAL) ELSE NULL END)
+                          WHEN 3 THEN (CASE WHEN $4 IS NOT NULL THEN ($4::DECIMAL - $10::DECIMAL) ELSE NULL END)
+                          WHEN 4 THEN (CASE WHEN $5 IS NOT NULL THEN ($11::DECIMAL - $5::DECIMAL) ELSE NULL END)
+                          WHEN 5 THEN (CASE WHEN $6 IS NOT NULL THEN ($12::DECIMAL - $6::DECIMAL) ELSE NULL END)
+                          WHEN 6 THEN (CASE WHEN $7 IS NOT NULL THEN ($13::DECIMAL - $7::DECIMAL) ELSE NULL END)
+                       END
                 WHERE monthly_id = $1
                   AND metrics_id IN (1, 2, 3, 4, 5, 6);
             `; 

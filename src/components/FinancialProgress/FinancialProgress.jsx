@@ -34,10 +34,6 @@ function FinancialProgress({company}) {
   const dispatch = useDispatch();
   const graphData = useSelector(store => store.financialMetrics.graphData);
 
-  // const [dateRange, setDateRange] = useState({ toMonth: today.getMonth() + 1,
-  //                                              fromMonth: today.getMonth() + 1,
-  //                                              toYear: today.getFullYear(),
-  //                                              fromYear: today.getFullYear() - 1 });
   // Set initial date range for 13 month span ending on today's month
   const [fromDateSelected, setFromDateSelected] = useState(dayjs().subtract(1, 'year')); 
   const [toDateSelected, setToDateSelected] = useState(dayjs()); 
@@ -57,13 +53,6 @@ function FinancialProgress({company}) {
                      metricId: metricSelected }
            })
   }, [dispatch, fromDateSelected, toDateSelected, metricSelected])
-
-// First MM/YYYY in selection is less than or equal to second MM/YYYY selection
-
-// useEffect(() => {
-//   console.log('graph data updated!')
-//   console.log(graphData);
-// },[graphData])
 
   const handleMetricChange = (event, newMetric) => {
     if (newMetric !== null) {

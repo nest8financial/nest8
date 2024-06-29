@@ -70,14 +70,18 @@ function FinancialSummary({month, year, company}){
                           key={index}>
                   {/* This is the color bar on the left of the box */}
                   <Box sx={{width: .04, height: 1, borderRadius: 1,
-                      backgroundColor: (variance.variance_value >= 0 ? 
-                        green[500] : red[700]) }}>
+                      backgroundColor: (variance.variance_value === null ? 'none' : (variance.variance_value >= 0 ? 
+                        green[500] : red[700]) ) }}>
                   </Box>
                   <Box sx={{display: 'flex', flexDirection: 'column', width: 1}}>
                     <Typography textAlign="left" sx={{pl: 2, pt: 2}}>{variance.metric_name}</Typography>
-                    <Item sx={{textAlign: 'left'}}>{variance.variance_value >= 0 ? 
+                    <Item sx={{textAlign: 'left'}}>
+                      {variance.variance_value === null ? 
+                      <Typography>N/A as some inputs are zero</Typography> : 
+                      (variance.variance_value >= 0 ? 
                           <CheckCircleIcon sx={{ color: green[500] }}/> : 
-                          <WarningIcon sx={{ color: red[700] }} />}  
+                          <WarningIcon sx={{ color: red[700] }} />)
+                      }  
                     </Item>
                   </Box>
                 </Grid>
@@ -92,4 +96,3 @@ function FinancialSummary({month, year, company}){
 }
 
 export default FinancialSummary;
-
