@@ -81,23 +81,25 @@ INSERT INTO product
 	(id, name, description, price, promo_price)
 	VALUES ( 1, 'One-Time Report', '', 50, 0),
 		   ( 2, 'Monthly', '/month', 25, 0),
-		   ( 3, 'One-Time Report', '/year', 240, 0);
+		   ( 3, 'Annual', '/year', 240, 0);
            
 INSERT INTO industry
     (name, 
-    profit_margin, 
-    asset_turnover_ratio,
+     profit_margin, 
+     asset_turnover_ratio,
      financial_leverage_ratio,
      return_on_equity,
      tax_burden,
      interest_burden)
-    VALUES( 'farmers', 0.2, 1.5, 2.0, 0.3, 0.2, 0.3);
+    VALUES( 'farmers- small size berry producer', 0.2, 1.5, 2.0, 0.3, 0.2, 0.3),
+    ( 'farmers- small size vegetable producer', 0.2, 1.5, 2.0, 0.3, 0.2, 0.3),
+    ( 'farmers- medium size hog producer', 0.2, 1.5, 2.0, 0.3, 0.2, 0.3);
 
     
 INSERT INTO metrics 
     (metric_name, metric_description, positive_text, negative_text)
     VALUES ('Profit Margin', 
-            'Profit margin is how well your business turns sales into profit.',
+            'Profit margin is how well your business turns sales into profit (higher is better).',
             'Maintain quality: Ensure that the quality of products or services remains
                 high to justify premium pricing and sustain profit margins. *Invest in innovation: Allocate resources towards research and development
                 to continually improve products or services, enhancing their value
@@ -106,7 +108,7 @@ INSERT INTO metrics
                 compromising quality. This could involve re-negotiating contracts with
                 suppliers, optimizing inventory management, or streamlining operations.'),
             ('Asset Turnover Ratio',
-             'The asset turnover ratio measures how efficiently a company uses its assets to generate sales',
+             'The asset turnover ratio measures how efficiently a company uses its assets to generate sales (higher is better).',
              'Optimize operations: Continuously review and streamline business
                 processes to maximize the efficiency of asset utilization. This could involve
                 improving inventory management, reducing idle time, or enhancing
@@ -118,7 +120,7 @@ INSERT INTO metrics
                 and increase sales volume. Explore opportunities to expand into new
                 markets or offer additional products/services.'),
             ('Financial Leverage Ratio',
-             'Financial leverage ratio is how much debt a company uses to finance its assets.',
+             'Financial leverage ratio is how much debt a company uses to finance its assets (lower is better).',
               'Strategic debt management: If <User> has a lower financial leverage ratio
                 compared to industry peers, evaluate the potential benefits of judiciously
                 increasing leverage to finance growth initiatives or invest in income-
@@ -131,7 +133,7 @@ INSERT INTO metrics
                 opportunities to raise equity capital through investors or partners. This can
                 improve the financial leverage ratio and reduce the reliance on debt.'),
             ('Return on Equity (ROE)',
-             'Return on Equity (ROE) shows how well a company uses the money invested by its shareholders to make a profit.',
+             'Return on Equity (ROE) shows how well a company uses the money invested by its shareholders to make a profit (higher is better).',
               'Capitalize on strengths: Identify the key drivers of superior ROE and double
                 down on strategies that have contributed to the business''s success,
                 whether it''s operational efficiency, strong brand loyalty, or innovative
@@ -142,7 +144,7 @@ INSERT INTO metrics
                 and optimizing asset utilization to boost overall profitability.  *Invest in in efficiency: Invest in technologies or processes that enhance
                 operational efficiency and productivity, leading to higher returns on equity.'),
             ('Tax Burden',
-             'Tax burden is the portion of a company''s profits that it must pay in taxes.',
+             'Tax burden is the portion of a company''s profits that it must pay in taxes (lower is better).',
              'Tax optimization: Continuously monitor changes in tax regulations and
                 work with tax advisors to identify opportunities for tax optimization, such
                 as leveraging tax credits or deductions available to businesses with higher
@@ -155,7 +157,7 @@ INSERT INTO metrics
                 efficient. Depending on the circumstances, restructuring the business entity
                 may help minimize tax liabilities.'),
             ('Interest Burden',
-             'Interest burden is the cost of borrowing money for a company.',
+             'Interest burden is the cost of borrowing money for a company (lower is better).',
              'Leverage favorable financing: If <User> has a lower interest burden
                 compared to industry peers, consider refinancing existing debt at more
                 favorable terms to further reduce interest expenses and improve
