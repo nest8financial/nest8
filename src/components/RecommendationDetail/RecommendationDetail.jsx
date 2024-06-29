@@ -40,7 +40,10 @@ function RecommendationDetail() {
                                  variant='h1' 
                                  fontSize={32}> Recommendation Action Items for {getMonthName(month)} {year} </Typography>
             <Typography variant="h7" 
-                        textAlign="center"
+                        style={{ paddingTop: '20px',
+                            display: 'flex',
+                            flexDirection: 'column', 
+                            alignItems: 'center'}} 
                         sx={{ px: 15, 
                               fontStyle: "italic", 
                               fontWeight: 'normal',
