@@ -80,7 +80,7 @@ function RecommendationActionItem({ metric, month, year, company }) {
                 type: "UPDATE_METRIC_NOTES",
                 payload: {
                     notes: newNotes,
-                    metricId: metric.id,
+                    metricId: metric.metrics_id,
                     month: month,
                     year: year,
                 },
