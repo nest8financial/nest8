@@ -118,7 +118,7 @@ useEffect(() => {
 const handleAmountChange = (event) => {
    event.preventDefault();
    const { name, value } = event.target;
-   const decimalRegex = /^\d*\.?\d{0,2}$/;
+   const decimalRegex = /^-?\d*\.?\d{0,2}$/;
    // validate amount field
    //   if valid data: set the amount input & clear error for field
    if (decimalRegex.test(value)) {
@@ -137,18 +137,18 @@ const handleAmountChange = (event) => {
 *      - if no problems with input, set the tax rate and clear any errors
 *      - if problems with input, set error for tax rate
 */
-const handleTaxRateChange = (event) => {
-   event.preventDefault();
-   const taxValue = event.target.value;
-   const decimalUnlimitedRegex = /^\d*\.?\d{0,}$/;
-   // if valid percentage (decimal value, non-negative)
-   if (decimalUnlimitedRegex.test(taxValue)) {
-       setTaxRateInput(taxValue);
-       setTaxRateError(false);
-   } else {
-       setTaxRateError(true);
-   }
-}
+// const handleTaxRateChange = (event) => {
+//    event.preventDefault();
+//    const taxValue = event.target.value;
+//    const decimalUnlimitedRegex = /^\d*\.?\d{0,}$/;
+//    // if valid percentage (decimal value, non-negative)
+//    if (decimalUnlimitedRegex.test(taxValue)) {
+//        setTaxRateInput(taxValue);
+//        setTaxRateError(false);
+//    } else {
+//        setTaxRateError(true);
+//    }
+// }
 
 /**
 * Submit the Financial Data for the current month to the database
@@ -162,7 +162,7 @@ const handleEditSaveButton= (event) => {
    // else, if screen is not in readOnly mode, button pressed is save
    //      - Save button pressed: save or update financial inputs
    } else {
-    const decimalRegex = /^\d*\.?\d{0,2}$/;
+    const decimalRegex = /^-?\d*\.?\d{0,2}$/;
 
     let hasError = false;
         const updatedErrors = { ...amountErrors };
@@ -295,7 +295,7 @@ return (
                 helperText={
                   amountErrors.sales
                     ? "Please enter a valid decimal value with up to two decimal places"
-                    : "Your Sales is the total amount of money your business earned from selling your products or services before any expenses."
+                    : "Sales is the total amount of money your business earned from selling your products or services before any expenses."
                 }
               />
             </Paper>
@@ -317,7 +317,7 @@ return (
                 helperText={
                   amountErrors.assets
                     ? "Please enter a valid decimal value with up to two decimal places"
-                    : "Your Assets is the average value of everything your business owns over a month. Assets can include cash, inventory, equipment, property, and any other valuable items."
+                    : "Assets is the average value of everything your business owns over a month. Assets can include cash, inventory, equipment, property, and any other valuable items."
                 }
               />
             </Paper>
@@ -376,7 +376,7 @@ return (
                 helperText={
                   amountErrors.earningsBeforeTax
                     ? "Please enter a valid decimal value with up to two decimal places"
-                    : "Your Earnings Before Tax is the amount of money your business has left after subtracting all its operating expenses, interest, and other costs, but before paying taxes."
+                    : "Earnings Before Tax is the amount of money your business has left after subtracting all its operating expenses, interest, and other costs, but before paying taxes."
                 }
               />
             </Paper>

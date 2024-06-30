@@ -57,15 +57,13 @@ const getAPIRequestData = async (user_id, month, year) => {
         Use language that the user would understand, based on what industry they work in. For example, use more straightfoward, simple language or analogies for a farmer. For concepts that cannot be simplified, break them down and explain each part. Provide 2 recommendations for each metric and base these recommendations off of the two recommendations provided within the table.
         For your response, respond using JSON format. For each metric, respond with only one description that contains all recommendations. The content response should consist of the metric name and the simplified recommendation text as the description. 
         Format the inside message.content into 6 separate objects, each with one key value pair in the pattern metric, description.  
-        The final structure of the objects should look like this 
-        inside message.content: 
-
-        [{"profit_margin": "description"},
-        {"asset_turnover_ration": "description"},
-        {"financial_leverage_ratio": "description"},
-        {"return_on_equity": "description"}, 
-        {"tax_burden": "description"},
-        {"interest_burden": "description}]
+        The final structure of the objects should look like this:
+        {recommendations: "profit_margin": "description",
+        "asset_turnover_ration": "description,
+        "financial_leverage_ratio": "description",
+        "return_on_equity": "description", 
+        "tax_burden": "description",
+        "interest_burden": "description}
 
         Here are the recommendations I would like you to use: 
         Metric ${recommendation.rows[0].metric_id}: ${recommendation.rows[0].metric_name} ${recommendation.rows[0].recommendation_text}
@@ -111,8 +109,9 @@ const getAPIRequestData = async (user_id, month, year) => {
  * Helper function to update DB with OpenAI recommendations
  */
 
-const updateRecommendations = async (parsedData, userId, month, year) => {
-    console.log('profit margin?', parsedData.profit_margin);
+const updateRecommendations = async (recData, userId, month, year) => {
+    console.log(recData);
+    console.log('profit margin?', recData.profit_margin);
     console.log('month?', month);
     console.log('user id?', userId);
 
@@ -138,18 +137,15 @@ const updateRecommendations = async (parsedData, userId, month, year) => {
         AND monthly_inputs.year = $9;
       `
       const response = 
-        await connection.query(sqlText, [parsedData.profit_margin,
-                                        parsedData.asset_turnover_ratio,
-                                        parsedData.financial_leverage_ratio,
-                                        parsedData.return_on_equity, 
-                                        parsedData.tax_burden,
-                                        parsedData.interest_burden,
-                                        userId,
-                                        month,
-                                        year                            
-                                        ]);
-
-                                    
+        await connection.query(sqlText, [recData.profit_margin,
+                                         recData.asset_turnover_ratio,
+                                         recData.financial_leverage_ratio,
+                                         recData.return_on_equity, 
+                                         recData.tax_burden,
+                                         recData.interest_burden,
+                                         userId,
+                                         month,
+                                         year ]);                
         connection.release();
         return true;
       } catch(dbError) {
@@ -473,17 +469,17 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
                     (monthly_id, metrics_id, metric_value, variance_value)
                     VALUES      
                     ($1::INTEGER, 1, $2::DECIMAL,
-                       CASE WHEN $2 IS NOT NULL THEN ($8::DECIMAL - $2::DECIMAL) ELSE NULL END),      
+                       CASE WHEN $2 IS NOT NULL THEN ($2::DECIMAL - $8::DECIMAL) ELSE NULL END),      
                     ($1::INTEGER, 2, $3::DECIMAL,
-                       CASE WHEN $3 IS NOT NULL THEN ($9::DECIMAL - $3::DECIMAL) ELSE NULL END),      
+                       CASE WHEN $3 IS NOT NULL THEN ($3::DECIMAL - $9::DECIMAL) ELSE NULL END),      
                     ($1::INTEGER, 3, $4::DECIMAL, 
-                       CASE WHEN $4 IS NOT NULL THEN ($4::DECIMAL - $10::DECIMAL) ELSE NULL END),     
+                       CASE WHEN $4 IS NOT NULL THEN ($10::DECIMAL - $4::DECIMAL) ELSE NULL END),     
                     ($1::INTEGER, 4, $5::DECIMAL, 
-                       CASE WHEN $5 IS NOT NULL THEN ($11::DECIMAL - $5::DECIMAL) ELSE NULL END),     
+                       CASE WHEN $5 IS NOT NULL THEN ($5::DECIMAL - $11::DECIMAL) ELSE NULL END),     
                     ($1::INTEGER, 5, $6::DECIMAL, 
-                       CASE WHEN $6 IS NOT NULL THEN ($6::DECIMAL - $12::DECIMAL) ELSE NULL END),    
+                       CASE WHEN $6 IS NOT NULL THEN ($12::DECIMAL - $6::DECIMAL) ELSE NULL END),    
                     ($1::INTEGER, 6, $7::DECIMAL, 
-                       CASE WHEN $7 IS NOT NULL THEN ($7::DECIMAL - $13::DECIMAL) ELSE NULL END);  
+                       CASE WHEN $7 IS NOT NULL THEN ($13::DECIMAL - $7::DECIMAL) ELSE NULL END);  
         `;
         await connection.query(sqlTextInsertMonthlyMetrics,
                                         [ monthlyInputId,
@@ -525,18 +521,19 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
       // Now parse the cleaned JSON string
       const parsedData = JSON.parse(aiReccomendations);
       console.log('parsed data is!', parsedData);
-
-      const updateDB = await updateRecommendations(parsedData, userId, month, year) // function to update the database with the response from OpenAI 
-
-        if (updateDB) {
-            // 6. Return created (201) status if successful
-            connection.release();
-            res.sendStatus(201);
-        } else {
-            connection.release();
-            throw new Error('Error updating recommendations in DB')
+      if (parsedData) {
+        const updateDB = await updateRecommendations(parsedData.recommendations, userId, month, year) // function to update the database with the response from OpenAI 
+            if (updateDB) {
+                // 6. Return created (201) status if successful
+                connection.release();
+                res.sendStatus(201);
+            } else {
+                connection.release();
+                throw new Error('Error updating recommendations in DB')
+            }
+        }  else {
+            throw new Error('Error no recommendations received from AI.');
         }
-  
    } catch (error) {
        console.log('Error in POST of single month\'s inputs in /api/financial_inputs/', error);
        connection.query('ROLLBACK;');
@@ -678,10 +675,10 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
                                       WHEN 6 THEN $7::DECIMAL
                                    END,
                     variance_value = CASE metrics_id
-                          WHEN 1 THEN (CASE WHEN $2 IS NOT NULL THEN ($8::DECIMAL - $2::DECIMAL) ELSE NULL END)
-                          WHEN 2 THEN (CASE WHEN $3 IS NOT NULL THEN ($9::DECIMAL - $3::DECIMAL) ELSE NULL END)
-                          WHEN 3 THEN (CASE WHEN $4 IS NOT NULL THEN ($4::DECIMAL - $10::DECIMAL) ELSE NULL END)
-                          WHEN 4 THEN (CASE WHEN $5 IS NOT NULL THEN ($11::DECIMAL - $5::DECIMAL) ELSE NULL END)
+                          WHEN 1 THEN (CASE WHEN $2 IS NOT NULL THEN ($2::DECIMAL - $8::DECIMAL) ELSE NULL END)
+                          WHEN 2 THEN (CASE WHEN $3 IS NOT NULL THEN ($3::DECIMAL - $9::DECIMAL) ELSE NULL END)
+                          WHEN 3 THEN (CASE WHEN $4 IS NOT NULL THEN ($10::DECIMAL - $4::DECIMAL) ELSE NULL END)
+                          WHEN 4 THEN (CASE WHEN $5 IS NOT NULL THEN ($5::DECIMAL - $11::DECIMAL) ELSE NULL END)
                           WHEN 5 THEN (CASE WHEN $6 IS NOT NULL THEN ($12::DECIMAL - $6::DECIMAL) ELSE NULL END)
                           WHEN 6 THEN (CASE WHEN $7 IS NOT NULL THEN ($13::DECIMAL - $7::DECIMAL) ELSE NULL END)
                        END
@@ -728,8 +725,7 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
       // Now parse the cleaned JSON string
       const parsedData = JSON.parse(aiReccomendations);
       console.log('parsed data is!', parsedData);
-
-      const updateDB = await updateRecommendations(parsedData, userId, month, year) // function to update the database with the response from OpenAI 
+      const updateDB = await updateRecommendations(parsedData.recommendations, userId, month, year) // function to update the database with the response from OpenAI 
 
         if (updateDB) {
             // 6. Return created (201) status if successful
