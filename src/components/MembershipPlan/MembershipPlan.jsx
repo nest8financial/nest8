@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { Container, Card } from '@mui/material';
+import { Container, Card, Paper } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { useSelector, useDispatch } from 'react-redux';
 import ConfirmPopUp from '../ConfirmPopUp/ConfirmPopUp';
@@ -33,6 +33,8 @@ function MembershipPlan() {
 
     return (
         <Container style={{ paddingTop: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
+            <Paper elevation={10} sx={{ p: 5}}>
+            <Typography variant="h4" textAlign="center" sx={{ mb: 2 }}>Nest 8 Products</Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1, p: 2 }}>
                 <Box sx={{ display: 'flex',
                             flexDirection: 'row', 
@@ -68,16 +70,19 @@ function MembershipPlan() {
             </Box>
             <Box sx={{ mt: 4 }}>
                 <FormControlLabel
+                    sx={{ mx: 5 }}
                     control={<Checkbox checked readOnly />}
                     label="All-in-one tracker: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor"
                 />
             </Box>
             <Box sx={{ mt: 2 }}>
                 <FormControlLabel
+                    sx={{ mx: 5 }}
                     control={<Checkbox checked readOnly />}
                     label="All-in-one tracker: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor"
                 />
             </Box>
+            </Paper>
         </Container>
     );
 }
