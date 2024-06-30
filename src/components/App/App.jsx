@@ -20,10 +20,11 @@ import "./App.css";
 import RecommendationDetail from "../RecommendationDetail/RecommendationDetail";
 import InputHeader from "../InputHeader/InputHeader";
 import MyData from "../MyData/MyData";
+import UseCasePage from "../UseCasePage";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
-import FinancialsPage from "../FinancialsPage/FinancialsPage"
+import FinancialsPage from "../FinancialsPage/FinancialsPage";
 import MyRecommendationsAndActions from "../MyRecomendationsAndActions/MyReports/MyRecomendationsAndActions"
 import Profile from "../Profile/Profile";
 import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
@@ -34,7 +35,7 @@ import FAQPage from "../StaticPages/FAQPage";
 import ContactUsPage from "../StaticPages/ContactUsPage";
 import OurStoryPage from "../StaticPages/OurStoryPage";
 import MissionPage from "../StaticPages/Mission";
-import UseCasePage from '../StaticPages/UseCasePage';
+
 
 
 function App() {
