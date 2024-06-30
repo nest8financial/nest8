@@ -155,7 +155,7 @@ function HomePage() {
           <Typography variant="h4" sx={{mb: 3}} gutterBottom>
             Quick Links
           </Typography>
-          <Grid container spacing={1} >
+          <Grid container spacing={.1} >
             <Grid item xs={12}>
               <Typography variant="h6" >Nest8 Software</Typography>
             </Grid>
@@ -206,7 +206,7 @@ function HomePage() {
 
 
           <Grid item style={{ marginTop: '70px', marginBottom: '1px'}}>
-              <Typography variant="h6" >@ 2024 Nest8. All rights reserved. 'Nest8' is a trademark of Nest8 LLC</Typography>
+              <Typography variant="h7" >@ 2024 Nest8. All rights reserved. 'Nest8' is a trademark of Nest8 LLC</Typography>
             </Grid>
          
           <Grid container spacing={2} justifyContent="center" >
@@ -240,7 +240,7 @@ function HomePage() {
           
           <Grid container spacing={2} justifyContent="center">
             <Grid item>
-              <Button color="primary" onClick={() => handleClick('/legal')}>Legal</Button>
+              <Button size="large" color="primary" onClick={() => handleClick('/legal')}>Legal</Button>
             </Grid>
             <Grid item>
               <Typography variant="h6" textAlign='center'>|</Typography>
