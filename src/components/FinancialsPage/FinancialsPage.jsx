@@ -5,22 +5,34 @@ import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { useState } from "react";
-import { experimentalStyled as styled } from '@mui/material/styles';
 import FinancialProgress from "../FinancialProgress/FinancialProgress";
 import FinancialRecommendation from "../FinancialRecommendation/FinancialRecommendation";
 import FinancialSummary from "../FinancialSummary/FinancialSummary";
 import { DatePicker } from '@mui/x-date-pickers'
 
 
-
 function FinancialsPage() {
 
+    const dispatch = useDispatch();
     const [dateSelected, setDateSelected] = useState(dayjs()); 
     const userData = useSelector(store => store.user);
-
+    const latestDate = useSelector(store => store.financialInputs.latestMonth);
 
     useEffect(() => {
+        dispatch({ type: 'GET_LATEST_MONTH' })
     }, [])
+
+    useEffect(() => {
+        if (latestDate) {
+            // convert to a date format that dayjs understands
+            const formattedMonth = String(latestDate.month).padStart(2, '0');
+            const dateString = `${latestDate.year}-${formattedMonth}-01`;
+            const lastestDateFormatted = dayjs(dateString);
+            setDateSelected(lastestDateFormatted);
+        } else {
+            setDateSelected(dayjs());
+        }
+    },[latestDate])
 
 
     return(

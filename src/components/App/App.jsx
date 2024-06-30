@@ -24,7 +24,7 @@ import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
 import FinancialsPage from "../FinancialsPage/FinancialsPage"
-import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyReportsRecomendations";
+import MyRecommendationsAndActions from "../MyRecomendationsAndActions/MyReports/MyRecomendationsAndActions"
 import Profile from "../Profile/Profile";
 import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
 import OrderConfirmation from "../OrderConfirmation/OrderConfirmation";
@@ -149,8 +149,8 @@ function App() {
               <FinancialsPage />
             </ProtectedRoute>
 
-            <ProtectedRoute exact path="/my_reports_recommendations">
-              <MyReportsRecommendations />
+            <ProtectedRoute exact path="/my_recommendations_action_items">
+              <MyRecommendationsAndActions />
             </ProtectedRoute>
 
             <ProtectedRoute exact path="/my_profile">

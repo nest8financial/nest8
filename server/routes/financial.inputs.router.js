@@ -4,7 +4,10 @@ const router = express.Router();
 const axios = require('axios')
 require('dotenv').config()
 const { rejectUnauthenticated } = require('../modules/authentication-middleware');
-const { convertToDatesWeHave, generateDatesWeShouldHave, getMissingMonths } = require('../modules/helper-functions-missing-inputs'); 
+const { convertToDatesWeHave,
+        generateDatesWeShouldHave, 
+        getMissingMonths,
+        getMonthName } = require('../modules/helper-functions-missing-inputs'); 
 const { parse } = require('dotenv');
 
 // API Keys 
@@ -27,23 +30,23 @@ const getAPIRequestData = async (user_id, month, year) => {
         const sqlText = // GET request to the server to grab the data we will need to send to the AI API in our prompt 
         `
         SELECT monthly_metrics.id, metrics.id AS metric_id,
-        metrics.metric_name, industry.name AS industry_name,
-	        CASE WHEN monthly_metrics.variance_value >= 0 THEN positive_text
-	        		WHEN monthly_metrics.variance_value < 0 THEN negative_text
-	        END AS recommendation_text
-      FROM monthly_metrics
-        JOIN metrics
-          ON metrics.id = monthly_metrics.metrics_id
-        JOIN monthly_inputs
-          ON monthly_metrics.monthly_id = monthly_inputs.id
-        JOIN "user"
-        	ON monthly_inputs.user_id = "user".id
-        JOIN industry
-        	ON industry.id = "user".industry_id
-        WHERE user_id = $1
-          AND month = $2
-          AND year = $3
-        ORDER BY year, month, metrics_id;
+            metrics.metric_name, industry.name AS industry_name,
+                CASE WHEN monthly_metrics.variance_value >= 0 THEN positive_text
+                        WHEN monthly_metrics.variance_value < 0 THEN negative_text
+                END AS recommendation_text
+        FROM monthly_metrics
+            JOIN metrics
+            ON metrics.id = monthly_metrics.metrics_id
+            JOIN monthly_inputs
+            ON monthly_metrics.monthly_id = monthly_inputs.id
+            JOIN "user"
+                ON monthly_inputs.user_id = "user".id
+            JOIN industry
+                ON industry.id = "user".industry_id
+            WHERE user_id = $1
+            AND month = $2
+            AND year = $3
+            ORDER BY year, month, metrics_id;
         `
         const recommendation = await connection.query(sqlText, [user_id, month, year]); 
 
@@ -53,13 +56,14 @@ const getAPIRequestData = async (user_id, month, year) => {
         `Look through the following table and provide simplified recommendations based on the recommendations provided, taking into account the corresponding industry and adjusting the recommendation based on if the text is suggesting ways the user can improve or if the user is already meeting industry standards.  
         Use language that the user would understand, based on what industry they work in. For example, use more straightfoward, simple language or analogies for a farmer. For concepts that cannot be simplified, break them down and explain each part. Provide 2 recommendations for each metric and base these recommendations off of the two recommendations provided within the table.
         For your response, respond using JSON format. For each metric, respond with only one description that contains all recommendations. The content response should consist of the metric name and the simplified recommendation text as the description. 
-        Content: 
-        "profit_margin": "description",
-        "asset_turnover_ration": "description",
+        Format the inside message.content into 6 separate objects, each with one key value pair in the pattern metric, description.  
+        The final structure of the objects should look like this:
+        {recommendations: "profit_margin": "description",
+        "asset_turnover_ration": "description,
         "financial_leverage_ratio": "description",
         "return_on_equity": "description", 
         "tax_burden": "description",
-        "interest_burden": "description
+        "interest_burden": "description}
 
         Here are the recommendations I would like you to use: 
         Metric ${recommendation.rows[0].metric_id}: ${recommendation.rows[0].metric_name} ${recommendation.rows[0].recommendation_text}
@@ -105,8 +109,9 @@ const getAPIRequestData = async (user_id, month, year) => {
  * Helper function to update DB with OpenAI recommendations
  */
 
-const updateRecommendations = async (parsedData, userId, month, year) => {
-    console.log('profit margin?', parsedData.profit_margin);
+const updateRecommendations = async (recData, userId, month, year) => {
+    console.log(recData);
+    console.log('profit margin?', recData.profit_margin);
     console.log('month?', month);
     console.log('user id?', userId);
 
@@ -132,18 +137,15 @@ const updateRecommendations = async (parsedData, userId, month, year) => {
         AND monthly_inputs.year = $9;
       `
       const response = 
-        await connection.query(sqlText, [parsedData.profit_margin,
-                                        parsedData.asset_turnover_ratio,
-                                        parsedData.financial_leverage_ratio,
-                                        parsedData.return_on_equity, 
-                                        parsedData.tax_burden,
-                                        parsedData.interest_burden,
-                                        userId,
-                                        month,
-                                        year                            
-                                        ]);
-
-                                    
+        await connection.query(sqlText, [recData.profit_margin,
+                                         recData.asset_turnover_ratio,
+                                         recData.financial_leverage_ratio,
+                                         recData.return_on_equity, 
+                                         recData.tax_burden,
+                                         recData.interest_burden,
+                                         userId,
+                                         month,
+                                         year ]);                
         connection.release();
         return true;
       } catch(dbError) {
@@ -157,14 +159,44 @@ const updateRecommendations = async (parsedData, userId, month, year) => {
 
 /**
  * GET all MISSING monthly inputs for a user
+ *     - List of dates is then converted to an array of dates
+ *      that currently exist for a user
+ *     - Pull also the earlist date in file and the date joined,
+ *         then generate a second array of dates:
+ *     - This second list shows the users joined date or 
+ *       the earliest input date in order to look for
+ *         missing input data
  */
 
 router.get('/missing', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
+
+    
     try {
         console.log(req.user);
         const userId = req.user.id;
+
+        // Get the earliest date available for a user
+        const sqlTextGetEarliestDate = `
+            SELECT DISTINCT year, month 
+                FROM monthly_inputs
+                JOIN monthly_metrics
+                    ON monthly_metrics.monthly_id = monthly_inputs.id
+                WHERE monthly_inputs.user_id = $1
+                ORDER BY year, month
+                LIMIT 1;
+        `;
+        const dbResponse2 = await connection.query(sqlTextGetEarliestDate, [userId]);
+        let earliestDate = dbResponse2.rows[0];
+        console.log('earliest date', earliestDate);
+          // Pad with leading zero if necessary
+         if (earliestDate.month.length === 1) {
+             earliestDate.month = '0' + earliestDate.month;
+         }
+         console.log('earliest month padded:', earliestDate.month);
+
+        // Get all Input dates (month/year) for a user and joined date for user
         const sqlTextGetInputs = `
         SELECT 
             "monthly_inputs"."month", 
@@ -176,21 +208,40 @@ router.get('/missing', rejectUnauthenticated, async (req, res) => {
                 ON "user"."id" = "monthly_inputs"."user_id"
                 WHERE user_id = $1
                 ORDER BY year, month;
-                `;
-            const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
-            let arrayOfDatesWeHave = convertToDatesWeHave(dbResponse.rows) // uses helper function to loop through the input dates in the database and creates an array of dates we have 
-           
-            const joinDate = dbResponse.rows[0].date_joined
+        `;
+        const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
+
+        // uses helper function to loop through the input dates in the database and creates an array of dates we have 
+        let arrayOfDatesWeHave = convertToDatesWeHave(dbResponse.rows) 
+        const joinDate = dbResponse.rows[0].date_joined;
+
+        // format earliestDate and JoinedDate to Date objects
+        //     in order to compare them
+        const dateObjEarliestDate = 
+            new Date(earliestDate.year, earliestDate.month - 1, 1);
+        const DateObjJoinedDate = new Date(joinDate);
+
+        // use the oldest date (either the earliest entry in the inputs file
+        //      or the joined date) to calculate the missing months
+        let formattedDate;
+        if (dateObjEarliestDate < DateObjJoinedDate) {
+            formattedDate = [earliestDate.year, earliestDate.month];
+        } else {
             const formattedMonth = joinDate.getMonth() + 1
             const formattedYear = joinDate.getFullYear()
-            const formattedJoinDate = [formattedYear, formattedMonth] // formats join date to [Number('YYYY'), Number('MM')] format
-         
-            let arrayOfDatesWeShouldHave = generateDatesWeShouldHave(formattedJoinDate) // uses helper function to generate an array of arrays with dates from the join date to current date
-      
-            let missingMonthsResponse = getMissingMonths(arrayOfDatesWeShouldHave, arrayOfDatesWeHave)
-            console.log('these are the missing months', missingMonthsResponse);
-            connection.release();
-            res.send(missingMonthsResponse);
+            formattedDate = [formattedYear, formattedMonth]
+        }
+
+        // formats join date to [Number('YYYY'), Number('MM')] format
+
+        
+        // uses helper function to generate an array of arrays with dates from the join date to current date
+        let arrayOfDatesWeShouldHave = generateDatesWeShouldHave(formattedDate) 
+    
+        let missingMonthsResponse = getMissingMonths(arrayOfDatesWeShouldHave, arrayOfDatesWeHave)
+        console.log('these are the missing months', missingMonthsResponse);
+        connection.release();
+        res.send(missingMonthsResponse);
     } catch (error) {
         console.log('Error in get of missing monthly inputs in /api/financial_inputs/missing', error);
         connection.release();
@@ -198,6 +249,40 @@ router.get('/missing', rejectUnauthenticated, async (req, res) => {
     }
 })
 
+/**
+ * GET all month/years with incomplete recommendations for a user
+ */
+router.get('/incomplete_recs', rejectUnauthenticated, async (req, res) => {
+    let connection;
+    connection = await pool.connect();
+    try {
+        const userId = req.user.id;
+        const sqlTextGetInputs = `
+            SELECT DISTINCT  month, year
+                FROM monthly_inputs
+                JOIN monthly_metrics
+                    ON monthly_metrics.monthly_id = monthly_inputs.id
+                WHERE monthly_inputs.user_id = $1
+                    AND monthly_metrics.completed_date IS NULL
+                ORDER BY year, month;
+            `;
+            const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
+            console.log('Get of monthly inputs in /api/financial_inputs/incomplete_recs succesful:', dbResponse.rows )
+            let incompleteRecs = [];
+            dbResponse.rows.forEach( incompleteDate => {
+                incompleteRecs.push([ incompleteDate.year,
+                                      getMonthName(incompleteDate.month),
+                                      incompleteDate.month ]);
+            })
+            console.log('incomplete recs array', incompleteRecs);
+            connection.release();
+            res.send(incompleteRecs);
+    } catch (error) {
+        console.log('Error in get of months with incomplete recommendations in /api/financial_inputs/incomplete_recs', error);
+        connection.release();
+        res.sendStatus(500);
+    }
+})
 /**
  * GET all monthly inputs for a user
  */
@@ -275,14 +360,14 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
    try {
-       const month = req.body.month;
-       const year = req.body.year;
-       const netIncome = req.body.netIncome;
-       const sales = req.body.sales;
-       const assets = req.body.assets;
-       const equity = req.body.equity;
-       const taxRate = req.body.taxRate;
-       const earningsBeforeTax = req.body.earningsBeforeTax;
+       const month = Number(req.body.month);
+       const year =  Number(req.body.year);
+       const netIncome =  Number(req.body.netIncome);
+       const sales =  Number(req.body.sales);
+       const assets =  Number(req.body.assets);
+       const equity =  Number(req.body.equity);
+       const taxRate =  Number(req.body.taxRate);
+       const earningsBeforeTax =  Number(req.body.earningsBeforeTax);
        userId = req.user.id;
        // If inserts fail for either monthly_inputs or monthly_metrics,
        //   rollback all SQL changes
@@ -317,13 +402,39 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
         console.log('POST of a single month\'s inputs in /api/financial_input/ successful, new id is:',returnedIdResponse.rows[0].id );
         const monthlyInputId = returnedIdResponse.rows[0].id;                       
         // 2. Compute the monthly financial metrics   
-        const profitMargin = netIncome / sales;
-        const assetTurnoverRatio = sales / assets;  //average assets????
-        const financialLeverageRatio = assets / equity;
-        const returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
-        const taxBurden = netIncome / earningsBeforeTax;
-        const interestBurden = earningsBeforeTax / sales;
-
+        //      - If key inputs are zero, resulting metrics are set to null
+        //          as metrics are unable to be computed
+        console.log('inputs:', sales, assets, equity, taxRate, earningsBeforeTax,'%%%%%%%%%')
+        let profitMargin, assetTurnoverRatio, financialLeverageRatio,
+             taxBurden, interestBurden, returnOnEquity;
+             if (sales === 0) {
+              profitMargin = null;
+              interestBurden = null;
+          } else {
+              profitMargin = netIncome / sales;
+              interestBurden = earningsBeforeTax / sales;
+          }
+          if (assets === 0) {
+              assetTurnoverRatio = null;
+          } else {
+              assetTurnoverRatio = sales / assets;
+          }
+          if (equity === 0) {
+              financialLeverageRatio = null;
+          } else {
+              financialLeverageRatio = assets / equity;
+          }
+          if (profitMargin !== null && assetTurnoverRatio !== null && financialLeverageRatio !== null) {
+              returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
+          } else {
+              returnOnEquity = null;
+          }
+          if (earningsBeforeTax === 0) {
+              taxBurden = null;
+          } else {
+              taxBurden = netIncome / earningsBeforeTax;
+          }
+          console.log('stuff:::::::', assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, '%%%%%%%%%%%')
         // 3. Retreive the industry standard metrics for the current user
         const sqlTextGetIndustry = `
         SELECT profit_margin AS ind_profit_margin,
@@ -356,13 +467,19 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
         const sqlTextInsertMonthlyMetrics = `
                 INSERT INTO monthly_metrics
                     (monthly_id, metrics_id, metric_value, variance_value)
-                    VALUES 
-                    ($1, 1, $2, ($8::DECIMAL - $2::DECIMAL)),      
-                    ($1, 2, $3, ($9::DECIMAL - $3::DECIMAL)),      
-                    ($1, 3, $4, ($4::DECIMAL - $10::DECIMAL)),     
-                    ($1, 4, $5, ($11::DECIMAL - $5::DECIMAL)),     
-                    ($1, 5, $6, ($6::DECIMAL - $12::DECIMAL)),    
-                    ($1, 6, $7, ($7::DECIMAL - $13::DECIMAL));    
+                    VALUES      
+                    ($1::INTEGER, 1, $2::DECIMAL,
+                       CASE WHEN $2 IS NOT NULL THEN ($2::DECIMAL - $8::DECIMAL) ELSE NULL END),      
+                    ($1::INTEGER, 2, $3::DECIMAL,
+                       CASE WHEN $3 IS NOT NULL THEN ($3::DECIMAL - $9::DECIMAL) ELSE NULL END),      
+                    ($1::INTEGER, 3, $4::DECIMAL, 
+                       CASE WHEN $4 IS NOT NULL THEN ($10::DECIMAL - $4::DECIMAL) ELSE NULL END),     
+                    ($1::INTEGER, 4, $5::DECIMAL, 
+                       CASE WHEN $5 IS NOT NULL THEN ($5::DECIMAL - $11::DECIMAL) ELSE NULL END),     
+                    ($1::INTEGER, 5, $6::DECIMAL, 
+                       CASE WHEN $6 IS NOT NULL THEN ($12::DECIMAL - $6::DECIMAL) ELSE NULL END),    
+                    ($1::INTEGER, 6, $7::DECIMAL, 
+                       CASE WHEN $7 IS NOT NULL THEN ($13::DECIMAL - $7::DECIMAL) ELSE NULL END);  
         `;
         await connection.query(sqlTextInsertMonthlyMetrics,
                                         [ monthlyInputId,
@@ -404,18 +521,19 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
       // Now parse the cleaned JSON string
       const parsedData = JSON.parse(aiReccomendations);
       console.log('parsed data is!', parsedData);
-
-      const updateDB = await updateRecommendations(parsedData, userId, month, year) // function to update the database with the response from OpenAI 
-
-        if (updateDB) {
-            // 6. Return created (201) status if successful
-            connection.release();
-            res.sendStatus(201);
-        } else {
-            connection.release();
-            throw new Error('Error updating recommendations in DB')
+      if (parsedData) {
+        const updateDB = await updateRecommendations(parsedData.recommendations, userId, month, year) // function to update the database with the response from OpenAI 
+            if (updateDB) {
+                // 6. Return created (201) status if successful
+                connection.release();
+                res.sendStatus(201);
+            } else {
+                connection.release();
+                throw new Error('Error updating recommendations in DB')
+            }
+        }  else {
+            throw new Error('Error no recommendations received from AI.');
         }
-  
    } catch (error) {
        console.log('Error in POST of single month\'s inputs in /api/financial_inputs/', error);
        connection.query('ROLLBACK;');
@@ -443,14 +561,14 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
    try {
-       const month = req.body.month;
-       const year = req.body.year;
-       const netIncome = req.body.netIncome;
-       const sales = req.body.sales;
-       const assets = req.body.assets;
-       const equity = req.body.equity;
-       const taxRate = req.body.taxRate;
-       const earningsBeforeTax = req.body.earningsBeforeTax;
+      const month = Number(req.body.month);
+      const year =  Number(req.body.year);
+      const netIncome =  Number(req.body.netIncome);
+      const sales =  Number(req.body.sales);
+      const assets =  Number(req.body.assets);
+      const equity =  Number(req.body.equity);
+      const taxRate =  Number(req.body.taxRate);
+      const earningsBeforeTax =  Number(req.body.earningsBeforeTax);
        const userId = req.user.id;
        // If inserts fail for either monthly_inputs or monthly_metrics,
        //   rollback all SQL changes
@@ -487,13 +605,35 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
         console.log('PUT of a single month\'s inputs in /api/financial_input/ successful, new id is:',returnedId.rows[0].id );
         const monthlyInputId = returnedId.rows[0].id;                       
         // 2. Compute the monthly financial metrics   
-        const profitMargin = netIncome / sales;
-        const assetTurnoverRatio = sales / assets;  //average assets????
-        const financialLeverageRatio = assets / equity;
-        const returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
-        const taxBurden = netIncome / earningsBeforeTax;
-        const interestBurden = earningsBeforeTax / sales;
-
+        let profitMargin, assetTurnoverRatio, financialLeverageRatio,
+        taxBurden, interestBurden, returnOnEquity;
+        if (sales === 0) {
+         profitMargin = null;
+         interestBurden = null;
+        } else {
+            profitMargin = netIncome / sales;
+            interestBurden = earningsBeforeTax / sales;
+        }
+        if (assets === 0) {
+            assetTurnoverRatio = null;
+        } else {
+            assetTurnoverRatio = sales / assets;
+        }
+        if (equity === 0) {
+            financialLeverageRatio = null;
+        } else {
+            financialLeverageRatio = assets / equity;
+        }
+        if (profitMargin !== null && assetTurnoverRatio !== null && financialLeverageRatio !== null) {
+            returnOnEquity = profitMargin * assetTurnoverRatio * financialLeverageRatio;
+        } else {
+            returnOnEquity = null;
+        }
+        if (earningsBeforeTax === 0) {
+            taxBurden = null;
+        } else {
+            taxBurden = netIncome / earningsBeforeTax;
+        }
         // 3. Retreive the industry standard metrics for the current user
         const sqlTextGetIndustry = `
         SELECT profit_margin AS ind_profit_margin,
@@ -535,13 +675,13 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
                                       WHEN 6 THEN $7::DECIMAL
                                    END,
                     variance_value = CASE metrics_id
-                                        WHEN 1 THEN ($8::DECIMAL - $2::DECIMAL)
-                                        WHEN 2 THEN ($9::DECIMAL - $3::DECIMAL)
-                                        WHEN 3 THEN ($4::DECIMAL - $10::DECIMAL)
-                                        WHEN 4 THEN ($11::DECIMAL - $5::DECIMAL)
-                                        WHEN 5 THEN ($6::DECIMAL - $12::DECIMAL)
-                                        WHEN 6 THEN ($7::DECIMAL - $13::DECIMAL)
-                                     END
+                          WHEN 1 THEN (CASE WHEN $2 IS NOT NULL THEN ($2::DECIMAL - $8::DECIMAL) ELSE NULL END)
+                          WHEN 2 THEN (CASE WHEN $3 IS NOT NULL THEN ($3::DECIMAL - $9::DECIMAL) ELSE NULL END)
+                          WHEN 3 THEN (CASE WHEN $4 IS NOT NULL THEN ($10::DECIMAL - $4::DECIMAL) ELSE NULL END)
+                          WHEN 4 THEN (CASE WHEN $5 IS NOT NULL THEN ($5::DECIMAL - $11::DECIMAL) ELSE NULL END)
+                          WHEN 5 THEN (CASE WHEN $6 IS NOT NULL THEN ($12::DECIMAL - $6::DECIMAL) ELSE NULL END)
+                          WHEN 6 THEN (CASE WHEN $7 IS NOT NULL THEN ($13::DECIMAL - $7::DECIMAL) ELSE NULL END)
+                       END
                 WHERE monthly_id = $1
                   AND metrics_id IN (1, 2, 3, 4, 5, 6);
             `; 
@@ -585,8 +725,7 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
       // Now parse the cleaned JSON string
       const parsedData = JSON.parse(aiReccomendations);
       console.log('parsed data is!', parsedData);
-
-      const updateDB = await updateRecommendations(parsedData, userId, month, year) // function to update the database with the response from OpenAI 
+      const updateDB = await updateRecommendations(parsedData.recommendations, userId, month, year) // function to update the database with the response from OpenAI 
 
         if (updateDB) {
             // 6. Return created (201) status if successful
@@ -604,6 +743,33 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
    }
 })
 
+
+/**
+ * GET the most recent (latest) month that exists in monthly_inputs for a user
+ */
+router.get('/latest_month', rejectUnauthenticated, async (req, res) => {
+  let connection;
+  console.log('requser',req.user);
+  connection = await pool.connect();
+  try {
+      const userId = req.user.id;
+      const sqlTextGetLatestMonth = `
+         SELECT year, month
+          FROM monthly_inputs
+          WHERE user_id = $1
+          ORDER BY year DESC, month DESC
+          LIMIT 1;
+          `;
+          const dbResponse = await connection.query(sqlTextGetLatestMonth, [userId]);
+          console.log('Get of single month\'s inputs in /api/financial_inputs/:month&:year succesful:', dbResponse.rows )
+          connection.release();
+          res.send(dbResponse.rows[0]);
+  } catch (error) {
+      console.log('Error in get of single month\'s inputs in /api/financial_inputs/:month&:year', error);
+      connection.release();
+      res.sendStatus(500);
+  }
+})
 
 
  /*------------------------ END ROUTES ---------------------------------------*/

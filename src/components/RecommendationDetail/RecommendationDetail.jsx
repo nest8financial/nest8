@@ -33,7 +33,21 @@ function RecommendationDetail() {
 
     return (
         <Container>
-            <Typography style={{ paddingTop: '20px', display: 'flex', flexDirection: 'column', alignItems: 'center'}} variant='h1' fontSize={32}> Recommendations for {getMonthName(month)} {year} </Typography>
+            <Typography style={{ paddingTop: '20px',
+                                 display: 'flex',
+                                 flexDirection: 'column', 
+                                 alignItems: 'center'}} 
+                                 variant='h1' 
+                                 fontSize={32}> Recommendation Action Items for {getMonthName(month)} {year} </Typography>
+            <Typography variant="h7" 
+                        style={{ paddingTop: '20px',
+                            display: 'flex',
+                            flexDirection: 'column', 
+                            alignItems: 'center'}} 
+                        sx={{ px: 15, 
+                              fontStyle: "italic", 
+                              fontWeight: 'normal',
+                         }}>Review and check off action items for each month. Keep track of details in the notes!</Typography>
             {singleMonthMetrics.map(metric => (
                 <RecommendationActionItem key={metric.id}
                                           metric={metric}

@@ -76,8 +76,23 @@ function getMissingMonths(monthsShouldHave, monthsWeHave) {
     return missingMonths
   }
 
+function getMonthName(monthNumber, locale = 'en-US') {
+    console.log("month Number", monthNumber)
+    // return blank if no month
+    if (!monthNumber || monthNumber === '' || monthNumber === 0) {
+        return '';
+    } 
+    monthNumber = Number(monthNumber);
+    const date = new Date(2000, monthNumber - 1);
+    const dateTimeFormat = new Intl.DateTimeFormat(locale, { month: 'long'});
+    const parts = dateTimeFormat.formatToParts(date);
+    const monthName = parts.find(part => part.type === 'month').value;
+    return monthName;
+}
+
 module.exports = {
   convertToDatesWeHave,
   generateDatesWeShouldHave,
-  getMissingMonths
+  getMissingMonths,
+  getMonthName
 };

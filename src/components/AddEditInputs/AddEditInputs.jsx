@@ -1,6 +1,6 @@
 
 import { TextField,
-    FormHelperText, 
+    Paper, 
     FormLabel,
     FormControl,
     Container,
@@ -80,6 +80,14 @@ useEffect(() => {
        console.log('objkeys', Object.keys(singleMonthInputs))
        setNewInputMonth(true);
        setReadOnlyMode(false);
+       setAmountInputs({
+          netIncome: '',
+          sales: '',
+          assets: '',
+          equity: '',
+          earningsBeforeTax: ''
+       })
+   setTaxRateInput('0');
    // else if this is an existing year/month for financial inputs:
    //      - newInputMode is false
    //      - readOnlyMode is true
@@ -110,7 +118,7 @@ useEffect(() => {
 const handleAmountChange = (event) => {
    event.preventDefault();
    const { name, value } = event.target;
-   const decimalRegex = /^\d*\.?\d{0,2}$/;
+   const decimalRegex = /^-?\d*\.?\d{0,2}$/;
    // validate amount field
    //   if valid data: set the amount input & clear error for field
    if (decimalRegex.test(value)) {
@@ -129,18 +137,18 @@ const handleAmountChange = (event) => {
 *      - if no problems with input, set the tax rate and clear any errors
 *      - if problems with input, set error for tax rate
 */
-const handleTaxRateChange = (event) => {
-   event.preventDefault();
-   const taxValue = event.target.value;
-   const decimalUnlimitedRegex = /^\d*\.?\d{0,}$/;
-   // if valid percentage (decimal value, non-negative)
-   if (decimalUnlimitedRegex.test(taxValue)) {
-       setTaxRateInput(taxValue);
-       setTaxRateError(false);
-   } else {
-       setTaxRateError(true);
-   }
-}
+// const handleTaxRateChange = (event) => {
+//    event.preventDefault();
+//    const taxValue = event.target.value;
+//    const decimalUnlimitedRegex = /^\d*\.?\d{0,}$/;
+//    // if valid percentage (decimal value, non-negative)
+//    if (decimalUnlimitedRegex.test(taxValue)) {
+//        setTaxRateInput(taxValue);
+//        setTaxRateError(false);
+//    } else {
+//        setTaxRateError(true);
+//    }
+// }
 
 /**
 * Submit the Financial Data for the current month to the database
@@ -154,7 +162,7 @@ const handleEditSaveButton= (event) => {
    // else, if screen is not in readOnly mode, button pressed is save
    //      - Save button pressed: save or update financial inputs
    } else {
-    const decimalRegex = /^\d*\.?\d{0,2}$/;
+    const decimalRegex = /^-?\d*\.?\d{0,2}$/;
 
     let hasError = false;
         const updatedErrors = { ...amountErrors };
@@ -246,107 +254,132 @@ return (
           <FormLabel component="legend" sx={{ textAlign: 'left', mb: 2, fontSize: '1.50rem', fontWeight: 'bold' }}>
             Input Your Financial Data for {getMonthName(month)} {year}:
           </FormLabel>
-          <Stack spacing={2}>
-            <TextField
-              required
-              label={readOnlyMode ? "Net Income" : "Net Income (required)"}
-              name="netIncome"
-              type="number"
-              inputProps={{ step: "0.01" }}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                readOnly: readOnlyMode,
-              }}
-              value={amountInputs.netIncome}
-              onChange={handleAmountChange}
-              variant={readOnlyMode ? 'standard' : 'outlined'}
-              error={amountErrors.netIncome}
-              helperText={
-                amountErrors.netIncome
-                  ? "Please enter a valid decimal value with up to two decimal places"
-                  : "Your Net Income is blah blah blah..."
-              }
-            />
-            <TextField
-              required
-              label={readOnlyMode ? "Sales" : "Sales (required)"}
-              name="sales"
-              type="number"
-              inputProps={{ step: "0.01" }}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                readOnly: readOnlyMode,
-              }}
-              value={amountInputs.sales}
-              onChange={handleAmountChange}
-              variant={readOnlyMode ? 'standard' : 'outlined'}
-              error={amountErrors.sales}
-              helperText={
-                amountErrors.sales
-                  ? "Please enter a valid decimal value with up to two decimal places"
-                  : "Your Sales is blah blah blah..."
-              }
-            />
-            <TextField
-              required
-              label={readOnlyMode ? "Assets" : "Assets (required)"}
-              name="assets"
-              type="number"
-              inputProps={{ step: "0.01" }}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                readOnly: readOnlyMode,
-              }}
-              value={amountInputs.assets}
-              onChange={handleAmountChange}
-              variant={readOnlyMode ? 'standard' : 'outlined'}
-              error={amountErrors.assets}
-              helperText={
-                amountErrors.assets
-                  ? "Please enter a valid decimal value with up to two decimal places"
-                  : "Your Assets are blah blah blah..."
-              }
-            />
-            <TextField
-              required
-              label={readOnlyMode ? "Equity" : "Equity (required)"}
-              name="equity"
-              type="number"
-              inputProps={{ step: "0.01" }}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                readOnly: readOnlyMode,
-              }}
-              value={amountInputs.equity}
-              onChange={handleAmountChange}
-              variant={readOnlyMode ? 'standard' : 'outlined'}
-              error={amountErrors.equity}
-              helperText={
-                amountErrors.equity
-                  ? "Please enter a valid decimal value with up to two decimal places"
-                  : "Your Equity is blah blah blah..."
-              }
-            />
-            <TextField
-              required
-              label={readOnlyMode ? "Earnings Before Tax (EBT)" : "Earnings Before Tax (EBT) (required)"}
-              name="earningsBeforeTax"
-              type="number"
-              inputProps={{ step: "0.01" }}
-              InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                readOnly: readOnlyMode,
-              }}
-              value={amountInputs.earningsBeforeTax}
-              onChange={handleAmountChange}
-              variant={readOnlyMode ? 'standard' : 'outlined'}
-              error={amountErrors.earningsBeforeTax}
-              helperText={
-                amountErrors.earningsBeforeTax
-                  ? "Please enter a valid decimal value with up to two decimal places"
-                  : "Your Earnings Before Tax is blah blah blah..."
-              }
-            />
+          <Stack spacing={4}>
+          <Paper elevation={10} sx={{ p: 2 }}>
+              <TextField
+                required
+                label={readOnlyMode ? "Net Income" : "Net Income (required)"}
+                name="netIncome"
+                type="number"
+                inputProps={{ step: "0.01" }}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  readOnly: readOnlyMode,
+                }}
+                value={amountInputs.netIncome}
+                onChange={handleAmountChange}
+                variant={readOnlyMode ? 'standard' : 'outlined'}
+                error={amountErrors.netIncome}
+                helperText={
+                  amountErrors.netIncome
+                    ? "Please enter a valid decimal value with up to two decimal places"
+                    : "Net Income is the amount of money you have left after subtracting all expenses from your total earnings. It's the profit that is left after you subtract all costs, taxes, etc."
+                }
+              />
+            </Paper>
+            <Paper elevation={10} sx={{ p: 2 }}>
+              <TextField
+                required
+                label={readOnlyMode ? "Sales" : "Sales (required)"}
+                name="sales"
+                type="number"
+                inputProps={{ step: "0.01" }}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  readOnly: readOnlyMode,
+                }}
+                value={amountInputs.sales}
+                onChange={handleAmountChange}
+                variant={readOnlyMode ? 'standard' : 'outlined'}
+                error={amountErrors.sales}
+                helperText={
+                  amountErrors.sales
+                    ? "Please enter a valid decimal value with up to two decimal places"
+                    : "Sales is the total amount of money your business earned from selling your products or services before any expenses."
+                }
+              />
+            </Paper>
+            <Paper elevation={10} sx={{ p: 2 }}>
+              <TextField
+                required
+                label={readOnlyMode ? "Assets" : "Assets (required)"}
+                name="assets"
+                type="number"
+                inputProps={{ step: "0.01" }}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  readOnly: readOnlyMode,
+                }}
+                value={amountInputs.assets}
+                onChange={handleAmountChange}
+                variant={readOnlyMode ? 'standard' : 'outlined'}
+                error={amountErrors.assets}
+                helperText={
+                  amountErrors.assets
+                    ? "Please enter a valid decimal value with up to two decimal places"
+                    : "Assets is the average value of everything your business owns over a month. Assets can include cash, inventory, equipment, property, and any other valuable items."
+                }
+              />
+            </Paper>
+            {/* <TextField
+               required 
+               label={readOnlyMode ? "Tax Rate" : "Tax Rate (required)"}
+               name="taxRate"
+               type="number"
+               inputProps={{ step: "0.01" }}
+               InputProps={{ startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                             readOnly: readOnlyMode}}
+               value={taxRateInput}
+               onChange={handleTaxRateChange}
+               variant={readOnlyMode ? 'standard' : 'outlined'}
+               error={taxRateError}
+               helperText={taxRateError ? "Please enter a percentage with up to two decimal places" : 
+                   "Your Tax Rate is the blah blah blah..."}>
+           </TextField> */}
+            <Paper elevation={10} sx={{ p: 2 }}>
+              <TextField
+                required
+                label={readOnlyMode ? "Equity" : "Equity (required)"}
+                name="equity"
+                type="number"
+                inputProps={{ step: "0.01" }}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  readOnly: readOnlyMode,
+                }}
+                value={amountInputs.equity}
+                onChange={handleAmountChange}
+                variant={readOnlyMode ? 'standard' : 'outlined'}
+                error={amountErrors.equity}
+                helperText={
+                  amountErrors.equity
+                    ? "Please enter a valid decimal value with up to two decimal places"
+                    : "Equity is the value of what you own in the business after subtracting all your debts and liabilities. If your business sold everything it owned and paid off all its debts, the remaining money would be your equity."
+                }
+              />
+            </Paper>
+            <Paper elevation={10} sx={{ p: 2 }}>
+              <TextField
+                required
+                label={readOnlyMode ? "Earnings Before Tax (EBT)" : "Earnings Before Tax (EBT) (required)"}
+                name="earningsBeforeTax"
+                type="number"
+                inputProps={{ step: "0.01" }}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  readOnly: readOnlyMode,
+                }}
+                value={amountInputs.earningsBeforeTax}
+                onChange={handleAmountChange}
+                variant={readOnlyMode ? 'standard' : 'outlined'}
+                error={amountErrors.earningsBeforeTax}
+                helperText={
+                  amountErrors.earningsBeforeTax
+                    ? "Please enter a valid decimal value with up to two decimal places"
+                    : "Earnings Before Tax is the amount of money your business has left after subtracting all its operating expenses, interest, and other costs, but before paying taxes."
+                }
+              />
+            </Paper>
           </Stack>
 
           <Button

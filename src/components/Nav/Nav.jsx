@@ -33,16 +33,21 @@ export default function Navbar() {
   const user = useSelector((store) => store.user);
   const missingInputs =
         useSelector((store) => store.financialInputs.missingMonthlyInputs); 
+  const uncompletedRecs = 
+  useSelector(store => store.financialInputs.incompleteRecsMonthlyInputs);
   console.log('missinginputs', missingInputs);
 
   useEffect(() => {
     if (user.id && user.date_joined) {
       dispatch({ type: "GET_MISSING_MONTHLY_INPUTS" });
+      dispatch({ type: "GET_INCOMPLETE_RECS_MONTHLY_INPUTS" });
     }
   }, [user]);
 
   useEffect(() => {
-    setNotifications(missingInputs.length);
+    if (missingInputs && uncompletedRecs) {
+      setNotifications(missingInputs.length + uncompletedRecs.length);
+    }
   },[missingInputs])
 
   const handleMenu = (event) => {
