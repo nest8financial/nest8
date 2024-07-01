@@ -63,7 +63,7 @@ console.log('year',year);
         <br></br>
         <Divider sx={{ my: 2 }} textAlign="left" >RECOMMENDATIONS</Divider>
         <br></br>
-        <Paper elevation={10} sx={{ }}>
+        <Paper elevation={10} sx={{px: 2}}>
                 <br></br>
                 <Typography variant="h5" align="center" sx={{ m: 2 }}>Recommendations for</Typography>
                 <Typography variant="h4" align="center">{company}</Typography>

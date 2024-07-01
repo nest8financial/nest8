@@ -35,7 +35,7 @@ function HomePage() {
       <Paper elevation={10} style={{ padding: '20px', marginBottom: '40px', textAlign: 'center', width: '100%', maxWidth: '800px' }}>
         <section id="educate-users">
           <Banner />
-          <Button variant="contained" sx={{ textTransform: "none", mt: '-15%', width: '80%' }} onClick={() => handleClick('/use_case')}>
+          <Button variant="contained" sx={{ textTransform: "none", mt: '-15%', width: '80%', color: 'black' }} onClick={() => handleClick('/use_case')}>
             Learn what Nest 8 can do
           </Button>
           <Box sx={{display: 'flex', justifyContent: 'center', textAlign: 'center'}}>

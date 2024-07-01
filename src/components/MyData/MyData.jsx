@@ -70,34 +70,24 @@ function separateOutMonthAndYear(arrayOfDates) {
                      alignItems: 'center'
     }}>
       <Typography variant="h1" fontSize={32} textAlign={'center'} mt={8} style={{fontWeight: 'inherit'}}>My Data</Typography>
-      <Box>
         <Button
           onClick={() => history.push("/my_recommendations_action_items")}
           variant="contained"
-          sx={{ mt: 6, mb: 2, mr: 2 }}
-        >
+          sx={{ mt: 6, mb: 2, width: '60%' }}>
           My Recommendations and Action Items
         </Button>
-      </Box>
-      <Box>
         <Button
           onClick={() => history.push("/my_profile")}
           variant="contained"
-          sx={{ mb: 2, mr: 2 }}
-        >
+          sx={{ mb: 2 , width: '60%' }}>
           My Profile
         </Button>
-      </Box>
-      <Box>
         <Button
           onClick={() => history.push("/my_inputs")}
           variant="contained"
-          sx={{ mb: 2, mr: 2 }}
-        >
+          sx={{ mb: 2 , width: '60%' }}>
           My Saved Inputs
-        </Button>
-      </Box>
-      
+        </Button>   
         <Typography sx={{ mt: 2 }} variant="h2" fontSize={32}>
           Alerts
         </Typography>

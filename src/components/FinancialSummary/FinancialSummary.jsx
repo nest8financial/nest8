@@ -43,7 +43,7 @@ function FinancialSummary({month, year, company}){
       <br></br>
       <Divider sx={{ my: 2 }} textAlign="left" >SUMMARY</Divider>
       <br></br>
-      <Paper elevation={10}>
+      <Paper elevation={10} sx={{px: 2}}>
         <br></br><br></br>
         <Typography variant="h5" align="center">Financial Summary for</Typography>
         <Typography variant="h4" align="center"> {company}</Typography>
