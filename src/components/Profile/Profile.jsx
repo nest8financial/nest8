@@ -86,101 +86,107 @@ setIndustry(user.industry);
   };
 
   return (
-    <Container style={{ paddingTop: '100px'}}>
-    <Card
-      elevation={10}
-      component="form"
-      sx={{
-        '& > :not(style)': { m: 3 },
-        position: 'relative', // Ensure Card is relative for absolute positioning if needed
-        p: 2
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <Typography gutterBottom variant="h4" component="div">
-        My Profile
-      </Typography>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6} md={4}>
-          <FormControl variant="standard" fullWidth>
-            <Input
-              placeholder="First Name"
-              value={user.first_name || ''}
-              onChange={handleFirstNameChange}
-              id="component-simple"
-              readOnly={readOnly}
-            />
-          </FormControl>
-        </Grid>
+    <Container style={{ paddingTop: '100px' }}>
+      <Card
+        elevation={10}
+        component="form"
+        sx={{
+          '& > :not(style)': { m: 3 },
+          position: 'relative', // Ensure Card is relative for absolute positioning if needed
+          p: 2,
+          mx: 'auto', // Center the card
+          maxWidth: 800, // Optional: Limit the card's maximum width for better aesthetics
+        }}
+        noValidate
+        autoComplete="off"
+      >
+        <Typography gutterBottom variant="h4" component="div">
+          My Profile
+        </Typography>
+        <Grid container spacing={3} direction="column" alignItems="flex-start" sx={{ paddingLeft: 2, paddingRight: 2 }}>
+          <Grid item xs={12}>
+            <FormControl variant="standard" fullWidth sx={{ mb: 2, maxWidth: '800%' }}>
+              <Input
+                placeholder="First Name"
+                value={user.first_name || ''}
+                onChange={handleFirstNameChange}
+                id="component-simple"
+                readOnly={readOnly}
+              />
+              <FormHelperText>First Name</FormHelperText>
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
-          <FormControl variant="standard" fullWidth>
-            <Input
-              placeholder="Last Name"
-              value={user.last_name || ''}
-              onChange={handleLastNameChange}
-              id="component-helper"
-              aria-describedby="component-helper-text"
-              readOnly={readOnly}
-            />
-          </FormControl>
-        </Grid>
+          <Grid item xs={12}>
+            <FormControl variant="standard" fullWidth sx={{ mb: 2, maxWidth: '800%' }}>
+              <Input
+                placeholder="Last Name"
+                value={user.last_name || ''}
+                onChange={handleLastNameChange}
+                id="component-helper"
+                aria-describedby="component-helper-text"
+                readOnly={readOnly}
+              />
+              <FormHelperText>Last Name</FormHelperText>
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
-          <FormControl variant="standard" fullWidth>
-            <Input
-              placeholder="Company"
-              value={user.company || ''}
-              onChange={handleCompanyChange}
-              id="component-simple"
-              readOnly={readOnly}
-            />
-          </FormControl>
-        </Grid>
+          <Grid item xs={12}>
+            <FormControl variant="standard" fullWidth sx={{ mb: 2, maxWidth: '800%' }}>
+              <Input
+                placeholder="Company"
+                value={user.company || ''}
+                onChange={handleCompanyChange}
+                id="component-simple"
+                readOnly={readOnly}
+              />
+              <FormHelperText>Company</FormHelperText>
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
-          <FormControl variant="standard" fullWidth sx={{ mt: 2 }}>
-            <Select
-              labelId="dynamic-select-label"
-              value={user.industry_id || ""}
-              onChange={handleIndustryChange}
-            //   displayEmpty
-              disabled={readOnly}
-            >
-              <MenuItem value="" disabled>
-                Industry
-              </MenuItem>
-              {industries?.map((industry) => (
-                <MenuItem key={industry.id} value={industry.id}>
-                  {industry.name}
+          <Grid item xs={12}>
+            <FormControl variant="standard" fullWidth sx={{ mb: 2, maxWidth: '100%' }}>
+              <Select
+                labelId="dynamic-select-label"
+                value={user.industry_id || ""}
+                onChange={handleIndustryChange}
+                disabled={readOnly}
+              >
+                <MenuItem value="" disabled>
+                  Industry
                 </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
+                {industries?.map((industry) => (
+                  <MenuItem key={industry.id} value={industry.id}>
+                    {industry.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>Industry</FormHelperText>
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={12} sm={6} md={4}>
-          <FormControl variant="standard" fullWidth>
-            <Input
-              placeholder="Email"
-              value={user.username || ''}
-              onChange={handleEmailChange}
-              id="component-simple"
-              readOnly={readOnly}
-            />
-          </FormControl>
+          <Grid item xs={12}>
+            <FormControl variant="standard" fullWidth sx={{ mb: 2, maxWidth: '800%' }}>
+              <Input
+                placeholder="Email"
+                value={user.username || ''}
+                onChange={handleEmailChange}
+                id="component-simple"
+                readOnly={readOnly}
+              />
+              <FormHelperText>Email</FormHelperText>
+            </FormControl>
+          </Grid>
         </Grid>
-      </Grid>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mt: 2 }}>
-        <Button onClick={handleSaveButton} variant="contained" color="primary" disabled={readOnly} sx={{ mr: 1 }}>
-          Save
-        </Button>
-        <IconButton onClick={handleEditButton}>
-          <EditIcon />
-        </IconButton>
-      </Box>
-    </Card>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mt: 2 }}>
+          <Button onClick={handleSaveButton} variant="contained" color="primary" disabled={readOnly} sx={{ mr: 1 }}>
+            Save
+          </Button>
+          <IconButton onClick={handleEditButton}>
+            <EditIcon />
+          </IconButton>
+        </Box>
+      </Card>
     </Container>
   );
 }

@@ -31,9 +31,7 @@ function LoginForm() {
     <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>  
    <form onSubmit={login} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-          <Typography variant="h6" component="div" sx={{ background: '#0073e6', color: 'white', width: '100%', textAlign: 'center', padding: '8px 0' }}>
-            Login/sign-up
-          </Typography>
+        
           <img alt="Login Icon" src="favicon.ico" />
         </Box>
       {errors.loginMessage && (
