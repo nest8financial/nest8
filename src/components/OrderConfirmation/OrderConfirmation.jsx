@@ -18,27 +18,27 @@ function OrderConfirmation() {
     
 
     return (
-        <Container style={{ paddingTop: '100px'}}>
-            <Paper elevation={10} sx={{ p: 3, display: 'flex', flexDirection: 'column'}}>
-                <Typography variant="h4" sx={{ mb: 2 }}>Review Cart and Place Order</Typography>
+        <Container style={{ paddingTop: '40px'}}>
+            <Paper elevation={10} sx={{ p: 3, pb: 10,  display: 'flex', flexDirection: 'column'}}>
+                <Typography variant="h4" textAlign="center" sx={{ my: 4}}>Thank You For Your Order</Typography>
                 { productNumber === 1 ||
                 productNumber === 2 ||
                 productNumber == 3 ?
                     (
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2}}>
-                        <Box sx={{ display: 'flex'}}>
+                        <Box sx={{ ml: 17, display: 'flex'}}>
                             <CheckBoxIcon color="primary"/>
-                            <Typography>{products && products[productNumber-1].name}: ${products && products[productNumber-1].promo_price} <s>${products && products[productNumber-1].price}</s></Typography>
+                            <Typography >{products && products[productNumber-1].name}: ${products && products[productNumber-1].promo_price} <s>${products && products[productNumber-1].price}</s></Typography>
                         </Box>
-                        <Typography variant="h5" >Thank you for your order!</Typography>
-                        <Typography>Your receipt has been set your your email. 
+                        <Typography variant="h5" textAlign="center" >We appreciate your business!</Typography>
+                        <Typography variant="h7" textAlign="center">Your receipt has been set your your email. 
                         </Typography> 
                     </Box>
                     ) : (
                         'Invalid Product selected, please return to selection page' 
                     )
                 }  
-                <Button variant="contained"  sx={{ width: 'auto', alignSelf: 'center', mt: 2 }} 
+                <Button variant="contained"  sx={{ width: '80%', alignSelf: 'center', mt: 5 }} 
                         onClick={() => history.push('/input_header')}>Start Using Nest 8!
                 </Button>
             </Paper>

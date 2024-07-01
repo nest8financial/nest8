@@ -193,8 +193,8 @@ router.get('/summary/:month&:year', rejectUnauthenticated, async (req, res) => {
 /*
  * GET all monthly graph data for a user, used for Financial Progress graph component
  *     Get all data for 6 separate financial progress graphs
- *         - 6 arrays of computed variances for a month/year range
- *         - 6 arrays of industry variances for user's industry
+ *         - 6 arrays of computed metrics for a month/year range
+ *         - 6 arrays of industry metrics for user's industry
  *         - array of short month names for x-axis ticks
  *         - array of metric names, numbers and descriptions 
  */
@@ -221,14 +221,14 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
         const metricsArray = metricsArrayResponse.rows;
         // create a month array that starts at mm/yyyy and ends at mm/yyyy:
         //       - one with just short month names for graph x-axis ticks
-        //       - one with year/month number to help populate variance arrays
+        //       - one with year/month number to help populate metric arrays
         //              for graphs for a given date range
         const shortMonthNameArray = generateMonthShortNameArray(fromMonth, fromYear, toMonth, toYear);
         console.log('shortMonths:', shortMonthNameArray)
         const yearMonthArray = generateYearMonthArray(fromMonth, fromYear, toMonth, toYear);
         console.log('yearmonthArray', yearMonthArray);
-        // get all industry variances for the user
-        const sqlSelectIndustryVariances = `
+        // get all industry metrics for the user
+        const sqlSelectIndustryMetrics = `
             SELECT    
                name, 
                profit_margin,
@@ -242,18 +242,18 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
                 ON "user".industry_id = industry.id
             WHERE "user".id = $1;
         `;
-        const dbResponseIndustry = await connection.query(sqlSelectIndustryVariances, [userId]);
+        const dbResponseIndustry = await connection.query(sqlSelectIndustryMetrics, [userId]);
         console.log('Get of monthly graph data in /api/financial_metrics/graph_data succesful:', dbResponseIndustry.rows);
-        let industryVariances = dbResponseIndustry.rows[0];
-        // get all variances for the user
-        const sqlSelectUserVariances = `
+        let industryMetrics = dbResponseIndustry.rows[0];
+        // get all metrics for the user
+        const sqlSelectUserMetrics = `
             SELECT    
                monthly_metrics.id,
                monthly_inputs.year,
                monthly_inputs.month,
                metrics.id AS metric_id, 
                metrics.metric_description AS metric_description,
-               monthly_metrics.variance_value,
+               monthly_metrics.metric_value,
                metrics.metric_name
             FROM monthly_metrics
             JOIN metrics
@@ -265,99 +265,99 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
             WHERE monthly_inputs.user_id = $1
             ORDER BY year, month, monthly_metrics.id;
         `;
-        const dbResponseUserVariances = await connection.query(sqlSelectUserVariances, [userId]);
+        const dbResponseUserMetrics = await connection.query(sqlSelectUserMetrics, [userId]);
         console.log('Get of monthly graph data in /api/financial_metrics/graph_data succesful');
-        let monthlyVariancesArray = dbResponseUserVariances.rows;
-        // six user data variance data arrays for graphs:
-        let userVarProfitMargin = [], userVarAssetTurnoverRatio = [];
-        let userVarFinancialLeverageRatio = [], userVarReturnOnEquity = [];
-        let userVarTaxBurden = [], userVarInterestBurden = [];
-        // six industry variance data arrays for graphs:
-        let industryVarProfitMargin = [], industryVarAssetTurnoverRatio = [];
-        let industryVarFinancialLeverageRatio = [], industryVarReturnOnEquity = [];
-        let industryVarTaxBurden = [], industryVarInterestBurden = [];
+        let monthlyMetricsArray = dbResponseUserMetrics.rows;
+        // six user data metric data arrays for graphs:
+        let userProfitMargin = [], userAssetTurnoverRatio = [];
+        let userFinancialLeverageRatio = [], userReturnOnEquity = [];
+        let userTaxBurden = [], userInterestBurden = [];
+        // six industry metric data arrays for graphs:
+        let industryProfitMargin = [], industryAssetTurnoverRatio = [];
+        let industryFinancialLeverageRatio = [], industryReturnOnEquity = [];
+        let industryTaxBurden = [], industryInterestBurden = [];
         // Go through the month/year range selected:
         //      for each month/day:
-        //          check to see if it exists in monthlyVariancesArray
+        //          check to see if it exists in monthlyMetricsArray
         //          if it does not exist:
-        //              push null to userVariancesArray (for each metric)
+        //              push null to userMetricsArray (for each metric)
         //          if it does exist:
-        //              push the variance to userVariancesArray (for each metric)
-        //          push the industry variance to the industryVariancesArray (for each metric)
-        let variance, oneMonthVariances;
+        //              push the metric to userMetricsArray (for each metric)
+        //          push the industry metric to the industryMetricsArray (for each metric)
+        let metric, oneMonthMetrics;
         for (let {year, month} of yearMonthArray) {
             console.log('here:', month, year)
-            // reset the variances for a new date (month/year)
-            oneMonthVariances = [];
-            variance = [];
-            // check to see if date exists in monthlyVariancesArray
-            oneMonthVariances = 
-                monthlyVariancesArray.filter(monthVariance => month === monthVariance.month && year === monthVariance.year);
-            console.log('variance:::', oneMonthVariances, '++++++')
+            // reset the metrics for a new date (month/year)
+            oneMonthMetrics = [];
+            metric = [];
+            // check to see if date exists in monthlyMetricsArray
+            oneMonthMetrics = 
+                monthlyMetricsArray.filter(monthMetric => month === monthMetric.month && year === monthMetric.year);
+            console.log('metric:::', oneMonthMetrics, '++++++')
             // If the month/year DOES NOT exist:
-            //    - push null to the userVariancesArray for each metric
-            if (oneMonthVariances.length === 0) {
-                userVarProfitMargin.push(null);
-                userVarAssetTurnoverRatio.push(null);
-                userVarFinancialLeverageRatio.push(null);
-                userVarReturnOnEquity.push(null);
-                userVarTaxBurden.push(null);
-                userVarInterestBurden.push(null);
+            //    - push null to the userMetricsArray for each metric
+            if (oneMonthMetrics.length === 0) {
+                userProfitMargin.push(null);
+                userAssetTurnoverRatio.push(null);
+                userFinancialLeverageRatio.push(null);
+                userReturnOnEquity.push(null);
+                userTaxBurden.push(null);
+                userInterestBurden.push(null);
             // Else if the month/year DOES exist:
-            //   - push the variance value to the corresponding metrics
+            //   - push the metric value to the corresponding metrics
             } else {
-                userVarProfitMargin.push(Number(oneMonthVariances[0].variance_value));
-                userVarAssetTurnoverRatio.push(Number(oneMonthVariances[1].variance_value));
-                userVarFinancialLeverageRatio.push(Number(oneMonthVariances[2].variance_value));
-                userVarReturnOnEquity.push(Number(oneMonthVariances[3].variance_value));
-                userVarTaxBurden.push(Number(oneMonthVariances[4].variance_value));
-                userVarInterestBurden.push(Number(oneMonthVariances[5].variance_value));
+                userProfitMargin.push(Number(oneMonthMetrics[0].metric_value));
+                userAssetTurnoverRatio.push(Number(oneMonthMetrics[1].metric_value));
+                userFinancialLeverageRatio.push(Number(oneMonthMetrics[2].metric_value));
+                userReturnOnEquity.push(Number(oneMonthMetrics[3].metric_value));
+                userTaxBurden.push(Number(oneMonthMetrics[4].metric_value));
+                userInterestBurden.push(Number(oneMonthMetrics[5].metric_value));
             }
-            // Then push the industry variances ot the corresponding metrics
-            industryVarProfitMargin.push(Number(industryVariances.profit_margin));
-            industryVarAssetTurnoverRatio.push(Number(industryVariances.asset_turnover_ratio));
-            industryVarFinancialLeverageRatio.push(Number(industryVariances.financial_leverage_ratio));
-            industryVarReturnOnEquity.push(Number(industryVariances.return_on_equity));
-            industryVarTaxBurden.push(Number(industryVariances.tax_burden));
-            industryVarInterestBurden.push(Number(industryVariances.interest_burden));   
+            // Then push the industry metrics ot the corresponding metrics
+            industryProfitMargin.push(Number(industryMetrics.profit_margin));
+            industryAssetTurnoverRatio.push(Number(industryMetrics.asset_turnover_ratio));
+            industryFinancialLeverageRatio.push(Number(industryMetrics.financial_leverage_ratio));
+            industryReturnOnEquity.push(Number(industryMetrics.return_on_equity));
+            industryTaxBurden.push(Number(industryMetrics.tax_burden));
+            industryInterestBurden.push(Number(industryMetrics.interest_burden));   
         }
         // Create the graph_data object to send back
         const graph_data =  [ { metric_id: 1,
                                 metric_name: metricsArray[0].metric_name,
                                 metric_description: metricsArray[0].metric_description,
                                 shortMonthNameArray,
-                                userVariances : userVarProfitMargin,
-                                industryVariances : industryVarProfitMargin },
+                                userMetrics : userProfitMargin,
+                                industryMetrics : industryProfitMargin },
                               { metric_id: 2,
                                 metric_name: metricsArray[1].metric_name,
                                 metric_description: metricsArray[1].metric_description,
                                 shortMonthNameArray,
-                                userVariances : userVarAssetTurnoverRatio,
-                                industryVariances : industryVarAssetTurnoverRatio },
+                                userMetrics : userAssetTurnoverRatio,
+                                industryMetrics : industryAssetTurnoverRatio },
                               { metric_id: 3,
                                 metric_name: metricsArray[2].metric_name,
                                 metric_description: metricsArray[2].metric_description,
                                 shortMonthNameArray,
-                                userVariances : userVarFinancialLeverageRatio,
-                                industryVariances : industryVarFinancialLeverageRatio },
+                                userMetrics : userFinancialLeverageRatio,
+                                industryMetrics : industryFinancialLeverageRatio },
                               { metric_id: 4,
                                 metric_name: metricsArray[3].metric_name,
                                 metric_description: metricsArray[3].metric_description,
                                 shortMonthNameArray,
-                                userVariances : userVarReturnOnEquity,
-                                industryVariances : industryVarReturnOnEquity },
+                                userMetrics : userReturnOnEquity,
+                                industryMetrics : industryReturnOnEquity },
                               { metric_id: 5,
                                 metric_name: metricsArray[4].metric_name,
                                 metric_description: metricsArray[4].metric_description,
                                 shortMonthNameArray,
-                                userVariances : userVarTaxBurden,
-                                industryVariances : industryVarTaxBurden },
+                                userMetrics : userTaxBurden,
+                                industryMetrics : industryTaxBurden },
                               { metric_id: 6,
                                 metric_name: metricsArray[5].metric_name,
                                 metric_description: metricsArray[5].metric_description,
                                 shortMonthNameArray,
-                                userVariances : userVarInterestBurden,
-                                industryVariances : industryVarInterestBurden } ]
+                                userMetrics : userInterestBurden,
+                                industryMetrics : industryInterestBurden } ]
                                 console.log('HEY',graph_data[0].metric_description, 'XXXXXXXXXX')
                                 console.log(graph_data[0])
             console.log('Get of monthly graph data in /api/financial_metrics/graph_data succesful:', graph_data[metricId - 1] );
@@ -377,13 +377,15 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
  */
 router.patch('/toggle_completed/:metric_id', rejectUnauthenticated, async (req, res) => {
     let connection;
+    console.log('#################################################################in toggle,')
     connection = await pool.connect();
     try {
         const month = Number(req.body.month);
         const year = Number(req.body.year);
-        const metricId = req.params.metric_id;
+        const metricId = Number(req.params.metric_id);
         const userId = req.user.id;
-        console.log('year, month', year, month);
+
+        console.log('year, month', year, month, userId, metricId);
         const sqlTextGetSingleMonth = `
             UPDATE monthly_metrics 
                 SET completed_date = 

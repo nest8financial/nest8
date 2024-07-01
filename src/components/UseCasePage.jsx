@@ -1,7 +1,15 @@
 import React from "react";
-import {Container, Typography, Card,CardContent,CardMedia,Grid, Box,Button,} from "@mui/material";
-import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyReportsRecomendations";
-import MembershipPlan from "../MembershipPlan/MembershipPlan";
+import {Container,
+        Typography, 
+        Card,
+        CardContent,
+        CardMedia,
+        Grid, 
+        Box,
+        Button,
+        Paper } from "@mui/material";
+import MyReportsRecommendations from "./MyRecomendationsAndActions/MyReports/MyRecomendationsAndActions";
+import MembershipPlan from "./MembershipPlan/MembershipPlan";
 const reviews = [
   {
     name: "James",
@@ -25,13 +33,14 @@ const reviews = [
 
 const UseCasePage = () => {
   return (
-    <Container style={{ paddingTop: '100px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
+    <Container style={{ paddingTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
+      <Paper elevation={10}>
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
-          <Card style={{ marginBottom: "16px", marginTop: "38px", textAlign: 'center'}}>
+          <Card style={{ marginBottom: "16px", textAlign: 'center'}}>
             <CardContent>
               <Typography variant="h4" gutterBottom>
-                How to Use the Application
+                See how a vegetable grower uses Nest 8 
               </Typography>
               <a
                 href="https://youtu.be/pOYc6DBdZGY?si=KzGIO54TEJQsjLbO"
@@ -60,12 +69,12 @@ const UseCasePage = () => {
           </Card>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Typography variant="h4" gutterBottom style={{ marginTop: "32px", textAlign: 'center' }}>
+          <Typography variant="h4" gutterBottom style={{ textAlign: 'center' }}>
             Customer Reviews
           </Typography>
           {reviews.map((review, index) => (
             <Card key={index} style={{ marginBottom: "16px" }}>
-              <CardContent>
+              <CardContent sx={{ px: 15}}>
                 <Typography variant="h6" gutterBottom>
                   {review.name}
                 </Typography>
@@ -80,9 +89,8 @@ const UseCasePage = () => {
           ))}
         </Grid>
       </Grid>
-      <Box my={4}>
-        <MembershipPlan />
-      </Box>
+      <MembershipPlan />
+      </Paper>
     </Container>
   );
 };

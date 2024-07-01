@@ -20,11 +20,12 @@ import "./App.css";
 import RecommendationDetail from "../RecommendationDetail/RecommendationDetail";
 import InputHeader from "../InputHeader/InputHeader";
 import MyData from "../MyData/MyData";
+import UseCasePage from "../UseCasePage";
 import AddEditInputs from "../AddEditInputs/AddEditInputs";
 import MonthlyInputs from "../MonthyInputs/MonthlyInputs";
 import MembershipPlan from "../MembershipPlan/MembershipPlan";
-import FinancialsPage from "../FinancialsPage/FinancialsPage"
-import MyReportsRecommendations from "../MyReportsRecommendations/MyReports/MyReportsRecomendations";
+import FinancialsPage from "../FinancialsPage/FinancialsPage";
+import MyRecommendationsAndActions from "../MyRecomendationsAndActions/MyReports/MyRecomendationsAndActions"
 import Profile from "../Profile/Profile";
 import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
 import OrderConfirmation from "../OrderConfirmation/OrderConfirmation";
@@ -34,7 +35,7 @@ import FAQPage from "../StaticPages/FAQPage";
 import ContactUsPage from "../StaticPages/ContactUsPage";
 import OurStoryPage from "../StaticPages/OurStoryPage";
 import MissionPage from "../StaticPages/Mission";
-import UseCasePage from '../StaticPages/UseCasePage';
+
 
 
 function App() {
@@ -149,8 +150,8 @@ function App() {
               <FinancialsPage />
             </ProtectedRoute>
 
-            <ProtectedRoute exact path="/my_reports_recommendations">
-              <MyReportsRecommendations />
+            <ProtectedRoute exact path="/my_recommendations_action_items">
+              <MyRecommendationsAndActions />
             </ProtectedRoute>
 
             <ProtectedRoute exact path="/my_profile">

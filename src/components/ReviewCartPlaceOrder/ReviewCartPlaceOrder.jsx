@@ -10,8 +10,6 @@ import { Typography,
 import { useHistory } from 'react-router-dom';
 
 
-
-
 function ReviewCartPlaceOrder({productNumber}) {
 
   const dispatch = useDispatch();
@@ -47,10 +45,11 @@ function ReviewCartPlaceOrder({productNumber}) {
   return (
     <Container style={{ paddingTop: '100px'}}>
       <Paper elevation={10} sx={{ p: 3, mt: 2, display: 'flex', flexDirection: 'column' }}>
-        <Typography variant="h4">Review Cart and Place Order</Typography>
+        <Typography variant="h4" textAlign="center">Review Cart and Place Order</Typography>
         <FormGroup sx={{ p: 1, mt: 1, display: 'flex', flexDirection: 'column' }}>
           {products.map(product => (
             <FormControlLabel
+              sx={{ mx: 8}}
               key={product.id}
               control={
                 <Checkbox
@@ -71,7 +70,7 @@ function ReviewCartPlaceOrder({productNumber}) {
             />
           ))}
         </FormGroup>
-        <Typography sx={{mt: 2}}>
+        <Typography sx={{ mt: 2, textAlign: 'center'}}>
           Your subscription will renew automatically upon the expiration of the 30-day trial. You can cancel anytime effective from the next cycle.
         </Typography>
         <Button

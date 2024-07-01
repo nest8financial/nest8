@@ -34,10 +34,6 @@ function FinancialProgress({company}) {
   const dispatch = useDispatch();
   const graphData = useSelector(store => store.financialMetrics.graphData);
 
-  // const [dateRange, setDateRange] = useState({ toMonth: today.getMonth() + 1,
-  //                                              fromMonth: today.getMonth() + 1,
-  //                                              toYear: today.getFullYear(),
-  //                                              fromYear: today.getFullYear() - 1 });
   // Set initial date range for 13 month span ending on today's month
   const [fromDateSelected, setFromDateSelected] = useState(dayjs().subtract(1, 'year')); 
   const [toDateSelected, setToDateSelected] = useState(dayjs()); 
@@ -57,13 +53,6 @@ function FinancialProgress({company}) {
                      metricId: metricSelected }
            })
   }, [dispatch, fromDateSelected, toDateSelected, metricSelected])
-
-// First MM/YYYY in selection is less than or equal to second MM/YYYY selection
-
-// useEffect(() => {
-//   console.log('graph data updated!')
-//   console.log(graphData);
-// },[graphData])
 
   const handleMetricChange = (event, newMetric) => {
     if (newMetric !== null) {
@@ -98,25 +87,37 @@ function FinancialProgress({company}) {
       {
         // NOTE: There are two industry data graphs so we can show green 
         //       and red fill zones above and below industry standards
-        data: graphData.industryVariances,
+        data: graphData.industryMetrics,
         borderColor: 'rgba(75,192,192,1)',
-        backgroundColor: 'rgba(75,192,192,0.2)', // green - good
+        // for color, use green metrics 1, 2, & 4, else use red
+        //    (some metrics are better if positive, others better if negative)
+        backgroundColor:  (graphData.metric_id === 1 ||
+                           graphData.metric_id === 2 ||
+                           graphData.metric_id === 4 ) ? 
+                           'rgba(75,192,192,0.2)' :
+                           'rgba(251, 80, 74, 0.37)', 
         fill: 'end',
         disableTooltip: true,
         pointStyle: 'rect',
         pointRadius: 6
       },
       {
-        data: graphData.industryVariances, 
+        data: graphData.industryMetrics, 
         borderColor: 'rgba(75,192,192,1)',
-        backgroundColor: 'rgba(251, 80, 74, 0.37)', //red - bad
+        // for color, use red if metrics 1, 2 & 4, else use green
+        //    (some metrics are better if positive, others better if negative)
+        backgroundColor: (graphData.metric_id === 1 ||
+                          graphData.metric_id === 2 ||
+                          graphData.metric_id === 4 ) ? 
+                          'rgba(251, 80, 74, 0.37)' :
+                          'rgba(75,192,192,0.2)',
         fill: 'start',
         pointStyle: 'rect',
         pointRadius: 6
       },
       {
-        // This will be user variance values for each month for a given metric
-        data: graphData.userVariances,
+        // This will be user metric values for each month for a given metric
+        data: graphData.userMetrics,
         borderColor: 'rgba(153,102,255,1)',
         backgroundColor: 'rgba(153,102,255,0.2)',
         customTooltip: `Your`,
@@ -142,13 +143,13 @@ function FinancialProgress({company}) {
         //        minus 30% the range of y-axis values
         //    set the maximum y-axis tick to the maximum graph value 
         //        minus 30% the range of y-axis values
-        // min: ((graphData.userVariances && graphData.industryVariances) && Math.min(...graphData.userVariances)),
-        min: ((graphData.userVariances && graphData.industryVariances) && 
-          (Math.min(...graphData.userVariances , ...graphData.industryVariances)) - 
-          (0.30 *(Math.max(...graphData.userVariances , ...graphData.industryVariances) - Math.min(...graphData.userVariances, ...graphData.industryVariances))) ), 
-        max: ((graphData.userVariances && graphData.industryVariances) && 
-          (Math.max(...graphData.userVariances , ...graphData.industryVariances)) + 
-          (0.30 *(Math.max(...graphData.userVariances , ...graphData.industryVariances) - Math.min(...graphData.userVariances, ...graphData.industryVariances))) )
+        // min: ((graphData.userMetrics && graphData.industryMetrics) && Math.min(...graphData.userMetrics)),
+        min: ((graphData.userMetrics && graphData.industryMetrics) && 
+          (Math.min(...graphData.userMetrics , ...graphData.industryMetrics)) - 
+          (0.30 *(Math.max(...graphData.userMetrics , ...graphData.industryMetrics) - Math.min(...graphData.userMetrics, ...graphData.industryMetrics))) ), 
+        max: ((graphData.userMetrics && graphData.industryMetrics) && 
+          (Math.max(...graphData.userMetrics , ...graphData.industryMetrics)) + 
+          (0.30 *(Math.max(...graphData.userMetrics , ...graphData.industryMetrics) - Math.min(...graphData.userMetrics, ...graphData.industryMetrics))) )
       },
     },
     plugins: {
@@ -208,7 +209,7 @@ function FinancialProgress({company}) {
                     <DatePicker label="From Month / Year"
                                 value={fromDateSelected}
                                 onChange={(value) => {handleDateRangeChange(value, 'from')}}
-                                views={['month', 'year']}
+                                views={[ 'year', 'month']}
                                 maxDate={dayjs()}>            
                     </DatePicker>
                 </Box>

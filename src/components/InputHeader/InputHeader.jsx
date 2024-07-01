@@ -26,8 +26,8 @@ return (
       <Container style={{ paddingTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
           <DateCalendar 
           value={date} onChange={(newValue) => setDate(newValue)} 
-          views={['month', 'year']}
-          openTo='month'
+          views={[ 'year', 'month']}
+          openTo='year'
           maxDate={dayjs()}
           />
         <Typography textAlign='center' variant='h2' fontSize={32}>{date.format('MMM YYYY')}</Typography>
