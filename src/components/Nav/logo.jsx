@@ -1,12 +1,18 @@
 import React from 'react';
-import SvgIcon from '@mui/material/SvgIcon';
+import nest8Icon from "../../../public/Group11-1.svg"
+import Box from '@mui/material/Box';
 
-function CustomIcon(props) {
+function Nest8icon(props) {
   return (
-    <SvgIcon {...props}>
-      <path d="M4 0H704V408H4V0Z" fill="url(#pattern0_2096_684)"/>
-    </SvgIcon>
+  <Box
+    component="img"
+    src={nest8Icon}
+    alt="Nest 8 Logo"
+    sx={{ width: 100, height: 65}}
+    >
+  </Box>
+
   );
 }
 
-export default CustomIcon;
+export default Nest8icon;
