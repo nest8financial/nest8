@@ -197,7 +197,7 @@ function FinancialProgress({company}) {
       <Box>
         <Divider sx={{ my: 2 }} textAlign="left" >FINANCIAL PROGRESS </Divider>{/* Add margin top and bottom */}
         <br></br>
-        <Paper elevation={10}>
+        <Paper elevation={10} sx={{px: 2, pb: 3}}>
           <br></br><br></br>
           <Typography variant="h4" align="center">
             {(graphData.metric_name && graphData.metric_name)} for {company} </Typography>
