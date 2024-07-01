@@ -17,6 +17,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import styled from 'styled-components';
+import Nest8icon from '../Nav/logo'
 
 
 const ImageButton = styled('img')({
@@ -116,8 +117,9 @@ export default function Navbar() {
       <AppBar position="static">
         <Toolbar>
           <IconButton onClick={handleNest8Icon}>
-            <ImageButton src="/nest8.png"
-                         alt="Nest 8 icon"/>
+            {/* <ImageButton src="/nest8.pn"
+                         alt="Nest 8 icon"/> */}
+                         <Nest8icon/>
           </IconButton>
           <Box component="div" sx={{ flexGrow: 1 }}>
             { (user.id && user.date_joined) && (
