@@ -77,7 +77,7 @@ function separateOutMonthAndYear(arrayOfDates) {
           My Recommendations and Action Items
         </Button>
         <Button
-          onClick={() => history.push("/my_profile")}
+          onClick={() => history.push("/profile")}
           variant="contained"
           sx={{ mb: 2 , width: '60%' }}>
           My Profile

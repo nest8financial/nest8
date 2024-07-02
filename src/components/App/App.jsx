@@ -111,13 +111,42 @@ function App() {
               <OrderConfirmation />
             </Route>
 
-            <ProtectedRoute exact path="/input_header">
-              <InputHeader />
-            </ProtectedRoute>
+
+            <Route exact path="/features">
+              <FeaturesPage />
+            </Route>
+
+            <Route exact path="/pricing">
+              <PricingPage />
+            </Route>
+
+            <Route exact path="/faq">
+              <FAQPage />
+            </Route>
+
+            <Route exact path="/contact">
+              <ContactUsPage />
+            </Route>
+
+            <Route exact path="/our_story">
+              <OurStoryPage />
+            </Route>
+
+            <Route exact path="/mission">
+              <MissionPage />
+            </Route>
+
+            <Route exact path="/use_case">
+              < UseCasePage />
+            </Route>
 
             <Route exact path="/product_page">
               <MembershipPlan />
             </Route>
+
+            <ProtectedRoute exact path="/input_header">
+              <InputHeader />
+            </ProtectedRoute>
 
             <ProtectedRoute
               // logged in shows InputHeader page, else shows LoginPage
@@ -154,43 +183,6 @@ function App() {
               <MyRecommendationsAndActions />
             </ProtectedRoute>
 
-            <ProtectedRoute exact path="/my_profile">
-              <Profile />
-            </ProtectedRoute>
-
-            <ProtectedRoute exact path="/features">
-              <FeaturesPage />
-            </ProtectedRoute>
-
-            <ProtectedRoute exact path="/pricing">
-              <PricingPage />
-            </ProtectedRoute>
-
-            <ProtectedRoute exact path="/faq">
-              <FAQPage />
-            </ProtectedRoute>
-
-            <ProtectedRoute exact path="/contact">
-              <ContactUsPage />
-            </ProtectedRoute>
-
-            <ProtectedRoute exact path="/our_story">
-              <OurStoryPage />
-            </ProtectedRoute>
-
-            <ProtectedRoute exact path="/mission">
-              <MissionPage />
-            </ProtectedRoute>
-
-            <ProtectedRoute exact path="/use_case">
-              < UseCasePage />
-            </ProtectedRoute>
-
-          
-            {/* <ProtectedRoute path="/financial_recommendation" >
-            <FinancialRecommendation />
-            </ProtectedRoute> */}
-            {/* If none of the other routes matched, we will show a 404. */}
             <Route>
               <h1>404</h1>
             </Route>
