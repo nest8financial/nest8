@@ -5,13 +5,9 @@ import { put, takeLatest } from "redux-saga/effects";
 function* fetchIndustries() {
   try {
     const response = yield axios.get("/api/industry");
-    
-    console.log("industry saga fetch:", response.data);
 
     yield put({ type: "SET_INDUSTRY", payload: response.data });
-  } catch (error) {
-    console.log("industry get request failed", error);
-  }
+  } catch (error) {}
 }
 
 function* industrySaga() {

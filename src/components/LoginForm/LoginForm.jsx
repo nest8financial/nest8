@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import {useSelector} from 'react-redux';
-import { Container, TextField, Button, Typography, Box } from '@mui/material';
-
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { Container, TextField, Button, Typography, Box } from "@mui/material";
 
 function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const errors = useSelector(store => store.errors);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const errors = useSelector((store) => store.errors);
   const dispatch = useDispatch();
 
   const login = (event) => {
@@ -15,64 +14,79 @@ function LoginForm() {
 
     if (email && password) {
       dispatch({
-        type: 'LOGIN',
+        type: "LOGIN",
         payload: {
           email: email,
-          password: password
+          password: password,
         },
       });
     } else {
-      dispatch({ type: 'LOGIN_INPUT_ERROR' });
+      dispatch({ type: "LOGIN_INPUT_ERROR" });
     }
   }; // end login
 
   return (
-  
-    <Container maxWidth="sm" sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>  
-   <form onSubmit={login} style={{ display: 'flex', flexDirection: 'column', gap: 5 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
-        
+    <Container
+      maxWidth="sm"
+      sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}
+    >
+      <form
+        onSubmit={login}
+        style={{ display: "flex", flexDirection: "column", gap: 5 }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
           <img alt="Login Icon" src="favicon.ico" />
         </Box>
-      {errors.loginMessage && (
-        <Typography variant="body1" color="error">
-          {errors.loginMessage}
-        </Typography>
-      )}
-      <TextField 
-      label="Email"
-            type="text"
-            name="email"
-            required
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            variant='outlined'
-            fullWidth
-            />
-      <TextField
-        label="Password"
-            type="password"
-            name="password"
-            required
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            variant='outlined'
-            fullWidth
-          />
-       
-      
-       <Box sx={{ display: 'flex',alignItems: 'center', flexDirection: 'column' ,gap: 2}}>
+        {errors.loginMessage && (
+          <Typography variant="body1" color="error">
+            {errors.loginMessage}
+          </Typography>
+        )}
+        <TextField
+          label="Email"
+          type="text"
+          name="email"
+          required
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          variant="outlined"
+          fullWidth
+        />
+        <TextField
+          label="Password"
+          type="password"
+          name="password"
+          required
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          variant="outlined"
+          fullWidth
+        />
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
           <Button type="submit" variant="contained" color="primary">
             Log In
           </Button>
-          <Typography variant="body2" sx={{gap:100}} >
+          <Typography variant="body2" sx={{ gap: 100 }}>
             Don't have an account?
           </Typography>
         </Box>
-  
-    </form>
+      </form>
     </Container>
-
   );
 }
 

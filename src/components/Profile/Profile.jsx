@@ -1,76 +1,70 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import FilledInput from '@mui/material/FilledInput';
-import FormControl from '@mui/material/FormControl';
-import FormHelperText from '@mui/material/FormHelperText';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import Typography from '@mui/material/Typography';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import Input from "@mui/material/Input";
+import Grid from "@mui/material/Grid";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { Select, MenuItem, IconButton, Button, Container } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 
 function Profile() {
   const industries = useSelector((store) => store.industries);
   const user = useSelector((store) => store.editUser);
   const dispatch = useDispatch();
-  const[industry, setIndustry] = useState([]);
+  const [industry, setIndustry] = useState([]);
   const [readOnly, setReadOnly] = useState(true);
 
   useEffect(() => {
     dispatch({
-      type: 'FETCH_EDIT_USER'
+      type: "FETCH_EDIT_USER",
     });
-    dispatch ({
-        type: 'FETCH_INDUSTRIES'
-    })
+    dispatch({
+      type: "FETCH_INDUSTRIES",
+    });
   }, [dispatch]);
 
   useEffect(() => {
-    console.log('PLS work',user.industry)
-setIndustry(user.industry);
-  },[user]);
+    setIndustry(user.industry);
+  }, [user]);
 
   const handleFirstNameChange = (event) => {
     dispatch({
-      type: 'UPDATE_USER_FIRST_NAME',
-      payload: event.target.value
+      type: "UPDATE_USER_FIRST_NAME",
+      payload: event.target.value,
     });
   };
 
   const handleLastNameChange = (event) => {
     dispatch({
-      type: 'UPDATE_USER_LAST_NAME',
-      payload: event.target.value
+      type: "UPDATE_USER_LAST_NAME",
+      payload: event.target.value,
     });
   };
 
   const handleCompanyChange = (event) => {
     dispatch({
-      type: 'UPDATE_USER_COMPANY',
-      payload: event.target.value
+      type: "UPDATE_USER_COMPANY",
+      payload: event.target.value,
     });
   };
 
   const handleIndustryChange = (event) => {
     if (event.target.value) {
-    dispatch({
-      type: 'UPDATE_USER_INDUSTRY',
-      payload: event.target.value
-    });
+      dispatch({
+        type: "UPDATE_USER_INDUSTRY",
+        payload: event.target.value,
+      });
     }
   };
 
   const handleEmailChange = (event) => {
     dispatch({
-      type: 'UPDATE_USER_EMAIL',
-      payload: event.target.value
+      type: "UPDATE_USER_EMAIL",
+      payload: event.target.value,
     });
   };
 
@@ -81,23 +75,22 @@ setIndustry(user.industry);
 
   const handleSaveButton = (event) => {
     event.preventDefault();
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!updating user, here is what we are sending up:', user)
     dispatch({
-      type: 'UPDATE_USER',
-      payload: user
+      type: "UPDATE_USER",
+      payload: user,
     });
   };
 
   return (
-    <Container style={{ paddingTop: '100px' }}>
+    <Container style={{ paddingTop: "100px" }}>
       <Card
         elevation={10}
         component="form"
         sx={{
-          '& > :not(style)': { m: 3 },
-          position: 'relative', // Ensure Card is relative for absolute positioning if needed
+          "& > :not(style)": { m: 3 },
+          position: "relative", // Ensure Card is relative for absolute positioning if needed
           p: 2,
-          mx: 'auto', // Center the card
+          mx: "auto", // Center the card
           maxWidth: 800, // Optional: Limit the card's maximum width for better aesthetics
         }}
         noValidate
@@ -106,12 +99,22 @@ setIndustry(user.industry);
         <Typography gutterBottom variant="h4" component="div">
           My Profile
         </Typography>
-        <Grid container spacing={3} direction="column" alignItems="flex-start" sx={{ paddingLeft: 2, paddingRight: 2 }}>
+        <Grid
+          container
+          spacing={3}
+          direction="column"
+          alignItems="flex-start"
+          sx={{ paddingLeft: 2, paddingRight: 2 }}
+        >
           <Grid item xs={12}>
-            <FormControl variant="standard" fullWidth sx={{ mb: 2, maxWidth: '800%' }}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              sx={{ mb: 2, maxWidth: "800%" }}
+            >
               <Input
                 placeholder="First Name"
-                value={user.first_name || ''}
+                value={user.first_name || ""}
                 onChange={handleFirstNameChange}
                 id="component-simple"
                 readOnly={readOnly}
@@ -121,10 +124,14 @@ setIndustry(user.industry);
           </Grid>
 
           <Grid item xs={12}>
-            <FormControl variant="standard" fullWidth sx={{ mb: 2, maxWidth: '800%' }}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              sx={{ mb: 2, maxWidth: "800%" }}
+            >
               <Input
                 placeholder="Last Name"
-                value={user.last_name || ''}
+                value={user.last_name || ""}
                 onChange={handleLastNameChange}
                 id="component-helper"
                 aria-describedby="component-helper-text"
@@ -135,10 +142,14 @@ setIndustry(user.industry);
           </Grid>
 
           <Grid item xs={12}>
-            <FormControl variant="standard" fullWidth sx={{ mb: 2, maxWidth: '800%' }}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              sx={{ mb: 2, maxWidth: "800%" }}
+            >
               <Input
                 placeholder="Company"
-                value={user.company || ''}
+                value={user.company || ""}
                 onChange={handleCompanyChange}
                 id="component-simple"
                 readOnly={readOnly}
@@ -148,7 +159,11 @@ setIndustry(user.industry);
           </Grid>
 
           <Grid item xs={12}>
-            <FormControl variant="standard" fullWidth sx={{ mb: 2, maxWidth: '100%' }}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              sx={{ mb: 2, maxWidth: "100%" }}
+            >
               <Select
                 labelId="dynamic-select-label"
                 value={user.industry_id || ""}
@@ -169,10 +184,14 @@ setIndustry(user.industry);
           </Grid>
 
           <Grid item xs={12}>
-            <FormControl variant="standard" fullWidth sx={{ mb: 2, maxWidth: '800%' }}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              sx={{ mb: 2, maxWidth: "800%" }}
+            >
               <Input
                 placeholder="Email"
-                value={user.username || ''}
+                value={user.username || ""}
                 onChange={handleEmailChange}
                 id="component-simple"
                 readOnly={readOnly}
@@ -181,8 +200,21 @@ setIndustry(user.industry);
             </FormControl>
           </Grid>
         </Grid>
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mt: 2 }}>
-          <Button onClick={handleSaveButton} variant="contained" color="primary" disabled={readOnly} sx={{ mr: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            mt: 2,
+          }}
+        >
+          <Button
+            onClick={handleSaveButton}
+            variant="contained"
+            color="primary"
+            disabled={readOnly}
+            sx={{ mr: 1 }}
+          >
             Save
           </Button>
           <IconButton onClick={handleEditButton}>
@@ -195,4 +227,3 @@ setIndustry(user.industry);
 }
 
 export default Profile;
-

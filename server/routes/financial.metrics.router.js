@@ -41,7 +41,6 @@ const { rejectUnauthenticated } =
                 currentYear++;
             }
         }
-        console.log(`Here's your array from ${startYear} ${startMonth} to ${endYear} ${endMonth}:`, monthNameArray)
         return monthNameArray;
     }
 
@@ -58,7 +57,6 @@ const { rejectUnauthenticated } =
                 currentYear++;
             }
         }
-        console.log(`Here's your array from ${startYear} ${startMonth} to ${endYear} ${endMonth}:`, yearMonthArray)
         return yearMonthArray;
     }
 
@@ -92,11 +90,9 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
                 ORDER BY year, month, id;
             `;
             const dbResponse = await connection.query(sqlTextGetMetrics, [userId]);
-            console.log('Get of monthly metrics in /api/financial_metrics succesful:', dbResponse.rows )
             connection.release();
             res.send(dbResponse.rows);
     } catch (error) {
-        console.log('Error in get of monthly metrics in /api/financial_metrics', error);
         connection.release();
         res.sendStatus(500);
     }
@@ -114,11 +110,9 @@ router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
     try {
-        console.log('USER: ', req.user);
         const month = Number(req.params.month);
         const year = Number(req.params.year);
         const userId = req.user.id;
-        console.log('year, month', year, month);
         const sqlTextGetSingleMonth = `
         SELECT monthly_metrics.*, 
                metrics.metric_name,
@@ -135,11 +129,9 @@ router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
                 ORDER BY year, month, id;
             `;
             const dbResponse = await connection.query(sqlTextGetSingleMonth, [userId, month, year]);
-            console.log('Get of single month\'s metrics in /api/financial_metrics/:month&:year succesful:', dbResponse.rows )
             connection.release();
             res.send(dbResponse.rows);
     } catch (error) {
-        console.log('Error in get of single month\'s metrics in /api/financial_metrics/:month&:year', error);
         connection.release();
         res.sendStatus(500);
     }
@@ -157,11 +149,9 @@ router.get('/summary/:month&:year', rejectUnauthenticated, async (req, res) => {
     let connection;
     connection = await pool.connect();
     try {
-        console.log('USER: ', req.user);
         const month = Number(req.params.month);
         const year = Number(req.params.year);
         const userId = req.user.id;
-        console.log('year, month', year, month);
         const sqlTextGetSingleMonth = `
         SELECT monthly_metrics.id,
               monthly_metrics.variance_value,
@@ -177,14 +167,9 @@ router.get('/summary/:month&:year', rejectUnauthenticated, async (req, res) => {
                 ORDER BY year, month, id;
             `;
             const dbResponse = await connection.query(sqlTextGetSingleMonth, [userId, month, year]);
-            console.log('Get of single month\'s metrics in /api/financial_metrics/summary/:month&:year succesful:', dbResponse.rows )
             connection.release();
             res.send(dbResponse.rows);
     } catch (error) {
-        console.log(
-          "Error in get of single month's metrics in /api/financial_metrics/summary/:month&:year",
-          error
-        );
         connection.release();
         res.sendStatus(500);
     }
@@ -209,7 +194,6 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
         const metricId = Number(req.params.metric_id);
         const userId = req.user.id;
 
-        console.log('fm, tm, fy, ty, userid', fromMonth, toMonth, fromYear, toYear, userId);
         // create a array with metrics names and descriptions metrics_description
         //      , metrics.metrics_description
         const sqlSelectMetrics = `
@@ -224,9 +208,7 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
         //       - one with year/month number to help populate metric arrays
         //              for graphs for a given date range
         const shortMonthNameArray = generateMonthShortNameArray(fromMonth, fromYear, toMonth, toYear);
-        console.log('shortMonths:', shortMonthNameArray)
         const yearMonthArray = generateYearMonthArray(fromMonth, fromYear, toMonth, toYear);
-        console.log('yearmonthArray', yearMonthArray);
         // get all industry metrics for the user
         const sqlSelectIndustryMetrics = `
             SELECT    
@@ -243,7 +225,6 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
             WHERE "user".id = $1;
         `;
         const dbResponseIndustry = await connection.query(sqlSelectIndustryMetrics, [userId]);
-        console.log('Get of monthly graph data in /api/financial_metrics/graph_data succesful:', dbResponseIndustry.rows);
         let industryMetrics = dbResponseIndustry.rows[0];
         // get all metrics for the user
         const sqlSelectUserMetrics = `
@@ -266,7 +247,6 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
             ORDER BY year, month, monthly_metrics.id;
         `;
         const dbResponseUserMetrics = await connection.query(sqlSelectUserMetrics, [userId]);
-        console.log('Get of monthly graph data in /api/financial_metrics/graph_data succesful');
         let monthlyMetricsArray = dbResponseUserMetrics.rows;
         // six user data metric data arrays for graphs:
         let userProfitMargin = [], userAssetTurnoverRatio = [];
@@ -286,14 +266,12 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
         //          push the industry metric to the industryMetricsArray (for each metric)
         let metric, oneMonthMetrics;
         for (let {year, month} of yearMonthArray) {
-            console.log('here:', month, year)
             // reset the metrics for a new date (month/year)
             oneMonthMetrics = [];
             metric = [];
             // check to see if date exists in monthlyMetricsArray
             oneMonthMetrics = 
                 monthlyMetricsArray.filter(monthMetric => month === monthMetric.month && year === monthMetric.year);
-            console.log('metric:::', oneMonthMetrics, '++++++')
             // If the month/year DOES NOT exist:
             //    - push null to the userMetricsArray for each metric
             if (oneMonthMetrics.length === 0) {
@@ -358,14 +336,10 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
                                 shortMonthNameArray,
                                 userMetrics : userInterestBurden,
                                 industryMetrics : industryInterestBurden } ]
-                                console.log('HEY',graph_data[0].metric_description, 'XXXXXXXXXX')
-                                console.log(graph_data[0])
-            console.log('Get of monthly graph data in /api/financial_metrics/graph_data succesful:', graph_data[metricId - 1] );
 
             connection.release();
             res.send(graph_data[metricId - 1]);
     } catch (error) {
-            console.log('Error in get of monthly graph data in /api/financial_metrics/graph_data', error);
             connection.release();
             res.sendStatus(500);
     }
@@ -377,7 +351,6 @@ router.get('/graph_data/:from_month/:to_month/:from_year/:to_year/:metric_id', r
  */
 router.patch('/toggle_completed/:metric_id', rejectUnauthenticated, async (req, res) => {
     let connection;
-    console.log('#################################################################in toggle,')
     connection = await pool.connect();
     try {
         const month = Number(req.body.month);
@@ -385,7 +358,6 @@ router.patch('/toggle_completed/:metric_id', rejectUnauthenticated, async (req, 
         const metricId = Number(req.params.metric_id);
         const userId = req.user.id;
 
-        console.log('year, month', year, month, userId, metricId);
         const sqlTextGetSingleMonth = `
             UPDATE monthly_metrics 
                 SET completed_date = 
@@ -406,11 +378,9 @@ router.patch('/toggle_completed/:metric_id', rejectUnauthenticated, async (req, 
                                                                 month, 
                                                                 year,
                                                                 metricId ]);
-            console.log('Patch/update of a completed_date (toggle) in /api/financial_metrics/:metricId succesful:', dbResponse.rows )
             connection.release();
             res.send(dbResponse.rows);
     } catch (error) {
-        console.log('Error in toggle of completed_date for metric in /api/financial_metrics/:metricId', error);
         connection.release();
         res.sendStatus(500);
     }
@@ -428,7 +398,6 @@ router.patch('/update_notes/:metric_id', rejectUnauthenticated, async (req, res)
         const metricId = req.params.metric_id;
         const notes = req.body.notes;
         const userId = req.user.id;
-        console.log('year, month, notes, userid, metricId', year, month, '@@@ ', notes, '@@@', userId, metricId);
         const sqlTextGetSingleMonth = `
             UPDATE monthly_metrics 
                 SET notes = $5
@@ -445,11 +414,9 @@ router.patch('/update_notes/:metric_id', rejectUnauthenticated, async (req, res)
                                                                  year, 
                                                                  metricId,
                                                                  notes ]);
-            console.log('Patch/update of notes for a metric in /api/financial_metrics/:metricId succesful:', dbResponse.rows )
             connection.release();
             res.send(dbResponse.rows);
     } catch (error) {
-        console.log('Error in toggle of notes for a metric in /api/financial_metrics/:metricId', error);
         connection.release();
         res.sendStatus(500);
     }

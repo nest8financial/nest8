@@ -1,27 +1,27 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from "redux";
 
 /**
  * The Products Reducer sets up state in the
  *      store for the possible products to
- *      buy in the product table, and 
+ *      buy in the product table, and
  *      a piece of state to hold new
  *      products before bought by user
  */
 
 /**
- * Gets all available products 
+ * Gets all available products
  */
 const products = (state = [], action) => {
-    if (action.type === 'SET_PRODUCTS') {
-        if (action.payload.length === 0) {
-          return [];
-        }
-        return action.payload;
-    } 
-    return state;
+  if (action.type === "SET_PRODUCTS") {
+    if (action.payload.length === 0) {
+      return [];
+    }
+    return action.payload;
   }
+  return state;
+};
 
-/** 
+/**
  *  Pulls the newProductSelected state, which stores:
  *      - a value of 0 if there is no new product selection
  *      - displays a number according to the product number
@@ -29,14 +29,13 @@ const products = (state = [], action) => {
  *              towards the shopping cart
  */
 const newProductSelected = (state = 0, action) => {
-    if (action.type === 'SET_NEW_PRODUCT_SELECTED') {
-        return action.payload;
-    }
-    return state;
-}
-
+  if (action.type === "SET_NEW_PRODUCT_SELECTED") {
+    return action.payload;
+  }
+  return state;
+};
 
 export default combineReducers({
-    products,
-    newProductSelected
+  products,
+  newProductSelected,
 });

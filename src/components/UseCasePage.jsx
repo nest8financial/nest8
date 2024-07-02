@@ -1,14 +1,15 @@
 import React from "react";
-import {Container,
-        Typography, 
-        Card,
-        CardContent,
-        CardMedia,
-        Grid, 
-        Box,
-        Button,
-        Paper } from "@mui/material";
-import MyReportsRecommendations from "./MyRecomendationsAndActions/MyReports/MyRecomendationsAndActions";
+import {
+  Container,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  Box,
+  Button,
+  Paper,
+} from "@mui/material";
 import MembershipPlan from "./MembershipPlan/MembershipPlan";
 const reviews = [
   {
@@ -33,63 +34,75 @@ const reviews = [
 
 const UseCasePage = () => {
   return (
-    <Container style={{ paddingTop: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
+    <Container
+      style={{
+        paddingTop: "40px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        minHeight: "100vh",
+      }}
+    >
       <Paper elevation={10}>
-      <Grid container spacing={4}>
-        <Grid item xs={12} md={6}>
-          <Card style={{ marginBottom: "16px", textAlign: 'center'}}>
-            <CardContent>
-              <Typography variant="h4" gutterBottom>
-                See how a vegetable grower uses Nest 8 
-              </Typography>
-              <a
-                href="https://youtu.be/pOYc6DBdZGY?si=KzGIO54TEJQsjLbO"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <CardMedia
-                  component="img"
-                  image="https://i.ytimg.com/vi/pOYc6DBdZGY/maxresdefault.jpg"
-                  title="How to use the application"
-                  style={{ cursor: "pointer" }}
-                />
-              </a>
-              <Box mt={2} display="flex" justifyContent="center">
-                <Button
-                  variant="contained"
-                  color="primary"
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={6}>
+            <Card style={{ marginBottom: "16px", textAlign: "center" }}>
+              <CardContent>
+                <Typography variant="h4" gutterBottom>
+                  See how a vegetable grower uses Nest 8
+                </Typography>
+                <a
                   href="https://youtu.be/pOYc6DBdZGY?si=KzGIO54TEJQsjLbO"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Watch on YouTube
-                </Button>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Typography variant="h4" gutterBottom style={{ textAlign: 'center' }}>
-            Customer Reviews
-          </Typography>
-          {reviews.map((review, index) => (
-            <Card key={index} style={{ marginBottom: "16px" }}>
-              <CardContent sx={{ px: 15}}>
-                <Typography variant="h6" gutterBottom>
-                  {review.name}
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  "{review.review}"
-                </Typography>
-                <Typography variant="subtitle2" color="textSecondary">
-                  {review.date}
-                </Typography>
+                  <CardMedia
+                    component="img"
+                    image="https://i.ytimg.com/vi/pOYc6DBdZGY/maxresdefault.jpg"
+                    title="How to use the application"
+                    style={{ cursor: "pointer" }}
+                  />
+                </a>
+                <Box mt={2} display="flex" justifyContent="center">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    href="https://youtu.be/pOYc6DBdZGY?si=KzGIO54TEJQsjLbO"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Watch on YouTube
+                  </Button>
+                </Box>
               </CardContent>
             </Card>
-          ))}
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Typography
+              variant="h4"
+              gutterBottom
+              style={{ textAlign: "center" }}
+            >
+              Customer Reviews
+            </Typography>
+            {reviews.map((review, index) => (
+              <Card key={index} style={{ marginBottom: "16px" }}>
+                <CardContent sx={{ px: 15 }}>
+                  <Typography variant="h6" gutterBottom>
+                    {review.name}
+                  </Typography>
+                  <Typography variant="body1" gutterBottom>
+                    "{review.review}"
+                  </Typography>
+                  <Typography variant="subtitle2" color="textSecondary">
+                    {review.date}
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))}
+          </Grid>
         </Grid>
-      </Grid>
-      <MembershipPlan />
+        <MembershipPlan />
       </Paper>
     </Container>
   );

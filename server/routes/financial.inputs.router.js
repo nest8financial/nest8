@@ -50,7 +50,7 @@ const getAPIRequestData = async (user_id, month, year) => {
         `
         const recommendation = await connection.query(sqlText, [user_id, month, year]); 
 
-        console.log('recommendation', recommendation.rows)
+      
 
         const prompt =  // prompt and data to send to the OpenAI API 
         `Look through the following table and provide simplified recommendations based on the recommendations provided, taking into account the corresponding industry and adjusting the recommendation based on if the text is suggesting ways the user can improve or if the user is already meeting industry standards.  
@@ -93,7 +93,7 @@ const getAPIRequestData = async (user_id, month, year) => {
         };
       connection.release(); 
 
-      console.log('TESTING API Request Data', apiRequestData);
+    
 
       return apiRequestData; 
    
@@ -110,10 +110,6 @@ const getAPIRequestData = async (user_id, month, year) => {
  */
 
 const updateRecommendations = async (recData, userId, month, year) => {
-    console.log(recData);
-    console.log('profit margin?', recData.profit_margin);
-    console.log('month?', month);
-    console.log('user id?', userId);
 
     let connection; // initialize DB connection
 
@@ -174,7 +170,7 @@ router.get('/missing', rejectUnauthenticated, async (req, res) => {
 
     
     try {
-        console.log(req.user);
+       
         const userId = req.user.id;
 
         // Get the earliest date available for a user
@@ -189,12 +185,12 @@ router.get('/missing', rejectUnauthenticated, async (req, res) => {
         `;
         const dbResponse2 = await connection.query(sqlTextGetEarliestDate, [userId]);
         let earliestDate = dbResponse2.rows[0];
-        console.log('earliest date', earliestDate);
+      
           // Pad with leading zero if necessary
          if (earliestDate.month.length === 1) {
              earliestDate.month = '0' + earliestDate.month;
          }
-         console.log('earliest month padded:', earliestDate.month);
+      
 
         // Get all Input dates (month/year) for a user and joined date for user
         const sqlTextGetInputs = `
@@ -239,11 +235,10 @@ router.get('/missing', rejectUnauthenticated, async (req, res) => {
         let arrayOfDatesWeShouldHave = generateDatesWeShouldHave(formattedDate) 
     
         let missingMonthsResponse = getMissingMonths(arrayOfDatesWeShouldHave, arrayOfDatesWeHave)
-        console.log('these are the missing months', missingMonthsResponse);
+      
         connection.release();
         res.send(missingMonthsResponse);
     } catch (error) {
-        console.log('Error in get of missing monthly inputs in /api/financial_inputs/missing', error);
         connection.release();
         res.sendStatus(500);
     }
@@ -267,18 +262,15 @@ router.get('/incomplete_recs', rejectUnauthenticated, async (req, res) => {
                 ORDER BY year, month;
             `;
             const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
-            console.log('Get of monthly inputs in /api/financial_inputs/incomplete_recs succesful:', dbResponse.rows )
             let incompleteRecs = [];
             dbResponse.rows.forEach( incompleteDate => {
                 incompleteRecs.push([ incompleteDate.year,
                                       getMonthName(incompleteDate.month),
                                       incompleteDate.month ]);
             })
-            console.log('incomplete recs array', incompleteRecs);
             connection.release();
             res.send(incompleteRecs);
     } catch (error) {
-        console.log('Error in get of months with incomplete recommendations in /api/financial_inputs/incomplete_recs', error);
         connection.release();
         res.sendStatus(500);
     }
@@ -299,11 +291,9 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
                 ORDER BY year, month;
             `;
             const dbResponse = await connection.query(sqlTextGetInputs, [userId]);
-            console.log('Get of monthly inputs in /api/financial_inputs succesful:', dbResponse.rows )
             connection.release();
             res.send(dbResponse.rows);
     } catch (error) {
-        console.log('Error in get of monthly inputs in /api/financial_inputs', error);
         connection.release();
         res.sendStatus(500);
     }
@@ -314,13 +304,11 @@ router.get('/', rejectUnauthenticated, async (req, res) => {
  */
 router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
     let connection;
-    console.log('requser',req.user);
     connection = await pool.connect();
     try {
         const month = Number(req.params.month);
         const year = Number(req.params.year);
         const userId = req.user.id;
-        console.log('year, month, user', year, month, userId);
         const sqlTextGetSingleMonth = `
             SELECT * 
                 FROM monthly_inputs
@@ -330,11 +318,9 @@ router.get('/:month&:year', rejectUnauthenticated, async (req, res) => {
                 ORDER BY year, month;
             `;
             const dbResponse = await connection.query(sqlTextGetSingleMonth, [userId, month, year]);
-            console.log('Get of single month\'s inputs in /api/financial_inputs/:month&:year succesful:', dbResponse.rows )
             connection.release();
             res.send(dbResponse.rows);
     } catch (error) {
-        console.log('Error in get of single month\'s inputs in /api/financial_inputs/:month&:year', error);
         connection.release();
         res.sendStatus(500);
     }
@@ -399,12 +385,10 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
                                     equity,
                                     taxRate,
                                     earningsBeforeTax ]);
-        console.log('POST of a single month\'s inputs in /api/financial_input/ successful, new id is:',returnedIdResponse.rows[0].id );
         const monthlyInputId = returnedIdResponse.rows[0].id;                       
         // 2. Compute the monthly financial metrics   
         //      - If key inputs are zero, resulting metrics are set to null
         //          as metrics are unable to be computed
-        console.log('inputs:', sales, assets, equity, taxRate, earningsBeforeTax,'%%%%%%%%%')
         let profitMargin, assetTurnoverRatio, financialLeverageRatio,
              taxBurden, interestBurden, returnOnEquity;
              if (sales === 0) {
@@ -434,7 +418,6 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
           } else {
               taxBurden = netIncome / earningsBeforeTax;
           }
-          console.log('stuff:::::::', assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, '%%%%%%%%%%%')
         // 3. Retreive the industry standard metrics for the current user
         const sqlTextGetIndustry = `
         SELECT profit_margin AS ind_profit_margin,
@@ -449,7 +432,6 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
         WHERE "user".id = $1;
         `;
         let industryMetrics = await connection.query(sqlTextGetIndustry, [userId]);
-        console.log('Industry metrics retreived successfully in /api/monthly_metrics (POST):', industryMetrics.rows);
         // save industry metrics 
         //   -use them to compute variances in below query
         const indProfitMargin = Number(industryMetrics.rows[0].ind_profit_margin);
@@ -458,7 +440,6 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
         const indReturnOnEquity = Number(industryMetrics.rows[0].ind_return_on_equity);
         const indTaxBurden = Number(industryMetrics.rows[0].ind_tax_burden);
         const indInterestBurden = Number(industryMetrics.rows[0].ind_interest_burden);
-        console.log(profitMargin, assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, indProfitMargin, indAssetTurnoverRatio, indFinancialLeverageRatio, indReturnOnEquity, indTaxBurden, indInterestBurden, '***********');
         // To calculate variances:
         //      Because a larger value is better for metric 1, 2, 4:
         //           calculate variance = (user - industry)
@@ -495,12 +476,10 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
                                           indReturnOnEquity,
                                           indTaxBurden,
                                           indInterestBurden ]);   
-        console.log('POST of a single month\'s metrics in /api/financial_input/ successful');  
         connection.query('COMMIT;');
         
         const APIRequestData = await getAPIRequestData(userId, month, year) // pulls in the data from the DB to send in our API request to OpenAI
         
-        console.log('THIS IS OUR API REQUEST DATA', APIRequestData);
 
         //  4. make call to openAI assistant with data and prompt
       const AIresponse = await axios({
@@ -510,17 +489,14 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
         data: APIRequestData
       });
       
-      console.log('Get recommendations back from openAI *****************')
       // 5. Get recommendations response back from openAI
 
       let aiReccomendations = AIresponse.data.choices[0].message.content
     
-      console.log('aiReccomendations*************', aiReccomendations);
       aiReccomendations = aiReccomendations.replace(/^```json\n/, '').replace(/\n```$/, ''); // reformat response 
    
       // Now parse the cleaned JSON string
       const parsedData = JSON.parse(aiReccomendations);
-      console.log('parsed data is!', parsedData);
       if (parsedData) {
         const updateDB = await updateRecommendations(parsedData.recommendations, userId, month, year) // function to update the database with the response from OpenAI 
             if (updateDB) {
@@ -535,7 +511,6 @@ router.post('/', rejectUnauthenticated, async (req, res) => {
             throw new Error('Error no recommendations received from AI.');
         }
    } catch (error) {
-       console.log('Error in POST of single month\'s inputs in /api/financial_inputs/', error);
        connection.query('ROLLBACK;');
        connection.release();
        res.sendStatus(500);
@@ -602,7 +577,6 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
                                              earningsBeforeTax,
                                              month,
                                              year ]);
-        console.log('PUT of a single month\'s inputs in /api/financial_input/ successful, new id is:',returnedId.rows[0].id );
         const monthlyInputId = returnedId.rows[0].id;                       
         // 2. Compute the monthly financial metrics   
         let profitMargin, assetTurnoverRatio, financialLeverageRatio,
@@ -648,7 +622,6 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
         WHERE "user".id = $1;
         `;
         let industryMetrics = await connection.query(sqlTextGetIndustry, [userId]);
-        console.log('Industry metrics retreived successfully in /api/monthly_metrics (POST):', industryMetrics.rows);
         // save industry metrics 
         //   -use them to compute variances in below query
         const indProfitMargin = Number(industryMetrics.rows[0].ind_profit_margin);
@@ -657,7 +630,6 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
         const indReturnOnEquity = Number(industryMetrics.rows[0].ind_return_on_equity);
         const indTaxBurden = Number(industryMetrics.rows[0].ind_tax_burden);
         const indInterestBurden = Number(industryMetrics.rows[0].ind_interest_burden);
-        console.log(profitMargin, assetTurnoverRatio, financialLeverageRatio, returnOnEquity, taxBurden, interestBurden, indProfitMargin, indAssetTurnoverRatio, indFinancialLeverageRatio, indReturnOnEquity, indTaxBurden, indInterestBurden, '***********');
         // 4. Update the monthly_metrics table:
         //   To calculate variances:
         //      Because a larger value is better for metric 1, 2, 4:
@@ -699,13 +671,10 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
                                           indReturnOnEquity,
                                           indTaxBurden,
                                           indInterestBurden ]);    
-        console.log('PUT of a single month\'s metrics in /api/financial_input/ successful:',returnedId.rows[0].id );
         connection.query('COMMIT;');
 
         const APIRequestData = await getAPIRequestData(userId, month, year) // pulls in the data from the DB to send in our API request to OpenAI
         
-        console.log('THIS IS OUR API REQUEST DATA', APIRequestData);
-
         //  5. make call to openAI assistant with data and prompt
       const AIresponse = await axios({
         method: 'POST',
@@ -714,17 +683,14 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
         data: APIRequestData
       });
       
-      console.log('Get recommendations back from openAI *****************')
       // 6. Get recommendations response back from openAI
 
       let aiReccomendations = AIresponse.data.choices[0].message.content
     
-      console.log('aiReccomendations*************', aiReccomendations);
       aiReccomendations = aiReccomendations.replace(/^```json\n/, '').replace(/\n```$/, ''); // reformat response 
    
       // Now parse the cleaned JSON string
       const parsedData = JSON.parse(aiReccomendations);
-      console.log('parsed data is!', parsedData);
       const updateDB = await updateRecommendations(parsedData.recommendations, userId, month, year) // function to update the database with the response from OpenAI 
 
         if (updateDB) {
@@ -736,7 +702,6 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
         }
 
    } catch (error) {
-       console.log('Error in PUT of single month\'s inputs in /api/financial_inputs/', error);
        connection.query('ROLLBACK;');
        connection.release();
        res.sendStatus(500);
@@ -749,7 +714,6 @@ router.put('/', rejectUnauthenticated, async (req, res) => {
  */
 router.get('/latest_month', rejectUnauthenticated, async (req, res) => {
   let connection;
-  console.log('requser',req.user);
   connection = await pool.connect();
   try {
       const userId = req.user.id;
@@ -761,11 +725,9 @@ router.get('/latest_month', rejectUnauthenticated, async (req, res) => {
           LIMIT 1;
           `;
           const dbResponse = await connection.query(sqlTextGetLatestMonth, [userId]);
-          console.log('Get of single month\'s inputs in /api/financial_inputs/:month&:year succesful:', dbResponse.rows )
           connection.release();
           res.send(dbResponse.rows[0]);
   } catch (error) {
-      console.log('Error in get of single month\'s inputs in /api/financial_inputs/:month&:year', error);
       connection.release();
       res.sendStatus(500);
   }

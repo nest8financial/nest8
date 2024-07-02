@@ -1,16 +1,16 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React from "react";
+import { useDispatch } from "react-redux";
 
 function LogOutButton(props) {
   const dispatch = useDispatch();
 
   const handleLogoutButton = () => {
-    dispatch({ 
-      type: 'SET_NEW_PRODUCT_SELECTED',
-      payload: 0 })
-    dispatch({ type: 'LOGOUT' })
-  }
-
+    dispatch({
+      type: "SET_NEW_PRODUCT_SELECTED",
+      payload: 0,
+    });
+    dispatch({ type: "LOGOUT" });
+  };
 
   return (
     <button

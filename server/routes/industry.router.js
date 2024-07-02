@@ -14,13 +14,11 @@ try {
   SELECT * FROM industry;
   `
 const dbResponse = await connection.query(sqlText)
-console.log('get industries successful: ', dbResponse.rows)
 connection.release()
 res.send(dbResponse.rows)
 
 }
 catch(err) {
-    console.log('Error in get industry  oww something went wrong', err);
     connection.release()
     res.sendStatus(500)
 }

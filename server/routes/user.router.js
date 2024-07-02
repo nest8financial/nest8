@@ -24,7 +24,6 @@ router.post('/register', (req, res, next) => {
    const industry = req.body.industry;
    const email = req.body.email;
   const password = encryptLib.encryptPassword(req.body.password);
-  console.log('In user router.  Posting user object req.body:', req.body);
   const queryText = `INSERT INTO "user" (first_name, last_name, company, industry_id, username, password)
     VALUES ($1, $2, $3, $4, $5, $6) RETURNING id`;
   pool
@@ -37,11 +36,9 @@ router.post('/register', (req, res, next) => {
       password
     ])
     .then((dbResponse) => {
-      console.log('User posted successfully in /api/user', dbResponse)
       res.sendStatus(201)
     })
     .catch((err) => {
-      console.log("User registration failed: ", err);
       res.sendStatus(500)
     });
 });
@@ -67,7 +64,6 @@ router.post("/logout", (req, res) => {
 
 router.put("/", rejectUnauthenticated, (req, res) => {
   const userId = req.user.id 
-  console.log(req.body)
   const firstName = req.body.first_name
   const lastName = req.body.last_name
   const company = req.body.company
@@ -84,24 +80,20 @@ router.put("/", rejectUnauthenticated, (req, res) => {
       WHERE "id" = $6;`
    pool.query (userInfo, [firstName, lastName, company, industry, email, userId]) 
  .then((dbResponse) => {
-  console.log('User updated successfully in /api/user', dbResponse)
   res.sendStatus(200)
 })
 .catch((err) => {
-  console.log("User update failed: ", err);
   res.sendStatus(500)
 });
 });
 
 router.get('/', rejectUnauthenticated, (req, res) => {
   // Send back user object from the session (previously queried from the database)
-  console.log('in user', req.user)
   res.send(req.user);
 });
 
 router.patch('/update_product', rejectUnauthenticated, (req, res) => {
   const userId = req.user.id 
-  console.log('In user update_product *************************', req.body)
   const productId = req.body.productId;
   const userInfo = `
     UPDATE "user"
@@ -111,11 +103,9 @@ router.patch('/update_product', rejectUnauthenticated, (req, res) => {
       WHERE "id" = $2;`
    pool.query (userInfo, [productId, userId]) 
  .then((dbResponse) => {
-  console.log('User product changed successfully in /api/user/update_product', dbResponse)
   res.sendStatus(200)
 })
 .catch((err) => {
-  console.log("Update of product in user in /api/user/update_product failed: ", err);
   res.sendStatus(500)
 });
 });
@@ -123,7 +113,6 @@ router.patch('/update_product', rejectUnauthenticated, (req, res) => {
 
 router.get('/edituser', rejectUnauthenticated, (req, res) => {
   // Send back user object from the session (previously queried from the database)
-  console.log('in edit user', req.user)
   res.send(req.user);
 });
 

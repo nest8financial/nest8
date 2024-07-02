@@ -1,21 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
+import {
+  Button,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { useDispatch } from "react-redux";
 
-function ConfirmPopUp({closePopUp, productId}) {
-
+function ConfirmPopUp({ closePopUp, productId }) {
   const history = useHistory();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     handleClickOpen();
-  }, [])
+  }, []);
 
   const handleClickOpen = () => {
-    console.log('open popup?')
     setOpen(true);
   };
 
@@ -26,13 +32,10 @@ function ConfirmPopUp({closePopUp, productId}) {
 
   const handleConfirm = () => {
     setOpen(false);
-    // set piece of state here so login or account registration 
+    // set piece of state here so login or account registration
     //     goes to review cart place order
-    console.log('popup click on confirm?')
-    console.log('product here is', productId)
-    dispatch({ type: 'SET_NEW_PRODUCT_SELECTED',
-               payload: productId })
-    history.push('/login');
+    dispatch({ type: "SET_NEW_PRODUCT_SELECTED", payload: productId });
+    history.push("/login");
   };
 
   return (
@@ -43,7 +46,7 @@ function ConfirmPopUp({closePopUp, productId}) {
             aria-label="close"
             onClick={handleClose}
             sx={{
-              position: 'absolute',
+              position: "absolute",
               right: 8,
               top: 8,
               color: (theme) => theme.palette.grey[500],
@@ -62,6 +65,6 @@ function ConfirmPopUp({closePopUp, productId}) {
       </Dialog>
     </Container>
   );
-};
+}
 
 export default ConfirmPopUp;

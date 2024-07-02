@@ -16,13 +16,11 @@ try {
     ORDER by id;
   `
 const dbResponse = await connection.query(sqlText)
-console.log('Get of all products successful: ', dbResponse.rows)
 connection.release()
 res.send(dbResponse.rows)
 
 }
 catch(err) {
-    console.log('Error in get of products', err);
     connection.release()
     res.sendStatus(500)
 }
