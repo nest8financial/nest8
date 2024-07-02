@@ -71,7 +71,7 @@ router.put("/", rejectUnauthenticated, (req, res) => {
   const firstName = req.body.first_name
   const lastName = req.body.last_name
   const company = req.body.company
-  const industry = req.body.industry
+  const industry = req.body.industry_id
   const email =req.body.username
   const userInfo = `
     UPDATE "user"

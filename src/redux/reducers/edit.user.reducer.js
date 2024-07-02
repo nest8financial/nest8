@@ -7,7 +7,7 @@ const editUser = (state = {}, action) => {
         case 'UPDATE_USER_COMPANY':
         return {...state, company: action.payload}
         case 'UPDATE_USER_INDUSTRY':
-        return {...state, industry: action.payload}
+        return {...state, industry_id: action.payload}
         case 'UPDATE_USER_EMAIL':
         return {...state, username: action.payload}
         case 'SET_EDIT_USER':

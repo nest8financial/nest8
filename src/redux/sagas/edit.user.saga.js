@@ -10,7 +10,7 @@ function* fetchEditUser(action) {
         method: 'GET',
         url: 'api/user/edituser'
     })
-console.log('spam', action.payload)
+console.log('spam++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++', action.payload)
     yield put({ type: 'SET_EDIT_USER', payload: response.data });
   } catch (error) {
     console.log('Edit User get request failed', error);

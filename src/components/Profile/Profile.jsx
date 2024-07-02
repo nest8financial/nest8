@@ -59,10 +59,12 @@ setIndustry(user.industry);
   };
 
   const handleIndustryChange = (event) => {
+    if (event.target.value) {
     dispatch({
       type: 'UPDATE_USER_INDUSTRY',
       payload: event.target.value
     });
+    }
   };
 
   const handleEmailChange = (event) => {
@@ -79,6 +81,7 @@ setIndustry(user.industry);
 
   const handleSaveButton = (event) => {
     event.preventDefault();
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!updating user, here is what we are sending up:', user)
     dispatch({
       type: 'UPDATE_USER',
       payload: user
