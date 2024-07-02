@@ -18,12 +18,12 @@ function HomePage() {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch({
-      type: 'SET_NEW_PRODUCT_SELECTED',
-      payload: 0
-    });
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch({
+  //     type: 'SET_NEW_PRODUCT_SELECTED',
+  //     payload: 0
+  //   });
+  // }, []);
 
   const handleClick = (route) => {
     history.push(route);

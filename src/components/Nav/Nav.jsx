@@ -40,6 +40,7 @@ export default function Navbar() {
   console.log('missinginputs', missingInputs);
 
   useEffect(() => {
+    console.log('in nav bar=================', user)
     if (user.id && user.date_joined) {
       dispatch({ type: "GET_MISSING_MONTHLY_INPUTS" });
       dispatch({ type: "GET_INCOMPLETE_RECS_MONTHLY_INPUTS" });

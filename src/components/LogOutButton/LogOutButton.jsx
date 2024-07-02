@@ -5,9 +5,9 @@ function LogOutButton(props) {
   const dispatch = useDispatch();
 
   const handleLogoutButton = () => {
-    dispatch({ 
-      type: 'SET_NEW_PRODUCT_SELECTED',
-      payload: 0 })
+    // dispatch({ 
+    //   type: 'SET_NEW_PRODUCT_SELECTED',
+    //   payload: 0 })
     dispatch({ type: 'LOGOUT' })
   }
 

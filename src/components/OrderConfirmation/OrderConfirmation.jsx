@@ -15,6 +15,12 @@ function OrderConfirmation() {
     useEffect(() => {
         dispatch({ type: 'FETCH_PRODUCTS' })
     },[])
+
+    const handleStartUsing = () => {
+        dispatch({ type: 'SET_NEW_PRODUCT_SELECTED',
+                   payload: 0 })  
+        history.push('/input_header')
+    }
     
 
     return (
@@ -39,7 +45,7 @@ function OrderConfirmation() {
                     )
                 }  
                 <Button variant="contained"  sx={{ width: '80%', alignSelf: 'center', mt: 5 }} 
-                        onClick={() => history.push('/input_header')}>Start Using Nest 8!
+                        onClick={handleStartUsing}>Start Using Nest 8!
                 </Button>
             </Paper>
         </Container>
