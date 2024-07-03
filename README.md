@@ -56,8 +56,8 @@ Before you get started, make sure you have the following software installed on y
 6. In the terminal of VS Code run `npm install` to install all dependencies
 7.  Create a `.env` file at the root of the project and paste these lines into the file:
 
-   -- SERVER_SESSION_SECRET=`{place string here}`
-   -- OPENAI_API_KEY=`{place API key here}`
+   - SERVER_SESSION_SECRET=`{place string here}`
+   - OPENAI_API_KEY=`{place API key here}`
 
     Add a string like `25POUbVtx6RKVNWszd9ERB9Bb6` to the Server Sessions Secret to keep your application secure. Here's a site that can help you: [Password Generator Plus](https://passwordsgenerator.net). If you don't do this step, create a secret with less than eight characters, or leave it blank, you will get a warning.
 
@@ -81,37 +81,10 @@ Video walkthrough of application usage: ***** INSERT YOUTUBE VIDEO LINK HERE ***
 
 ## Deployment 
 
-- Login Credentials for Heroku have been provided in the hand off document.
-- If you need make changes you wish to push to the deployed app, you must login, go into the pet-star section, go to the deploy tab, and then manually deploy. You can reconfigure this to redeploy automatically if you wish, which is on the same page.
+- If you need make changes you wish to push to the deployed app, you must login, go into the nest8prime app, go to the deploy tab, and then manually deploy. You can reconfigure this to redeploy automatically if you wish, which is on the same page.
 - Environment variables are kept on Heroku in the Settings tab, just click the Reveal Config Vars button
-- To set up the DB, we used Postico, just plug the information from Heroku into a new favorite. The Information for this can be found in the Resources tab, by clicking the Postgres add on. From there it will bring you to a new page where you will go into the settings tab and click view credentials. 
-
-- If you'd like to create new users (also a hacky way to change password) you must:
-1. Go into the user router
-1. Uncomment the route
-1. Push changes and redeploy app
-1. Register User
-1. Comment out the route back in VSCode
-1. Push changes
-1. Redeploy
+- To set up the DB, we used Postico, just plug the information from Heroku into a new favorite. The information for this can be found in the Resources tab, by clicking the Postgres add on. From there it will bring you to a new page where you will go into the settings tab and click view credentials. 
 
 
-## Production Build
-
-Before pushing to Heroku, run `npm run build` in terminal. This will create a build folder that contains the code Heroku will be pointed at. You can test this build by typing `npm start`. Keep in mind that `npm start` will let you preview the production build but will **not** auto update.
-
-- Start postgres if not running already by using opening up the [Postgres.app](https://postgresapp.com), or if using [Homebrew](https://brew.sh) you can use the command `brew services start postgresql`.
-- Run `npm start`.
-- Navigate to `localhost:5173`.
-
-## Deployment
-
-1. Create a new Heroku project.
-1. Link the Heroku project to the project GitHub Repo.
-1. Create an Heroku Postgres database.
-1. Connect to the Heroku Postgres database from Postico.
-1. Create the necessary tables.
-1. Add an environment variable for `SERVER_SESSION_SECRET` with a nice random string for security.
-1. In the deploy section, select manual deploy.
 
 
