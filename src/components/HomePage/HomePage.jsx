@@ -32,6 +32,7 @@ function HomePage() {
   const history = useHistory();
   const dispatch = useDispatch();
 
+
   useEffect(() => {
     dispatch({
       type: "SET_NEW_PRODUCT_SELECTED",

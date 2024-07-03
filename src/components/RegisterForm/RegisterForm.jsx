@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Container, TextField, Button, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { Select, MenuItem } from "@mui/material";
+import { useHistory } from "react-router-dom";
 
 function RegisterForm() {
   const industries = useSelector((store) => store.industries);
@@ -15,6 +16,10 @@ function RegisterForm() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const errors = useSelector((store) => store.errors);
   const dispatch = useDispatch();
+  const history = useHistory();
+
+  
+  const newProductSelected = useSelector(store => store.products.newProductSelected);
 
   useEffect(() => {
     dispatch({
@@ -35,8 +40,13 @@ function RegisterForm() {
         email: email,
         password: password,
         confirmPassword: confirmPassword,
-      },
-    });
+      }
+    })
+      if (newProductSelected && newProductSelected !== 0) {
+        history.push('/review_cart');
+      } else {
+        history.push('/home');
+      }
   }; // end registerUser
 
   return (

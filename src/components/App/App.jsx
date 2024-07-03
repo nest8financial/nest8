@@ -27,7 +27,6 @@ import MembershipPlan from "../MembershipPlan/MembershipPlan";
 import FinancialsPage from "../FinancialsPage/FinancialsPage";
 import MyRecommendationsAndActions from "../MyRecomendationsAndActions/MyReports/MyRecomendationsAndActions"
 import Profile from "../Profile/Profile";
-import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
 import OrderConfirmation from "../OrderConfirmation/OrderConfirmation";
 import FeaturesPage from "../StaticPages/FeaturesPage";
 import PricingPage from "../StaticPages/Pricing";
@@ -35,7 +34,7 @@ import FAQPage from "../StaticPages/FAQPage";
 import ContactUsPage from "../StaticPages/ContactUsPage";
 import OurStoryPage from "../StaticPages/OurStoryPage";
 import MissionPage from "../StaticPages/Mission";
-
+import ReviewCartPlaceOrder from "../ReviewCartPlaceOrder/ReviewCartPlaceOrder";
 
 
 function App() {
@@ -45,6 +44,7 @@ function App() {
   const newProductSelected = useSelector(store => store.products.newProductSelected);
 
   useEffect(() => {
+
     dispatch({ type: "FETCH_USER" });
   }, [dispatch]);
 
@@ -74,19 +74,29 @@ function App() {
                   - redirect to the /financials (Reports) page
                 Otherwise, if no user logged in
                   - show the login page                         */}
-              <Route exact path="/login">
+              {/* <Route exact path="/login">
+              {console.log('WHOA^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^', newProductSelected)}
               { user.id ? ( 
-                newProductSelected && newProductSelected !== 0 ? (
-              <Redirect to="/review_cart" />
+                (newProductSelected && newProductSelected !== 0) ? (
+    
+              <Redirect to="/financials" />
               ) : ( 
                 newProductSelected === 0 || newProductSelected === 'undefined' ? (
-              <Redirect to="/financials" />
+              <Redirect to="/review_cart" />
               ) : (
                 <LoginPage />
               ))) : (
                 <LoginPage />
               )}
+            </Route> */}
+            <Route exact path="/login">
+            {user.id ? (
+                <Redirect to="/financials" />
+              ) : (
+                <LoginPage />
+              )}
             </Route>
+
 
             <Route exact path="/registration">
               {user.id ? (
@@ -99,13 +109,10 @@ function App() {
               )}
             </Route>
 
-            <Route exact path="/home">
-              <Redirect to="/home" />
-            </Route>
-
             <Route exact path="/review_cart">
               <ReviewCartPlaceOrder />
             </Route>
+
 
             <Route exact path="/order_confirmation">
               <OrderConfirmation />

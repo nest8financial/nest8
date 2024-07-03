@@ -12,9 +12,16 @@ function OrderConfirmation() {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch({ type: "FETCH_PRODUCTS" });
-  }, []);
+    useEffect(() => {
+        dispatch({ type: 'FETCH_PRODUCTS' })
+    },[])
+
+    const handleStartUsing = () => {
+        dispatch({ type: 'SET_NEW_PRODUCT_SELECTED',
+                   payload: 0 })  
+        history.push('/input_header')
+    }
+    
 
   return (
     <Container style={{ paddingTop: "40px" }}>
