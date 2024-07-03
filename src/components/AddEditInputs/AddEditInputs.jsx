@@ -12,6 +12,7 @@ import { getMonthName } from '../../utilities/utilities';
 import { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom/cjs/react-router-dom.min';
 import { useSelector, useDispatch } from 'react-redux';
+import AddSavePopUp from '../AddSavePopUp/AddSavePopUp';
 
 /**
 * This component provides a way for the user to input, edit, and view
@@ -34,6 +35,17 @@ function AddEditInputs() {
 const dispatch = useDispatch();
 const history = useHistory();    
 const { month, year } = useParams();
+const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+const handleSnackbarOpen = () => {
+  setSnackbarOpen(true);
+};
+
+const handleSnackbarClose = (event, reason) => {
+  setSnackbarOpen(false);
+  history.push('/input_header');
+};
+
 console.log( 'month and year', month, year, 'end')
 const singleMonthInputs = 
    useSelector(store => store.financialInputs.singleMonthInputs);
@@ -228,7 +240,8 @@ const handleEditSaveButton= (event) => {
     });
        setTaxRateError(false)
        // kick back to input header screen
-       history.push('/input_header');
+       handleSnackbarOpen();
+
    }
 }
 }
@@ -381,7 +394,7 @@ return (
               />
             </Paper>
           </Stack>
-
+          <AddSavePopUp open={snackbarOpen} handleClose={handleSnackbarClose} />
           <Button
             type="button"
             variant="contained"
