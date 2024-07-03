@@ -59,7 +59,7 @@ Before you get started, make sure you have the following software installed on y
    - SERVER_SESSION_SECRET=`{place string here}`
    - OPENAI_API_KEY=`{place API key here}`
 
-    Add a string like `25POUbVtx6RKVNWszd9ERB9Bb6` to the Server Sessions Secret to keep your application secure. Here's a site that can help you: [Password Generator Plus](https://passwordsgenerator.net). If you don't do this step, create a secret with less than eight characters, or leave it blank, you will get a warning.
+    Add a string like "25POUbVtx6RKVNWszd9ERB9Bb6" to the Server Sessions Secret to keep your application secure. Here's a site that can help you: [Password Generator Plus](https://passwordsgenerator.net). If you don't do this step, create a secret with less than eight characters, or leave it blank, you will get a warning.
 
     You will need to create your own Open AI account to generate an OpenAI API key. 
 
@@ -73,11 +73,7 @@ Before you get started, make sure you have the following software installed on y
 
 Once everything is installed and running, navigate to http://localhost:5173/#/
 
-Video walkthrough of application usage: ***** INSERT YOUTUBE VIDEO LINK HERE ******** 
-
-
-
-------- DELETE AFTER DEPLOYMENT ----------
+Video walkthrough of application usage: https://www.youtube.com/watch?v=BqzhPuHCW9E
 
 ## Deployment 
 
